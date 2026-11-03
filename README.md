@@ -9,7 +9,7 @@
 | Arquivo | O que é |
 |---|---|
 | [ROADMAP.md](ROADMAP.md) | Enunciado detalhado, marcos, divisão de tarefas, matriz requisito → evidência e critérios de avaliação |
-| [RECEITA.md](RECEITA.md) | O algoritmo passo a passo ("receita de bolo") que guia o código |
+| [algoritmo_v1.md](algoritmo_v1.md) | O algoritmo completo em português (dados, previsão, energia, decisões e visual). Base de todo o código |
 | [docs/VISUAL.md](docs/VISUAL.md) | Proposta de visual do painel HTML, do PDF e da apresentação |
 
 ## Fases anteriores

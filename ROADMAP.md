@@ -97,7 +97,7 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 
 | # | Marco | Responsável | Critério de pronto |
 |---|---|---|---|
-| M0 | Repositório, roadmap, receita e visual | Marcelo | Repositório público com os 4 documentos |
+| M0 | Repositório, roadmap, algoritmo e visual | Marcelo | Repositório público com os 4 documentos |
 | M1 | **Dados**: dicionário da colônia + históricos | Marcelo e Douglas | Navega a hierarquia e busca qualquer sensor por chave |
 | M2 | **Previsão**: regressão feita à mão | Marcelo e Douglas | Exemplo do enunciado dá β₁ = 2,5, β₀ = 0 e ŷ(11) = 27,5 |
 | M3 | **Energia**: balanço geração × consumo | Marcelo e Douglas | Os dois exemplos do enunciado geram as frases exatas |
