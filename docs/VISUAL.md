@@ -1,0 +1,125 @@
+# Visual e apresentação — Fase 3
+
+Proposta para a Alice (painel HTML + PDF). É um ponto de partida: a Alice tem a palavra final no visual.
+
+---
+
+## 1. A ideia central em uma frase
+
+> **"A colônia que vê o futuro."**
+> Mostrar, lado a lado, a mesma colônia vivendo o mesmo dia em Marte: uma **reage** (e quase apaga) e a outra **prevê** (e passa ilesa).
+
+A Fase 1 foi a sala de **decolagem**, a Fase 2 foi a sala de controle do **pouso**. A Fase 3 é o **Centro de Operações da Colônia**. A mesma família visual segue, agora vista do chão de Marte.
+
+---
+
+## 2. Identidade visual
+
+Continuidade com o painel da Fase 2, mais duas cores novas desta fase.
+
+| Papel | Cor | Origem |
+|---|---|---|
+| Fundo | `#0c0b1e` | Fase 2 (mantém a família) |
+| Telas / cartões | `#06141c` | Fase 2 |
+| Dados e linhas | ciano `#46f0ff` | Fase 2 |
+| **Sol marciano / solar** | laranja `#ff8a3d` | **novo**: o céu de Marte, a energia solar |
+| **Suporte à vida / OK** | verde `#3dffa8` | **novo**: o que nunca pode apagar |
+| Crítico | rosa `#ff3d7f` | Fase 2 |
+
+**Estados da decisão (o mesmo código de cor em tudo, do terminal ao PDF):**
+
+| Estado | Cor |
+|---|---|
+| NORMAL | verde |
+| ALERTA | amarelo `#ffd23d` |
+| MODO ECONOMIA | laranja |
+| CRÍTICO | rosa |
+
+- **Fonte sugerida:** uma monoespaçada para números (parece telemetria) e uma sem serifa para textos.
+- **No PDF:** capa escura com a identidade e páginas internas claras (para leitura e impressão), como na Fase 2.
+
+---
+
+## 3. Telas do painel
+
+### Tela 1 — Abertura: "Sol 1 da colônia"
+- Linha do tempo das três fases: decolagem → pouso → colônia.
+- Uma frase sobre a virada desta fase: **de reativo para preditivo**.
+- Um botão: **Iniciar o dia**.
+
+### Tela 2 — Mapa vivo da colônia (estrutura de dados)
+- A **árvore** da colônia desenhada: colônia → energético / ambiental / operacional → solar, eólico, bateria, módulos.
+- Ao clicar num nó, aparece a **chave e o valor**, por exemplo `energetico/eolico/geracao_kw = 25`.
+- **Por quê:** mostra o critério "Estruturação de dados" sem precisar explicar. O dicionário aparece de verdade na tela.
+
+### Tela 3 — Painel de energia
+- Medidor da bateria (%), geração solar, geração eólica e consumo total.
+- Barra de **balanço**: verde quando sobra energia, rosa quando falta.
+- Os cinco módulos como "luzes" que acendem e apagam. Suporte à vida tem um cadeado 🔒: não desliga nunca.
+
+### Tela 4 — Previsão
+- Gráfico de pontos **vento × energia** com a **reta ajustada** por cima.
+- Ao lado: β₀, β₁ e R², cada um com uma frase em português. Exemplo: "a cada 1 m/s de vento, +2,5 kW".
+- Um seletor de vento mostra a previsão ŷ. Os valores vêm **prontos do Python**: o painel não refaz a conta.
+
+### Tela 5 — Reativo × Preditivo (o "uau")
+- Tela dividida: **a mesma tempestade de poeira** nas duas metades.
+  - **Esquerda (reativo):** a bateria cai, e o sistema só age quando ela já está crítica. As luzes piscam.
+  - **Direita (preditivo):** a previsão enxerga a queda, desliga o Laboratório antes, e a bateria se mantém.
+- No fim, um placar: "energia economizada", "minutos em estado crítico", "suporte à vida: sempre ligado".
+
+### Tela 6 — Diário de decisões
+- Lista de cada decisão com **hora, entrada, regra usada e motivo**. Exemplo: "B·A verdadeiro → MODO ECONOMIA → Laboratório desligado".
+- **Por quê:** mostra o critério "Lógica de decisão" e deixa o sistema explicável.
+
+---
+
+## 4. Contrato entre o código e o visual
+
+```text
+Python (Marcelo e Douglas)  →  exportar_painel.py  →  painel/dados.js  →  HTML (Alice)
+```
+- O HTML **só mostra**, não calcula. Assim, painel, README e PDF sempre têm os mesmos números.
+- Para começar antes do código ficar pronto, a Alice pode usar um `dados.js` de exemplo com os números do enunciado. Os nomes dos campos são combinados no marco M1.
+- Deve funcionar abrindo o `index.html` direto no navegador (sem servidor) e ser publicado no GitHub Pages, como na Fase 2.
+
+---
+
+## 5. PDF (objetivo: entendimento, não volume)
+
+Sugestão: **6 a 8 páginas**. O enunciado não fixa um limite e pede objetividade.
+
+| Página | Conteúdo | Item do enunciado |
+|---|---|---|
+| 1 | Capa: equipe, RMs, link do GitHub e do painel | link do repositório |
+| 2 | A história e a virada reativo → preditivo (1 diagrama) | contexto |
+| 3 | **Como os dados foram organizados**: desenho da árvore + trecho do dicionário | dados |
+| 4 | **Regras de decisão**: tabela B / A / P, expressão simplificada e tabela do `if/elif` | regras |
+| 5 | **Modelo de previsão**: conta à mão (β₁ = 2,5; β₀ = 0; ŷ = 27,5), gráfico e R² | previsão |
+| 6 | **Como melhora o uso de energia**: o cenário reativo × preditivo com números | energia |
+| 7 | Exemplos de entrada e saída reais (print do terminal) + limites do protótipo | evidência |
+
+Regra da equipe: todo número do PDF vem de uma execução real do código.
+
+---
+
+## 6. Apresentação (se houver vídeo ou fala)
+
+Cinco atos, cerca de 3 minutos:
+1. **O problema:** a Terra está a até 22 minutos-luz; a colônia precisa decidir sozinha.
+2. **Os dados:** o mapa vivo (Tela 2).
+3. **As regras:** o diário de decisões (Tela 6).
+4. **A previsão:** a reta (Tela 4).
+5. **O clímax:** reativo × preditivo na tempestade (Tela 5), e a frase "a colônia que vê o futuro".
+
+---
+
+## 7. Checklist da Alice
+
+- [ ] Escolher e validar a paleta (seção 2).
+- [ ] Rascunho das 6 telas (papel, Figma ou HTML direto).
+- [ ] Combinar os nomes dos campos do `dados.js` com Marcelo e Douglas (M1).
+- [ ] Montar o painel com dados de exemplo.
+- [ ] Trocar pelos dados reais (M6).
+- [ ] PDF com a estrutura da seção 5 (M7).
+- [ ] Testar no celular e no computador.
