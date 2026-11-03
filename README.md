@@ -19,4 +19,19 @@
 
 ## Como executar
 
-*(Será preenchido no marco M5, com exemplo real de entrada e saída.)*
+Requer Python 3, sem bibliotecas externas. No macOS, use `python3`.
+
+```text
+python colonia.py                              # mostra a árvore da colônia e buscas por chave
+python -m unittest discover -s tests -t .      # roda os testes
+```
+
+O sistema completo (`main.py`), com exemplo de entrada e saída, chega no marco M5.
+
+## Andamento
+
+| Marco | Situação |
+|---|---|
+| M0 Documentos | Pronto |
+| M1 Dados e estrutura | Pronto (`dados.py`, `colonia.py`, 11 testes) |
+| M2 Previsão | Próximo |

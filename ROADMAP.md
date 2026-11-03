@@ -116,9 +116,9 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 
 | ID | Requisito | Arquivo / seção | Evidência | Situação |
 |---|---|---|---|---|
-| D1 | Listas e chave-valor | `dados.py` | | Pendente |
-| D2 | Hierarquia (energético → solar / eólico) | `dados.py`, `colonia.py` | | Pendente |
-| D3 | Acesso rápido a dados críticos | `colonia.py` | | Pendente |
+| D1 | Listas e chave-valor | `dados.py` | `criar_colonia()` (dicionários) e `criar_historico()` (listas); `tests/test_colonia.py` | Atendido (M1) |
+| D2 | Hierarquia (energético → solar / eólico) | `dados.py`, `colonia.py` | Árvore de 4 níveis; `percorrer()` recursiva; `python colonia.py` | Atendido (M1) |
+| D3 | Acesso rápido a dados críticos | `colonia.py` | `buscar(colonia, "energetico/bateria/nivel_pct")` → 40; caminho inexistente → `None` | Atendido (M1) |
 | L1 | Regra simples (energia < 50) | `regras.py` | | Pendente |
 | L2 | Condição combinada (E) | `regras.py` | | Pendente |
 | L3 | Prioridade (suporte à vida) | `regras.py` | | Pendente |
