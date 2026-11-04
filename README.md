@@ -11,6 +11,7 @@
 | [ROADMAP.md](ROADMAP.md) | Enunciado detalhado, marcos, divisão de tarefas, matriz requisito → evidência e critérios de avaliação |
 | [algoritmo_v1.md](algoritmo_v1.md) | O algoritmo completo em português (dados, previsão, energia, decisões e visual). Base de todo o código |
 | [docs/VISUAL.md](docs/VISUAL.md) | Proposta de visual do painel HTML, do PDF e da apresentação |
+| [docs/DECISOES_03-11-2026.md](docs/DECISOES_03-11-2026.md) | Decisões da reunião de 03/11/2026 (algoritmo 1.1) e o porquê de cada uma |
 
 ## Fases anteriores
 
