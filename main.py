@@ -40,8 +40,8 @@ def exibir_relatorio(cenario, resultado):
     print("  consumo medido:", formatar(resultado["consumo_kw"]), "kW")
     print()
     print("PREVISÃO")
-    print("  reta eólica: ŷ = " + formatar(resultado["beta0"]) + " + "
-          + formatar(resultado["beta1"]) + "·vento   (R² = " + formatar(resultado["r2"], 2) + ")")
+    print("  reta eólica: ŷ = " + formatar(resultado["beta0"], 2) + " + "
+          + formatar(resultado["beta1"], 2) + "·vento   (R² = " + formatar(resultado["r2"], 2) + ")")
     print("  eólica prevista:", formatar(resultado["eolica_prevista_kw"]), "kW ·",
           "fator de poeira:", formatar(resultado["fator_poeira"], 2))
     print("  bateria projetada em 3h:", formatar_abaixo(resultado["projecao_pct"]), "%")
@@ -244,7 +244,7 @@ def main():
             continuar = executar(opcao)
             print()
     except (EOFError, KeyboardInterrupt, BrokenPipeError):
-        return   # entrada fechada, Ctrl+C ou saída fechada: encerra sem erro
+        return   # entrada fechada, Ctrl+C ou saída fechada: encerra sem traceback
 
 
 if __name__ == "__main__":

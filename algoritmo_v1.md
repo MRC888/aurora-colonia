@@ -669,7 +669,7 @@ Nenhum ponto em aberto.
 ### 11.3 Decisões técnicas tomadas ao codar (04/11/2026), mantidas em 05/11/2026
 O código foi montado em 04/11 a pedido do Douglas. Estes pontos não estavam fechados e precisaram de uma escolha. Na auditoria, Marcelo pediu para manter as decisões do Douglas:
 
-1. **P = projeção < 70% E bateria caindo** (`EXIGIR_QUEDA = True` em `dados.py`). Pela regra literal (só "< 70%"), a Colônia B, que começa às 8h com 53% por projeto, cortaria o Laboratório **toda manhã de céu limpo**, com a bateria subindo. A frase original da reunião ("caso **abaixe** ele corta") sustenta essa leitura. Com `False`, vale a regra literal, mas 9 testes supõem `True` e precisam mudar junto.
+1. **P = projeção < 70% E bateria caindo** (`EXIGIR_QUEDA = True` em `dados.py`). Pela regra literal (só "< 70%"), a Colônia B, que começa às 8h com 53% por projeto, cortaria o Laboratório **toda manhã de céu limpo**, com a bateria subindo. A frase original da reunião ("caso **abaixe** ele corta") sustenta essa leitura. Com `False`, vale a regra literal, mas 10 testes supõem `True` e precisam mudar junto.
 2. **Janela de 3h = a hora atual + as duas seguintes.** É o que faz a projeção das 17h cobrir 17h–20h, como a seção 3.3 promete.
 3. **Na hora atual, a projeção usa o consumo MEDIDO**; nas seguintes, o perfil. Sem isso, uma anomalia acontecendo agora nunca entraria na conta da bateria.
 4. **O reativo** usa as mesmas regras, mas sem projeção: o P dele é "geração atual < consumo atual". Ele corta só pela situação (CRÍTICO/ECONOMIA) e religa com tempo mínimo e "faz de conta" da situação.

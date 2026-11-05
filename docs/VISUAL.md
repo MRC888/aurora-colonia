@@ -61,7 +61,7 @@ Continuidade com o painel da Fase 2, mais duas cores novas desta fase.
 - Gráfico de pontos **vento × energia** com a **reta ajustada** por cima.
 - Ao lado: β₀, β₁ e R², cada um com uma frase em português. Exemplo: "a cada 1 m/s de vento, +2,5 kW".
 - Um seletor de vento (0 a 25 m/s) mostra a previsão ŷ. Os valores vêm **prontos do Python** em `previsao.seletor_vento`: o painel não refaz a conta.
-- Comparação reta × curva v³ calibrada × fórmula pura, em `previsao.reta_x_fisica`. Sempre escrever **calibrada**: a fórmula pura dá só 1,2 kW a 10 m/s.
+- Comparação reta × curva v³ calibrada × fórmula pura, em `previsao.reta_x_fisica` (campos `reta_kw`, `fisica_calibrada_kw` e `fisica_pura_kw`). Sempre escrever **calibrada**: a fórmula pura dá só 1,2 kW a 10 m/s.
 
 ### Tela 5 — Reativo × Preditivo (o "uau")
 - Tela dividida: **a mesma tempestade de poeira** nas duas metades, do dia até as 6h.

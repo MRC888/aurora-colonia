@@ -60,7 +60,7 @@ ENTRADA
   consumo medido: 70,0 kW
 
 PREVISÃO
-  reta eólica: ŷ = 0,0 + 2,5·vento   (R² = 1,00)
+  reta eólica: ŷ = 0,00 + 2,50·vento   (R² = 1,00)
   eólica prevista: 25,0 kW · fator de poeira: 1,00
   bateria projetada em 3h: 31,9 %
 
@@ -141,4 +141,4 @@ Alguns recursos simples de Python foram usados sem aparecer nos textos dos capí
 - **Uma função devolver dois valores** (`return a, b`) e `if __name__ == "__main__"`.
 - **`main.py`:** `sys`, `try/except` e alinhamento em f-strings, só para o menu funcionar bem.
 - **`painel.py`:** `json`, `os` e `with open`, só para gravar o arquivo do painel.
-- **`tests/`:** `unittest`, que vem com o Python, só para conferir o sistema.
+- **`tests/`:** `unittest` e outras ferramentas da biblioteca padrão, com `class`, só para conferir o sistema.
