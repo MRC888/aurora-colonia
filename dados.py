@@ -20,7 +20,7 @@ TEMPO_MINIMO_DESLIGADO = 2     # horas que um módulo fica desligado antes de po
 LIMITE_ANOMALIA = 0.30         # 30% acima do esperado para a hora = anomalia
 # Decisão do código, mantida pela equipe (algoritmo, seção 11.3): a projeção só é
 # "desfavorável" se, além de ficar abaixo de 70%, a bateria estiver CAINDO. Sem isso,
-# a Colônia B cortaria o Laboratório toda manhã de céu limpo, só porque amanhece com 53%.
+# a Colônia B cortaria o Laboratório toda manhã de céu limpo, só porque começa às 8h com 53%.
 # Com False, vale a regra literal (só "< 70%"), e os testes que supõem True falham.
 EXIGIR_QUEDA = True
 

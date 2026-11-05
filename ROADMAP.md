@@ -60,10 +60,10 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 ## 3. Entregáveis obrigatórios
 
 ### 3.1 Repositório GitHub público
-- [ ] **Um único sistema funcionando.**
-- [ ] Código Python **organizado em funções**.
-- [ ] Separação clara entre **dados**, **lógica** e **decisões**.
-- [ ] `README.md` com explicação simples e **exemplo de entrada e saída**.
+- [x] **Um único sistema funcionando.**
+- [x] Código Python **organizado em funções**.
+- [x] Separação clara entre **dados**, **lógica** e **decisões**.
+- [x] `README.md` com explicação simples e **exemplo de entrada e saída**.
 
 ### 3.2 Relatório em PDF (objetivo: mostrar entendimento, não volume)
 - [ ] Como os dados foram organizados.
@@ -121,7 +121,7 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 | ID | Requisito | Arquivo / seção | Evidência | Situação |
 |---|---|---|---|---|
 | D1 | Listas e chave-valor | `dados.py` | `criar_colonia()` (dicionários), `criar_historico()` e perfis (listas); `tests/test_dados_estrutura.py` | Atendido |
-| D2 | Hierarquia (energético → solar / eólico) | `dados.py`, `colonia.py` | Árvore de dicionários; `percorrer()` recursiva; opção `arv` do menu | Atendido |
+| D2 | Hierarquia (energético → solar / eólico) | `dados.py`, `colonia.py` | Árvore de dicionários; `percorrer()` recursiva; opções `arv` e `todos` do menu | Atendido |
 | D3 | Acesso rápido a dados críticos e alertas de falha | `colonia.py`, `energia.py` | `buscar(colonia, "energetico/bateria/nivel_pct")` → 53; `operacional/alertas_de_falha` (cenário 20) | Atendido |
 | D4 | Séries históricas | `dados.py`, `sistema.py` | `historico`; medição entra e refaz a reta (cenário 21) | Atendido |
 | L1 | Regra simples (energia < 50) | `regras.py` | `decidir()`, variável B; `tests/test_regras.py` | Atendido |

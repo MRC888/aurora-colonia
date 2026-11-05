@@ -75,6 +75,10 @@ class TestSolar(unittest.TestCase):
 
     def test_fator_poeira_tem_teto_de_1(self):
         self.assertEqual(fator_poeira(140, 17), 1.0)
+        self.assertEqual(fator_poeira(50, 17), 1.0)     # 50 ÷ 42,8 ≈ 1,17
+
+    def test_reta_com_dois_pontos(self):
+        self.assertEqual(ajustar_reta([0, 2], [1, 5]), (1, 2))
 
     def test_curva_depois_da_meia_noite(self):
         self.assertAlmostEqual(solar_curva(36), 140)   # 36 = 12h do dia seguinte
@@ -109,6 +113,12 @@ class TestEnergia(unittest.TestCase):
         # ½ × 0,020 × 120 × 10³ = 1200 W = 1,2 kW: bem longe dos 25 kW do enunciado.
         self.assertAlmostEqual(eolica_fisica_pura(10), 1.2)
         self.assertAlmostEqual(eolica_fisica_pura(20), 9.6)
+
+    def test_modulo_desligado_nao_tem_anomalia(self):
+        modulos = modulos_da(colonia_na_hora(12))
+        modulos["Laboratório"]["consumo_atual_kw"] = 40
+        modulos["Laboratório"]["ligado"] = False
+        self.assertEqual(detectar_anomalias(modulos, 12), [])
 
     def test_falhas_so_avisam(self):
         modulos = modulos_da(criar_colonia())

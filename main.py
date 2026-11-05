@@ -3,7 +3,7 @@
 #   - um cenário pronto (entrada → regra → saída);
 #   - uma das 4 simulações do dia e da noite (reativo × preditivo);
 #   - a árvore de dados da colônia;
-#   - a comparação entre a reta e a física do vento;
+#   - a comparação entre a reta, a curva calibrada e a fórmula pura do vento;
 #   - a exportação dos números para o painel.
 #
 # Uso: python main.py → abre o menu; digite a opção (ex.: 1, 9b, todos) e Enter.
@@ -11,9 +11,9 @@
 import sys
 
 from dados import criar_colonia, criar_historico, COLONIAS, TEMPESTADES
-from colonia import mostrar_arvore
+from colonia import mostrar_arvore, buscar
 from previsao import ajustar_reta, prever
-from energia import formatar, eolica_fisica_calibrada, eolica_fisica_pura
+from energia import formatar, formatar_abaixo, eolica_fisica_calibrada, eolica_fisica_pura
 from cenarios import CENARIOS, buscar_cenario
 from sistema import processar_leitura, registrar
 from simulacao import SIMULACOES, comparar
@@ -37,13 +37,14 @@ def exibir_relatorio(cenario, resultado):
         print("SAÍDA")
         print(" ", resultado["erro"])
         return
+    print("  consumo medido:", formatar(resultado["consumo_kw"]), "kW")
     print()
     print("PREVISÃO")
     print("  reta eólica: ŷ = " + formatar(resultado["beta0"]) + " + "
           + formatar(resultado["beta1"]) + "·vento   (R² = " + formatar(resultado["r2"], 2) + ")")
     print("  eólica prevista:", formatar(resultado["eolica_prevista_kw"]), "kW ·",
           "fator de poeira:", formatar(resultado["fator_poeira"], 2))
-    print("  bateria projetada em 3h:", formatar(resultado["projecao_pct"]), "%")
+    print("  bateria projetada em 3h:", formatar_abaixo(resultado["projecao_pct"]), "%")
     print()
     print("ENERGIA")
     print("  geração", formatar(resultado["geracao_kw"]), "kW · consumo",
@@ -66,7 +67,7 @@ def exibir_relatorio(cenario, resultado):
             print("  -", acao)
     if resultado["acoes"]:
         print("  consumo depois das ações:", formatar(resultado["consumo_depois_kw"]),
-              "kW · projeção depois:", formatar(resultado["projecao_depois_pct"]), "%")
+              "kW · projeção depois:", formatar_abaixo(resultado["projecao_depois_pct"]), "%")
 
 
 def rodar_cenario(cenario):
@@ -115,7 +116,7 @@ def exibir_simulacao(codigo):
             marca = "☁"
         print(f" {r['hora']:2d}h{marca} | {formatar(r['bateria_fim_pct']):>6}%  {r['situacao']:<9}"
               f" {abreviar(r['desligados']):<14} | {formatar(p['bateria_fim_pct']):>6}%"
-              f"  {formatar(p['projecao_pct']):>5}%  {p['situacao']:<9} {abreviar(p['desligados'])}")
+              f"  {formatar_abaixo(p['projecao_pct']):>5}%  {p['situacao']:<9} {abreviar(p['desligados'])}")
     print()
     print("PLACAR (☁ = hora de tempestade)")
     for sistema in ["reativo", "preditivo"]:
@@ -136,7 +137,7 @@ def exibir_fisica():
     historico = criar_historico()
     beta0, beta1 = ajustar_reta(historico["vento"], historico["energia_eolica"])
     print(LINHA)
-    print("Vento: reta × física")
+    print("Vento: reta × curva calibrada × fórmula pura")
     print(LINHA)
     print(" vento | reta (planejamento) | curva v³ calibrada | P = ½·ρ·A·v³ pura")
     for vento in [8, 10, 12, 15, 20]:
@@ -147,6 +148,22 @@ def exibir_fisica():
     print("A fórmula pura mostra que o ar de Marte gera pouco: os 25 kW do enunciado")
     print("são uma hipótese didática. A curva calibrada aceita essa hipótese e mostra")
     print("que, a partir dela, a reta cresce menos que v³ no vento forte.")
+
+
+def exibir_dados():
+    # Procedimento: mostra a hierarquia e o acesso direto por chave.
+    colonia = criar_colonia()
+    print(LINHA)
+    print("Árvore de dados da colônia")
+    print(LINHA)
+    mostrar_arvore(colonia)
+    print()
+    print("Busca por chave (acesso direto ao dicionário):")
+    for caminho in ["energetico/bateria/nivel_pct",
+                    "energetico/bateria/capacidade_kwh",
+                    "operacional/modulos/Médico/essencial",
+                    "energetico/nuclear/geracao_kw"]:
+        print(" ", caminho, "→", buscar(colonia, caminho))
 
 
 def abreviar(nomes):
@@ -169,10 +186,10 @@ def mostrar_menu():
     for codigo in SIMULACOES:
         tipo, chave = SIMULACOES[codigo]
         print(f"  {codigo:<4} Simulação: {COLONIAS[tipo]['nome']} × {TEMPESTADES[chave]['nome']}")
-    print("  arv  Árvore de dados da colônia")
-    print("  fis  Vento: reta × física")
+    print("  arv  Árvore de dados da colônia e busca por chave")
+    print("  fis  Vento: reta × curva calibrada × fórmula pura")
     print("  pnl  Exportar os números para o painel (painel/dados.js)")
-    print("  todos  Rodar tudo · sair  Encerrar")
+    print("  todos  Mostrar cenários, simulações, árvore e vento · sair  Encerrar")
 
 
 def executar(opcao):
@@ -189,16 +206,21 @@ def executar(opcao):
         for codigo in SIMULACOES:
             exibir_simulacao(codigo)
             print()
+        exibir_dados()
+        print()
         exibir_fisica()
         return True
     if opcao == "arv":
-        mostrar_arvore(criar_colonia())
+        exibir_dados()
         return True
     if opcao == "fis":
         exibir_fisica()
         return True
     if opcao == "pnl":
-        print("Gravado em", exportar_painel())
+        try:
+            print("Gravado em", exportar_painel())
+        except OSError:   # ex.: pasta sem permissão de escrita
+            print("Não foi possível gravar o arquivo do painel.")
         return True
     if opcao in SIMULACOES:
         exibir_simulacao(opcao)
@@ -214,18 +236,19 @@ def executar(opcao):
 def main():
     # Procedimento: mostra o menu, lê a opção e executa, até o avaliador sair.
     continuar = True
-    while continuar:
-        mostrar_menu()
-        try:
+    try:
+        while continuar:
+            mostrar_menu()
             opcao = input("Opção: ")
-        except (EOFError, KeyboardInterrupt):   # entrada fechada ou Ctrl+C: sai sem erro
             print()
-            break
-        print()
-        continuar = executar(opcao)
-        print()
+            continuar = executar(opcao)
+            print()
+    except (EOFError, KeyboardInterrupt, BrokenPipeError):
+        return   # entrada fechada, Ctrl+C ou saída fechada: encerra sem erro
 
 
 if __name__ == "__main__":
-    sys.stdout.reconfigure(encoding="utf-8")   # acentos e símbolos também no Windows
+    # Acentos e símbolos também no Windows; bytes inválidos não derrubam o menu.
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdin.reconfigure(errors="replace")
     main()

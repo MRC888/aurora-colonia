@@ -1164,7 +1164,7 @@ const DADOS = {
       "regra": "B: bateria < 50%",
       "situacao": "ALERTA: reduzir consumo",
       "acoes": [],
-      "observacao": "Sem corte agora: a projeção de 57,7% não está caindo abaixo de 70%"
+      "observacao": "Sem corte agora: a projeção de 57,6% não pede corte"
      },
      {
       "hora": 9,
@@ -1267,7 +1267,7 @@ const DADOS = {
       "entrada": "bateria 94,7%, geração 25,0 kW, consumo 74,0 kW",
       "anomalias": [],
       "projecao_pct": 67.44949494949495,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 67,4% em 3h (abaixo de 70% e caindo)"
@@ -1289,7 +1289,7 @@ const DADOS = {
       "entrada": "bateria 79,3%, geração 25,0 kW, consumo 42,0 kW",
       "anomalias": [],
       "projecao_pct": 67.67676767676768,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Logística — motivo: bateria projetada em 67,6% em 3h (abaixo de 70% e caindo)"
@@ -1301,7 +1301,7 @@ const DADOS = {
       "entrada": "bateria 76,5%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 68.35858585858585,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -1311,7 +1311,7 @@ const DADOS = {
       "entrada": "bateria 73,8%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 65.63131313131314,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -1321,7 +1321,7 @@ const DADOS = {
       "entrada": "bateria 71,1%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 62.90404040404041,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -1331,7 +1331,7 @@ const DADOS = {
       "entrada": "bateria 68,4%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 60.176767676767675,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -1341,7 +1341,7 @@ const DADOS = {
       "entrada": "bateria 65,6%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 57.44949494949496,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -1351,7 +1351,7 @@ const DADOS = {
       "entrada": "bateria 62,9%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 54.722222222222236,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -1361,7 +1361,7 @@ const DADOS = {
       "entrada": "bateria 60,2%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 51.9949494949495,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -1371,7 +1371,7 @@ const DADOS = {
       "entrada": "bateria 57,4%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 49.267676767676775,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2323,7 +2323,7 @@ const DADOS = {
       "regra": "B: bateria < 50%",
       "situacao": "ALERTA: reduzir consumo",
       "acoes": [],
-      "observacao": "Sem corte agora: a projeção de 57,7% não está caindo abaixo de 70%"
+      "observacao": "Sem corte agora: a projeção de 57,6% não pede corte"
      },
      {
       "hora": 9,
@@ -2396,7 +2396,7 @@ const DADOS = {
       "entrada": "bateria 92,1%, geração 55,2 kW, consumo 91,0 kW",
       "anomalias": [],
       "projecao_pct": 66.70454545454545,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 66,7% em 3h (abaixo de 70% e caindo)"
@@ -2438,7 +2438,7 @@ const DADOS = {
       "entrada": "bateria 83,0%, geração 25,0 kW, consumo 59,0 kW",
       "anomalias": [],
       "projecao_pct": 67.53156565656565,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Logística — motivo: bateria projetada em 67,5% em 3h (abaixo de 70% e caindo)"
@@ -2450,7 +2450,7 @@ const DADOS = {
       "entrada": "bateria 78,0%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 69.80429292929293,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2460,7 +2460,7 @@ const DADOS = {
       "entrada": "bateria 75,3%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 67.0770202020202,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2470,7 +2470,7 @@ const DADOS = {
       "entrada": "bateria 72,5%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 64.34974747474746,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2480,7 +2480,7 @@ const DADOS = {
       "entrada": "bateria 69,8%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 61.622474747474755,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2490,7 +2490,7 @@ const DADOS = {
       "entrada": "bateria 67,1%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 58.89520202020203,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2500,7 +2500,7 @@ const DADOS = {
       "entrada": "bateria 64,3%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 56.167929292929294,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2510,7 +2510,7 @@ const DADOS = {
       "entrada": "bateria 61,6%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 53.440656565656575,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2520,7 +2520,7 @@ const DADOS = {
       "entrada": "bateria 58,9%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 50.71338383838384,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -2530,7 +2530,7 @@ const DADOS = {
       "entrada": "bateria 56,2%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 47.98611111111112,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -3481,7 +3481,7 @@ const DADOS = {
       "entrada": "bateria 59,2%, geração 56,2 kW, consumo 91,0 kW",
       "anomalias": [],
       "projecao_pct": 49.80050505050505,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 49,8% em 3h (abaixo de 70% e caindo)",
@@ -3569,7 +3569,7 @@ const DADOS = {
       "entrada": "bateria 80,9%, geração 25,0 kW, consumo 74,0 kW",
       "anomalias": [],
       "projecao_pct": 69.99242424242425,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 69,9% em 3h (abaixo de 70% e caindo)"
@@ -3601,7 +3601,7 @@ const DADOS = {
       "entrada": "bateria 73,2%, geração 25,0 kW, consumo 42,0 kW",
       "anomalias": [],
       "projecao_pct": 68.53787878787878,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Logística — motivo: bateria projetada em 68,5% em 3h (abaixo de 70% e caindo)",
@@ -3614,7 +3614,7 @@ const DADOS = {
       "entrada": "bateria 72,1%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 68.81060606060606,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -3624,7 +3624,7 @@ const DADOS = {
       "entrada": "bateria 71,0%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 67.71969696969697,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -3634,7 +3634,7 @@ const DADOS = {
       "entrada": "bateria 69,9%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 66.62878787878786,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -3644,7 +3644,7 @@ const DADOS = {
       "entrada": "bateria 68,8%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 65.53787878787878,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -3654,7 +3654,7 @@ const DADOS = {
       "entrada": "bateria 67,7%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 64.44696969696967,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -3664,7 +3664,7 @@ const DADOS = {
       "entrada": "bateria 66,6%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 63.356060606060595,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -3674,7 +3674,7 @@ const DADOS = {
       "entrada": "bateria 65,5%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 62.26515151515151,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4654,7 +4654,7 @@ const DADOS = {
       "entrada": "bateria 77,5%, geração 53,9 kW, consumo 91,0 kW",
       "anomalias": [],
       "projecao_pct": 68.44949494949493,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 68,4% em 3h (abaixo de 70% e caindo)"
@@ -4676,7 +4676,7 @@ const DADOS = {
       "entrada": "bateria 77,5%, geração 25,0 kW, consumo 59,0 kW",
       "anomalias": [],
       "projecao_pct": 69.78030303030303,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Logística — motivo: bateria projetada em 69,7% em 3h (abaixo de 70% e caindo)"
@@ -4708,7 +4708,7 @@ const DADOS = {
       "entrada": "bateria 72,4%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 69.14393939393939,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4718,7 +4718,7 @@ const DADOS = {
       "entrada": "bateria 71,3%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 68.0530303030303,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4728,7 +4728,7 @@ const DADOS = {
       "entrada": "bateria 70,2%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 66.96212121212122,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4738,7 +4738,7 @@ const DADOS = {
       "entrada": "bateria 69,1%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 65.87121212121212,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4748,7 +4748,7 @@ const DADOS = {
       "entrada": "bateria 68,1%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 64.78030303030302,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4758,7 +4758,7 @@ const DADOS = {
       "entrada": "bateria 67,0%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 63.68939393939394,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4768,7 +4768,7 @@ const DADOS = {
       "entrada": "bateria 65,9%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 62.59848484848484,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4778,7 +4778,7 @@ const DADOS = {
       "entrada": "bateria 64,8%, geração 25,0 kW, consumo 37,0 kW",
       "anomalias": [],
       "projecao_pct": 61.50757575757575,
-      "regra": "nenhuma regra de alerta",
+      "regra": "P: projeção abaixo de 70% e caindo",
       "situacao": "NORMAL: operação padrão",
       "acoes": [],
       "observacao": ""
@@ -4850,7 +4850,7 @@ const DADOS = {
     "falhas": [],
     "situacao": "ALERTA",
     "mensagem": "ALERTA: reduzir consumo",
-    "regra": "B: bateria < 50%",
+    "regra": "B: bateria < 50% · P: projeção abaixo de 70% e caindo",
     "acoes": [
      "Desligado: Laboratório — motivo: bateria projetada em 31,9% em 3h (abaixo de 70% e caindo)",
      "Desligado: Logística — motivo: bateria projetada em 31,9% em 3h (abaixo de 70% e caindo)",
@@ -5150,7 +5150,7 @@ const DADOS = {
     "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
-    "regra": "nenhuma regra de alerta",
+    "regra": "P: projeção abaixo de 70% e caindo",
     "acoes": [
      "Desligado: Logística — motivo: anomalia de consumo (quem causou sai primeiro); bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
      "Desligado: Laboratório — motivo: bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
@@ -5189,7 +5189,7 @@ const DADOS = {
     "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
-    "regra": "nenhuma regra de alerta",
+    "regra": "P: projeção abaixo de 70% e caindo",
     "acoes": [
      "Desligado: Laboratório — motivo: bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
      "Desligado: Logística — motivo: bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
@@ -5344,7 +5344,7 @@ const DADOS = {
     "pendencias": [
      "Aguardando: Laboratório — voltaria à situação MODO ECONOMIA"
     ],
-    "observacao": "Sem corte agora: a projeção de 100,0% não está caindo abaixo de 70%"
+    "observacao": "Sem corte agora: a projeção de 100,0% não pede corte"
    }
   },
   {

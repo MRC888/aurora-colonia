@@ -3,8 +3,8 @@
 # previsão → energia → decisão → ação → registro.
 # A mesma função atende o menu de cenários e cada hora da simulação.
 
-from colonia import (validar, aplicar_leitura, modulos_da, consumo_total,
-                     geracao_total)
+from colonia import (validar, validar_historico, aplicar_leitura, modulos_da,
+                     consumo_total, geracao_total)
 from previsao import ajustar_reta, r2, eolica_prevista, fator_poeira
 from energia import (balanco, detectar_anomalias, detectar_falhas, formatar,
                      formatar_abaixo)
@@ -13,12 +13,15 @@ from regras import (SITUACOES, decidir, regra_usada, projecao_desfavoravel,
 from dados import EXIGIR_QUEDA
 
 
-def atualizar_historico(historico, leitura):
-    # Procedimento: uma medição real de eólica entra na série histórica.
-    # Assim a reta é refeita com mais dados a cada leitura medida.
+def series_com_medicao(historico, leitura):
+    # Função: as séries que a reta vai usar, com a medição nova (se houver).
+    # Devolve listas novas: o histórico só muda depois de a reta dar certo.
+    vento = historico["vento"]
+    energia = historico["energia_eolica"]
     if "eolica_medida_kw" in leitura:
-        historico["vento"].append(leitura["vento_m_s"])
-        historico["energia_eolica"].append(leitura["eolica_medida_kw"])
+        vento = vento + [leitura["vento_m_s"]]
+        energia = energia + [leitura["eolica_medida_kw"]]
+    return vento, energia
 
 
 def motivo_da_projecao(projecao):
@@ -29,7 +32,7 @@ def motivo_da_projecao(projecao):
     return texto + ")"
 
 
-def observacao_da_decisao(situacao, acoes, preditivo, projecao):
+def observacao_da_decisao(situacao, acoes, preditivo, previsao_ruim, projecao):
     # Função: explica os dois casos em que a situação e a ação parecem discordar.
     houve_corte = False
     for acao in acoes:
@@ -38,10 +41,11 @@ def observacao_da_decisao(situacao, acoes, preditivo, projecao):
     if situacao == "NORMAL" and houve_corte:
         return "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
     if situacao == "ALERTA" and not houve_corte:
-        if preditivo:
-            return ("Sem corte agora: a projeção de " + formatar(projecao)
-                    + "% não está caindo abaixo de 70%")
-        return "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+        if not preditivo:
+            return "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+        if previsao_ruim:
+            return "Sem corte agora: os módulos não essenciais já estão desligados"
+        return "Sem corte agora: a projeção de " + formatar_abaixo(projecao) + "% não pede corte"
     return ""
 
 
@@ -54,12 +58,17 @@ def processar_leitura(colonia, leitura, historico, preditivo=True):
         return {"erro": "ERRO: leitura inválida — " + motivo}
 
     # Previsão eólica: a reta é ajustada sobre o histórico (enunciado + medições).
-    atualizar_historico(historico, leitura)
-    reta = ajustar_reta(historico["vento"], historico["energia_eolica"])
+    erro_historico = {"erro": "ERRO: histórico inválido — não existe reta com esses dados"}
+    if not validar_historico(historico):
+        return erro_historico
+    vento, energia = series_com_medicao(historico, leitura)
+    reta = ajustar_reta(vento, energia)
     if reta is None:
-        return {"erro": "ERRO: histórico inválido — não existe reta com esses dados"}
+        return erro_historico
+    historico["vento"] = vento
+    historico["energia_eolica"] = energia
     beta0, beta1 = reta
-    qualidade = r2(historico["vento"], historico["energia_eolica"], beta0, beta1)
+    qualidade = r2(vento, energia, beta0, beta1)
     eolica = eolica_prevista(beta0, beta1, leitura["vento_m_s"])
     eolica_atual = leitura.get("eolica_medida_kw", eolica)
     aplicar_leitura(colonia, leitura, eolica_atual)
@@ -91,7 +100,7 @@ def processar_leitura(colonia, leitura, historico, preditivo=True):
 
     # Decisão.
     situacao = decidir(bateria_pct, consumo, previsao_ruim)
-    regra = regra_usada(bateria_pct, consumo, previsao_ruim)
+    regra = regra_usada(bateria_pct, consumo, previsao_ruim, preditivo)
 
     # Ação: corte pela situação, corte pela projeção, ou tentativa de religar.
     pendencias = []
@@ -127,7 +136,7 @@ def processar_leitura(colonia, leitura, historico, preditivo=True):
         "regra": regra,
         "acoes": acoes,
         "pendencias": pendencias,
-        "observacao": observacao_da_decisao(situacao, acoes, preditivo, projecao),
+        "observacao": observacao_da_decisao(situacao, acoes, preditivo, previsao_ruim, projecao),
     }
 
 

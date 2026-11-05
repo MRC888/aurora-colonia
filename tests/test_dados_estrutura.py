@@ -103,6 +103,7 @@ class TestEstrutura(unittest.TestCase):
         linhas = percorrer(self.colonia)
         self.assertIn("energetico", linhas)
         self.assertIn("    solar", linhas)
+        self.assertIn("        geracao_kw = 0", linhas)    # as folhas também aparecem
         # operacional (0) → modulos (1) → Energia (2) → perfil_kw (3): 12 espaços
         self.assertIn("            perfil_kw = lista com 24 valores", linhas)
 
@@ -127,6 +128,19 @@ class TestEstrutura(unittest.TestCase):
         self.assertEqual(m["Habitação"]["consumo_atual_kw"], 22)   # esperado do expediente
         self.assertFalse(m["Logística"]["ligado"])
         self.assertEqual(m["Logística"]["desligado_desde"], 10)
+
+    def test_aplicar_leitura_grava_os_sensores_na_arvore(self):
+        leitura = {"hora": 12, "bateria_pct": 70, "geracao_solar_kw": 100, "vento_m_s": 15,
+                   "temp_externa_c": -70, "tempestade": True, "estados": {"Médico": "falha"}}
+        aplicar_leitura(self.colonia, leitura, 37)
+        self.assertEqual(buscar(self.colonia, "energetico/bateria/nivel_pct"), 70)
+        self.assertEqual(buscar(self.colonia, "energetico/solar/geracao_kw"), 100)
+        self.assertEqual(buscar(self.colonia, "energetico/eolico/vento_m_s"), 15)
+        self.assertEqual(buscar(self.colonia, "energetico/eolico/geracao_kw"), 37)
+        self.assertEqual(buscar(self.colonia, "ambiental/vento_m_s"), 15)
+        self.assertEqual(buscar(self.colonia, "ambiental/temp_externa_c"), -70)
+        self.assertTrue(buscar(self.colonia, "ambiental/tempestade"))
+        self.assertEqual(buscar(self.colonia, "operacional/modulos/Médico/estado"), "falha")
 
 
 class TestValidar(unittest.TestCase):
@@ -158,6 +172,20 @@ class TestValidar(unittest.TestCase):
 
     def test_bateria_acima_de_100(self):
         self.assertFalse(validar(self.leitura(bateria_pct=120))[0])
+        self.assertFalse(validar(self.leitura(bateria_pct=100.5))[0])
+        self.assertFalse(validar(self.leitura(bateria_pct=-0.5))[0])
+
+    def test_tempestade_precisa_ser_booleana(self):
+        self.assertFalse(validar(self.leitura(tempestade="abc"))[0])
+        self.assertTrue(validar(self.leitura(tempestade=True))[0])
+
+    def test_estado_ok_e_valido(self):
+        self.assertTrue(validar(self.leitura(estados={"Logística": "ok"}))[0])
+
+    def test_consumo_precisa_ser_numero(self):
+        self.assertFalse(validar(self.leitura(consumo_kw={"Laboratório": "abc"}))[0])
+        self.assertFalse(validar(self.leitura(consumo_kw={"Laboratório": float("nan")}))[0])
+        self.assertTrue(validar(self.leitura(consumo_kw={"Laboratório": 0}))[0])
 
     def test_falta_campo(self):
         leitura = self.leitura()

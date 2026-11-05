@@ -58,8 +58,13 @@ class TestCenarios(unittest.TestCase):
                     self.assertTrue(modulos_da(colonia)[nome]["ligado"])
                 if "falhas" in esperado:
                     self.assertEqual(resultado["falhas"][0]["modulo"], esperado["falhas"][0])
-                if "r2_abaixo_de_1" in esperado:
-                    self.assertLess(resultado["r2"], 1)
+                if "r2" in esperado:
+                    self.assertAlmostEqual(resultado["r2"], esperado["r2"], places=2)
+                if "projecao_pct" in esperado:
+                    self.assertAlmostEqual(resultado["projecao_pct"], esperado["projecao_pct"],
+                                           places=1)
+                if "pendencia" in esperado:
+                    self.assertIn(esperado["pendencia"], resultado["pendencias"][0])
                 for nome in esperado.get("religados", []):
                     self.assertTrue(any("Religado: " + nome in a for a in resultado["acoes"]))
 
@@ -87,6 +92,51 @@ class TestCenarios(unittest.TestCase):
         resultado = processar_leitura(criar_colonia(), dict(buscar_cenario("8")["leitura"]), historico)
         self.assertIn("histórico inválido", resultado["erro"])
 
+    def test_historico_ruim_vira_erro_sem_quebrar(self):
+        for historico in [{}, None, {"vento": [8, 10, 12]}, {"vento": (8, 10), "energia_eolica": (1, 2)},
+                          {"vento": ["a", 10, 12], "energia_eolica": [20, 25, 30]},
+                          {"vento": [1e200, 10, 12], "energia_eolica": [20, 25, 30]},
+                          {"vento": [8, 10, 12], "energia_eolica": [float("nan"), 25, 30]}]:
+            with self.subTest(historico=historico):
+                resultado = processar_leitura(criar_colonia(), dict(buscar_cenario("8")["leitura"]),
+                                              historico)
+                self.assertIn("histórico inválido", resultado["erro"])
+
+    def test_erro_nao_altera_o_historico(self):
+        historico = {"vento": [10, 10], "energia_eolica": [1, 2]}
+        leitura = dict(buscar_cenario("21")["leitura"], vento_m_s=10)
+        processar_leitura(criar_colonia(), leitura, historico)
+        self.assertEqual(historico["vento"], [10, 10])
+
+    def test_valor_absurdo_nao_quebra_a_mensagem(self):
+        leitura = dict(buscar_cenario("8")["leitura"], vento_m_s=10 ** 5000)
+        self.assertIn("erro", processar_leitura(criar_colonia(), leitura, criar_historico()))
+
+    def test_p_do_reativo_e_geracao_menor_que_consumo(self):
+        base = {"hora": 16, "bateria_pct": 40, "vento_m_s": 10, "temp_externa_c": -60}
+        ruim = processar_leitura(criar_colonia(), dict(base, geracao_solar_kw=4),
+                                 criar_historico(), False)
+        boa = processar_leitura(criar_colonia(), dict(base, geracao_solar_kw=100),
+                                criar_historico(), False)
+        self.assertEqual(ruim["situacao"], "CRITICO")
+        self.assertEqual(boa["situacao"], "ECONOMIA")
+        self.assertEqual(ruim["projecao_pct"], None)
+
+    def test_regra_do_corte_preventivo_aparece_no_diario(self):
+        _, resultado = rodar(buscar_cenario("12"))
+        self.assertIn("P: projeção abaixo de 70%", resultado["regra"])
+
+    def test_observacao_sem_nada_para_cortar(self):
+        leitura = {"hora": 21, "bateria_pct": 40, "geracao_solar_kw": 0, "vento_m_s": 10,
+                   "temp_externa_c": -60, "desligados": {"Logística": 18, "Laboratório": 18}}
+        resultado = processar_leitura(criar_colonia(), leitura, criar_historico())
+        self.assertEqual(resultado["situacao"], "ALERTA")
+        self.assertIn("já estão desligados", resultado["observacao"])
+
+    def test_sem_observacao_quando_situacao_e_acao_combinam(self):
+        for cenario in ["8", "5", "6"]:
+            self.assertEqual(rodar(buscar_cenario(cenario))[1]["observacao"], "")
+
     def test_observacao_explica_corte_preventivo(self):
         _, resultado = rodar(buscar_cenario("12"))
         self.assertEqual(resultado["situacao"], "NORMAL")
@@ -97,7 +147,7 @@ class TestCenarios(unittest.TestCase):
                    "temp_externa_c": -60}
         resultado = processar_leitura(criar_colonia(), leitura, criar_historico())
         self.assertEqual(resultado["acoes"], [])
-        self.assertIn("Sem corte agora", resultado["observacao"])
+        self.assertIn("não pede corte", resultado["observacao"])
         resultado = processar_leitura(criar_colonia(), dict(leitura), criar_historico(), False)
         self.assertIn("reativo", resultado["observacao"])
 
@@ -168,6 +218,16 @@ class TestSimulacao(unittest.TestCase):
         self.assertEqual(self.todas["9b"]["preditivo"]["resumo"]["menor_bateria_pct"], 29)
         self.assertEqual(self.todas["9d"]["preditivo"]["resumo"]["menor_bateria_pct"], 53)
 
+    def test_placar_do_dia_e_da_noite(self):
+        total = []
+        for codigo in ["9a", "9b", "9c", "9d"]:
+            total.append((self.todas[codigo]["reativo"]["resumo"]["modulo_horas_desligados"],
+                          self.todas[codigo]["preditivo"]["resumo"]["modulo_horas_desligados"]))
+        self.assertEqual(total, [(8, 30), (12, 30), (4, 28), (0, 26)])
+
+    def test_diario_tem_uma_entrada_por_hora(self):
+        self.assertEqual(len(self.todas["9b"]["preditivo"]["diario"]), 22)
+
     def test_placar_de_modulo_horas(self):
         dia = []
         for codigo in ["9a", "9b", "9c", "9d"]:
@@ -229,8 +289,9 @@ class TestSimulacao(unittest.TestCase):
                     for nome in ["Energia", "Habitação", "Médico"]:
                         self.assertNotIn(nome, linha["desligados"])
 
-    def test_dia_limpo_na_colonia_b_nao_corta_nada(self):
-        # Por isso o EXIGIR_QUEDA: amanhecer com 53% não é emergência.
+    def test_de_dia_a_colonia_b_com_ceu_limpo_nao_corta_nada(self):
+        # Por isso o EXIGIR_QUEDA: começar às 8h com 53% não é emergência.
+        # À noite a bateria cai por projeto, e a regra dos 70% segue cortando.
         resumo = simular_dia("B", None, True)["resumo"]
         self.assertEqual(resumo["modulo_horas_desligados_dia"], 0)
 

@@ -56,8 +56,9 @@ def decidir(bateria_pct, consumo_kw, previsao_ruim):
     return "NORMAL"
 
 
-def regra_usada(bateria_pct, consumo_kw, previsao_ruim):
+def regra_usada(bateria_pct, consumo_kw, previsao_ruim, preditivo=True):
     # Função: explica qual expressão booleana disparou (vai para o diário).
+    # No reativo, P é só "geração < consumo" e não dispara corte sozinha.
     v = variaveis_logicas(bateria_pct, consumo_kw, previsao_ruim)
     if v["C"]:
         return "C: bateria < " + str(ENERGIA_CRITICA) + "%"
@@ -65,8 +66,13 @@ def regra_usada(bateria_pct, consumo_kw, previsao_ruim):
         return "B·A·P: bateria baixa, consumo alto e previsão desfavorável"
     if v["B"] and v["A"]:
         return "B·A: bateria baixa e consumo alto"
+    texto_p = "P: projeção abaixo de " + str(RESERVA_MINIMA_PROJETADA) + "% e caindo"
     if v["B"]:
+        if v["P"] and preditivo:
+            return "B: bateria < " + str(ENERGIA_BAIXA) + "% · " + texto_p
         return "B: bateria < " + str(ENERGIA_BAIXA) + "%"
+    if v["P"] and preditivo:
+        return texto_p
     return "nenhuma regra de alerta"
 
 
@@ -168,12 +174,14 @@ def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0, pendenci
     for nome in ordenar_por_prioridade(desligados, modulos, False):
         modulo = modulos[nome]
         # % 24 para a conta funcionar na virada do dia (desligado às 23h, agora 1h: 2h).
+        # Como a hora é do dia, a conta vale para até 24h fora; a simulação vai até 22h.
         tempo_fora = (hora - modulo["desligado_desde"]) % 24
         if tempo_fora < TEMPO_MINIMO_DESLIGADO:
             pendencias.append("Aguardando: " + nome + " — desligado há só " + str(tempo_fora)
                               + "h (mínimo de " + str(TEMPO_MINIMO_DESLIGADO) + "h)")
             continue
         # Faz de conta: liga com o consumo esperado da hora.
+        consumo_antes = modulo["consumo_atual_kw"]
         modulo["ligado"] = True
         modulo["consumo_atual_kw"] = modulo["perfil_kw"][hora % 24]
         consumo_se_religar = consumo_total(modulos)
@@ -200,5 +208,6 @@ def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0, pendenci
             acoes.append("Religado: " + nome + texto_projecao)
         else:
             modulo["ligado"] = False   # desfaz o faz de conta
+            modulo["consumo_atual_kw"] = consumo_antes
             pendencias.append("Aguardando: " + nome + " — " + motivo)
     return acoes

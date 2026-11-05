@@ -76,6 +76,29 @@ def e_hora(valor):
     return type(valor) == int and valor >= 0 and valor <= 23
 
 
+def mostrar(valor):
+    # Função: texto seguro para a mensagem de erro. Só mostra número ou texto;
+    # outros valores (listas enormes, inteiros gigantes) poderiam quebrar o str().
+    if type(valor) == str or e_numero(valor):
+        return str(valor)
+    return "valor inválido"
+
+
+def validar_historico(historico):
+    # Função: confere as séries antes de ajustar a reta. Devolve True ou False.
+    if type(historico) != dict:
+        return False
+    if "vento" not in historico or "energia_eolica" not in historico:
+        return False
+    for chave in ["vento", "energia_eolica"]:
+        if type(historico[chave]) != list:
+            return False
+        for valor in historico[chave]:
+            if not e_numero(valor):
+                return False
+    return True
+
+
 def validar_opcionais(leitura):
     # Função: confere os campos opcionais da leitura. Devolve "" ou o motivo do erro.
     consumos = leitura.get("consumo_kw", {})
@@ -85,25 +108,27 @@ def validar_opcionais(leitura):
         return "consumo_kw, desligados e estados precisam ser dicionários"
     for nome in consumos:
         if nome not in MODULOS:
-            return "módulo desconhecido em consumo_kw (" + str(nome) + ")"
+            return "módulo desconhecido em consumo_kw (" + mostrar(nome) + ")"
         if not e_numero(consumos[nome]) or consumos[nome] < 0:
-            return "consumo de " + nome + " inválido (" + str(consumos[nome]) + ")"
+            return "consumo de " + nome + " inválido (" + mostrar(consumos[nome]) + ")"
     for nome in desligados:
         if nome not in MODULOS:
-            return "módulo desconhecido em desligados (" + str(nome) + ")"
+            return "módulo desconhecido em desligados (" + mostrar(nome) + ")"
         if MODULOS[nome]["essencial"]:   # segurança antes de prioridade
             return nome + " é essencial e não pode começar desligado"
         if not e_hora(desligados[nome]):
             return "hora de desligamento de " + nome + " inválida"
     for nome in estados:
         if nome not in MODULOS:
-            return "módulo desconhecido em estados (" + str(nome) + ")"
+            return "módulo desconhecido em estados (" + mostrar(nome) + ")"
         if estados[nome] != "ok" and estados[nome] != "falha":
-            return "estado de " + nome + " inválido (" + str(estados[nome]) + ")"
+            return "estado de " + nome + " inválido (" + mostrar(estados[nome]) + ")"
     if "eolica_medida_kw" in leitura:
         medida = leitura["eolica_medida_kw"]
         if not e_numero(medida) or medida < 0:
-            return "'eolica_medida_kw' inválida (" + str(medida) + ")"
+            return "'eolica_medida_kw' inválida (" + mostrar(medida) + ")"
+    if "tempestade" in leitura and type(leitura["tempestade"]) != bool:
+        return "'tempestade' precisa ser verdadeiro ou falso"
     return ""
 
 
@@ -118,11 +143,11 @@ def validar(leitura):
             return False, "falta o campo '" + campo + "'"
         valor = leitura[campo]
         if not e_numero(valor):
-            return False, "'" + campo + "' não é numérico (" + str(valor) + ")"
+            return False, "'" + campo + "' não é numérico (" + mostrar(valor) + ")"
         if valor < 0 and campo != "temp_externa_c":   # só a temperatura pode ser negativa
-            return False, "'" + campo + "' é negativo (" + str(valor) + ")"
+            return False, "'" + campo + "' é negativo (" + mostrar(valor) + ")"
     if not e_hora(leitura["hora"]):
-        return False, "hora precisa ser inteira, de 0 a 23 (" + str(leitura["hora"]) + ")"
+        return False, "hora precisa ser inteira, de 0 a 23 (" + mostrar(leitura["hora"]) + ")"
     if leitura["bateria_pct"] > 100:
         return False, "bateria fora de 0–100 (" + str(leitura["bateria_pct"]) + ")"
     if leitura["geracao_solar_kw"] > PICO_SOLAR:

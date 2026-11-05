@@ -7,7 +7,7 @@ Proposta para a Alice (painel HTML + PDF). É um ponto de partida: a Alice tem a
 ## 1. A ideia central em uma frase
 
 > **"A colônia que vê o futuro."**
-> Mostrar, lado a lado, a mesma colônia vivendo o mesmo dia e a mesma noite em Marte: uma **reage** e chega à madrugada em CRÍTICO, e a outra **prevê** e amanhece com folga.
+> Mostrar, lado a lado, a mesma colônia vivendo o mesmo dia e a mesma noite em Marte: uma **reage** e (na simulação 9b) chega à madrugada em CRÍTICO, e a outra **prevê** e amanhece com folga.
 
 A Fase 1 foi a sala de **decolagem**, a Fase 2 foi a sala de controle do **pouso**. A Fase 3 é o **Centro de Operações da Colônia**. A mesma família visual segue, agora vista do chão de Marte.
 
@@ -49,7 +49,7 @@ Continuidade com o painel da Fase 2, mais duas cores novas desta fase.
 
 ### Tela 2 — Mapa vivo da colônia (estrutura de dados)
 - A **árvore** da colônia desenhada: colônia → energético / ambiental / operacional → solar, eólico, bateria, módulos.
-- Ao clicar num nó, aparece a **chave e o valor**, por exemplo `energetico/bateria/capacidade_kwh = 1100`. Em `dados.js`, o campo `arvore` traz as linhas prontas.
+- Ao clicar num nó, aparece a **chave e o valor**, por exemplo `energetico/bateria/capacidade_kwh = 1100`. Em `dados.js`, o campo `arvore` traz as linhas com recuo; o caminho completo se monta pelo recuo.
 - **Por quê:** mostra o critério "Estruturação de dados" sem precisar explicar. O dicionário aparece de verdade na tela.
 
 ### Tela 3 — Painel de energia
@@ -66,13 +66,13 @@ Continuidade com o painel da Fase 2, mais duas cores novas desta fase.
 ### Tela 5 — Reativo × Preditivo (o "uau")
 - Tela dividida: **a mesma tempestade de poeira** nas duas metades, do dia até as 6h.
   - **Esquerda (reativo):** não corta durante a tempestade. Na 9b, a bateria desce pela noite, entra em CRÍTICO às 2h e amanhece com 7,1%.
-  - **Direita (preditivo):** a projeção fura 70%, o Laboratório sai durante a tempestade, e a bateria amanhece com 50,7%, em NORMAL.
+  - **Direita (preditivo):** na 9b, a projeção fura 70%, o Laboratório sai durante a tempestade, e a bateria amanhece com 50,7%, em NORMAL.
 - Seletores de **colônia** (A/B) e de **tempestade** (manhã/tarde): escolhem entre as simulações 9a a 9d.
 - No fim, um placar com os campos de `resumo`: bateria às 20h, amanhecer, horas em CRÍTICO, menor bateria e módulo-horas desligados.
 - **Importante:** de dia ninguém chega ao CRÍTICO, e o preditivo mantém módulos parados por mais tempo. O placar deve mostrar esse custo. Usar "age durante a tempestade", e não "age antes" ou "na primeira hora": isso só vale na 9c.
 
 ### Tela 6 — Diário de decisões
-- Lista de cada decisão com **hora, entrada, regra usada e motivo**. Exemplo: "B·A verdadeiro → MODO ECONOMIA → Laboratório desligado".
+- Lista de cada decisão com **hora, entrada, regra usada e motivo**. Exemplo: "B·A verdadeiro → MODO ECONOMIA → Laboratório e Logística desligados".
 - **Por quê:** mostra o critério "Lógica de decisão" e deixa o sistema explicável.
 
 ---

@@ -2,7 +2,7 @@
 
 A colônia já está em Marte, e a Terra está longe demais para dar ordens em tempo real. Este sistema **organiza os dados dos sensores, prevê a geração de energia, analisa geração × consumo e decide sozinho** o que ligar e desligar, sempre protegendo o suporte à vida.
 
-A ideia central: sair de um sistema **reativo** (que age depois que a bateria já caiu) para um sistema **preditivo** (que projeta a bateria **3 horas à frente**, de hora em hora, e corta antes).
+A ideia central: sair de um sistema **reativo** (que age depois que a bateria já caiu) para um sistema **preditivo** (que projeta a bateria **3 horas à frente**, de hora em hora, e corta antes de a reserva ficar perigosa).
 
 **Equipe:** Alice Brenda (RM 574916), Douglas Goltz (RM 574439) e Marcelo Santos (RM 576131) · Ciência da Computação · FIAP · 2026
 
@@ -15,7 +15,7 @@ Requer só o Python 3, sem nenhuma biblioteca externa. No macOS, use `python3` n
 ```text
 python main.py            # abre o menu: digite a opção (ex.: 1, 9b, todos) e Enter
 python painel.py          # grava painel/dados.js com todos os números para o painel
-python -m unittest discover -s tests -t .     # 136 testes
+python -m unittest discover -s tests -t .     # 161 testes
 ```
 
 Opções do menu:
@@ -24,10 +24,10 @@ Opções do menu:
 |---|---|
 | `1` a `8`, `10a`, `10b`, `11` a `21` | Os 21 cenários prontos |
 | `9a` a `9d` | As 4 simulações do dia e da noite (reativo × preditivo) |
-| `arv` | A árvore de dados da colônia |
+| `arv` | A árvore de dados da colônia e a busca por chave |
 | `fis` | Vento: reta × curva calibrada × fórmula pura |
 | `pnl` | Exporta os números para o painel |
-| `todos` | Roda tudo |
+| `todos` | Mostra cenários, simulações, árvore e vento |
 | `sair` | Encerra |
 
 ## Como funciona
@@ -57,6 +57,7 @@ ENTRADA (sensores) → validar → anomalias → previsão → energia → decis
 ```text
 ENTRADA
   hora 19 h · bateria 40 % · solar 0 kW · vento 10 m/s · colônia B
+  consumo medido: 70,0 kW
 
 PREVISÃO
   reta eólica: ŷ = 0,0 + 2,5·vento   (R² = 1,00)
@@ -68,7 +69,7 @@ ENERGIA
   ALERTA: consumo maior que geração
 
 DECISÃO
-  regra usada: B: bateria < 50%
+  regra usada: B: bateria < 50% · P: projeção abaixo de 70% e caindo
   ALERTA: reduzir consumo
 
 AÇÕES
@@ -114,7 +115,7 @@ O que os números mostram:
 | `cenarios.py` | os cenários prontos do menu, cada um com a saída esperada |
 | `painel.py` | exporta `painel/dados.js` (o painel só mostra, não recalcula) |
 | `main.py` | menu do avaliador e relatório |
-| `tests/` | 136 testes automáticos (`unittest`) |
+| `tests/` | 161 testes automáticos (`unittest`) |
 | `algoritmo_v1.md` | o algoritmo em português: **fonte da verdade** |
 | `docs/DECISOES_03-11-2026.md` | registro da reunião de 03/11 e o porquê de cada decisão |
 | `docs/VISUAL.md` | proposta de visual do painel HTML, do PDF e da apresentação |
@@ -129,11 +130,15 @@ O que os números mostram:
 - R² = 1 não prova que o modelo é ótimo: três pontos alinhados sempre dão 1.
 - A projeção supõe que o vento e a poeira medidos agora **se mantêm** pelas próximas 3h. Por isso o preditivo não enxerga a tempestade antes de ela começar.
 - A bateria das 8h é um valor fixo (29% e 53%). O modelo é por hora, então um dia não emenda exatamente no outro.
-- Num teste de estresse (Colônia A com bateria de 5% às 8h), o Laboratório pode religar e sair de novo uma hora depois. Isso não ocorre nas 4 simulações oficiais.
+- Em testes de estresse fora das 4 simulações oficiais (ex.: Colônia B com bateria de 11% a 16% às 8h e tempestade da tarde), um módulo pode religar e sair de novo 1 hora depois.
 
 ## Recursos fora dos capítulos
 
-O núcleo usa só o que foi ensinado. Alguns recursos de apoio ficam fora dele:
-- `tests/`: `unittest`, que vem com o Python, só para conferir o sistema.
-- `painel.py`: `json`, `os` e `with open`, só para gravar o arquivo do painel.
-- `main.py`: `try/except`, só para fechar o menu sem erro.
+A lógica usa os conceitos dos capítulos: funções, módulos, recursão, dicionários, listas, `if/elif/else`, álgebra booleana e mínimos quadrados. Sem classes, sem NumPy e sem bibliotecas externas.
+
+Alguns recursos simples de Python foram usados sem aparecer nos textos dos capítulos:
+- **Métodos de texto, lista e dicionário:** `.get`, `.split`, `.join`, `.insert`, `.replace`, `.strip`, `.startswith`, `dict()` e o corte `[:3]`.
+- **Uma função devolver dois valores** (`return a, b`) e `if __name__ == "__main__"`.
+- **`main.py`:** `sys`, `try/except` e alinhamento em f-strings, só para o menu funcionar bem.
+- **`painel.py`:** `json`, `os` e `with open`, só para gravar o arquivo do painel.
+- **`tests/`:** `unittest`, que vem com o Python, só para conferir o sistema.

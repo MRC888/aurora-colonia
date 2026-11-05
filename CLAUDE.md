@@ -10,7 +10,7 @@ Equipe: Marcelo e Douglas (código), Alice (painel HTML e PDF).
 
 ## Regras do projeto
 - Usar **só conceitos dos capítulos da Fase 3**: funções e procedimentos, módulos, recursão, dicionário/hash, árvore, listas, `if/elif/else`, álgebra booleana, regressão por mínimos quadrados, R² e P = ½ρAv³.
-- **Núcleo em Python puro**, sem bibliotecas externas e sem classes (não foram ensinadas). `unittest` e `json` ficam só nos testes e na exportação.
+- **Núcleo em Python puro**, sem bibliotecas externas e sem classes (não foram ensinadas). `unittest`, `json`, `os` e `sys` ficam só nos testes, na exportação e no menu. A lista completa está no README.
 - Separar **dados** (`dados.py`), **estrutura** (`colonia.py`), **modelos** (`previsao.py`, `energia.py`), **decisões** (`regras.py`), **sistema** (`sistema.py`), **demonstração** (`simulacao.py`, `cenarios.py`) e **interface** (`main.py`, `painel.py`).
 - **Segurança antes de prioridade:** suporte à vida nunca é desligado.
 - O painel lê `painel/dados.js` gerado pelo Python e **não recalcula** nada.
@@ -31,6 +31,6 @@ Equipe: Marcelo e Douglas (código), Alice (painel HTML e PDF).
 | Fim do dia | `/fim-de-sessao` (Obsidian, commit e push) |
 
 ## Estado atual (05/11/2026)
-- M0 a M5 prontos e na `main`: sistema completo, 21 cenários, 4 simulações (dia e noite) e 136 testes.
+- M0 a M5 prontos e na `main`: sistema completo, 21 cenários, 4 simulações (dia e noite) e 161 testes.
 - **Próximo:** M6 (painel HTML) e M7 (PDF da equipe), com a Alice. Ela deve ler `docs/VISUAL.md`.
 - M8 (fechamento) depois disso: rodar `verificador-alinhamento` e marcar R2 na matriz do ROADMAP.

@@ -52,6 +52,15 @@ class TestRegraUsada(unittest.TestCase):
         self.assertIn("B:", regra_usada(40, 70, False))
         self.assertEqual(regra_usada(85, 50, False), "nenhuma regra de alerta")
 
+    def test_a_regra_mais_grave_vem_primeiro(self):
+        self.assertIn("C:", regra_usada(15, 90, True))
+
+    def test_p_so_aparece_no_preditivo(self):
+        self.assertIn("P:", regra_usada(85, 50, True))
+        self.assertIn("P:", regra_usada(40, 70, True))
+        self.assertEqual(regra_usada(85, 50, True, False), "nenhuma regra de alerta")
+        self.assertNotIn("P:", regra_usada(40, 70, True, False))
+
 
 class TestProjecaoDesfavoravel(unittest.TestCase):
 
@@ -120,6 +129,24 @@ class TestCorte(unittest.TestCase):
         self.assertFalse(modulos["Laboratório"]["ligado"])
         self.assertTrue(modulos["Logística"]["ligado"])
         self.assertEqual(len(acoes), 1)
+
+    def test_projecao_exata_de_70_para_o_corte(self):
+        colonia = criar_colonia()
+        with patch("regras.projetar", return_value=70):
+            self.assertEqual(cortar_cargas(colonia, 16, [], "ate_70", "teste", PREV_LIMPO), [])
+        with patch("regras.projetar", return_value=69.9):
+            acoes = cortar_cargas(colonia, 16, [], "ate_70", "teste", PREV_LIMPO)
+        self.assertIn("ATENÇÃO", acoes[-1])
+        colonia = criar_colonia()
+        modulos_da(colonia)["Laboratório"]["ligado"] = False
+        with patch("regras.projetar", return_value=70):
+            self.assertEqual(cortar_cargas(colonia, 16, [], "todos", "teste", PREV_LIMPO)[-1],
+                             "Desligado: Logística — motivo: teste")
+
+    def test_duas_anomalias_seguem_a_prioridade(self):
+        modulos = modulos_da(criar_colonia())
+        self.assertEqual(fila_de_corte(modulos, [{"modulo": "Logística"}, {"modulo": "Laboratório"}]),
+                         ["Laboratório", "Logística"])
 
     def test_desligar_anota_a_hora_e_o_motivo(self):
         colonia = criar_colonia()
@@ -201,6 +228,17 @@ class TestReligar(unittest.TestCase):
         religar_cargas(colonia, 12, PREV_LIMPO, True)
         self.assertTrue(modulos_da(colonia)["Laboratório"]["ligado"])
         self.assertIsNone(modulos_da(colonia)["Laboratório"]["desligado_desde"])
+
+    def test_virada_do_dia_respeita_o_tempo_minimo(self):
+        colonia = self.colonia_com_lab_desligado(95, 23)   # desligado às 23h, agora 0h: só 1h
+        religar_cargas(colonia, 0, PREV_LIMPO, True)
+        self.assertFalse(modulos_da(colonia)["Laboratório"]["ligado"])
+
+    def test_faz_de_conta_nao_altera_o_consumo_lido(self):
+        colonia = self.colonia_com_lab_desligado(60, 10)
+        modulos_da(colonia)["Laboratório"]["consumo_atual_kw"] = 3
+        religar_cargas(colonia, 12, PREV_LIMPO, True)
+        self.assertEqual(modulos_da(colonia)["Laboratório"]["consumo_atual_kw"], 3)
 
     def test_virada_do_dia(self):
         colonia = self.colonia_com_lab_desligado(95, 23)   # desligado às 23h, agora 1h: 2h

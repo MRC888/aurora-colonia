@@ -38,6 +38,17 @@ class TestMenu(unittest.TestCase):
         self.assertIn("ALERTA: reduzir consumo", texto)
         self.assertIn("ALERTA: consumo maior que geração", texto)
 
+    def test_cenario_1_mostra_o_consumo_na_entrada(self):
+        self.assertIn("consumo medido: 70,0 kW", saida_de("1")[1])
+
+    def test_relatorio_mostra_anomalia_falha_e_observacao(self):
+        self.assertIn("ANOMALIA: Logística", saida_de("12")[1])
+        self.assertIn("CORTE PREVENTIVO", saida_de("12")[1])
+        self.assertIn("FALHA: Logística", saida_de("20")[1])
+
+    def test_placar_diz_quem_ficou_acima_do_piso(self):
+        self.assertIn("acima do piso", saida_de("9b")[1])
+
     def test_cenario_17_explica_por_que_nao_religou(self):
         self.assertIn("Aguardando: Laboratório", saida_de("17")[1])
 
@@ -51,16 +62,27 @@ class TestMenu(unittest.TestCase):
         self.assertIn("ABAIXO DO PISO", texto)
 
     def test_arvore_e_fisica(self):
-        self.assertIn("energetico", saida_de("arv")[1])
+        texto = saida_de("arv")[1]
+        self.assertIn("energetico", texto)
+        self.assertIn("energetico/bateria/nivel_pct → 53", texto)
         texto = saida_de("fis")[1]
         self.assertIn("1,2 kW", texto)
         self.assertIn("200,0 kW", texto)
 
-    def test_todos_roda_sem_erro(self):
-        self.assertTrue(saida_de("todos")[0])
+    def test_todos_mostra_cenarios_simulacoes_arvore_e_vento(self):
+        continua, texto = saida_de("todos")
+        self.assertTrue(continua)
+        for trecho in ["Cenário 21", "Simulação 9d", "Busca por chave", "fórmula pura"]:
+            self.assertIn(trecho, texto)
+
+    def test_pnl_grava_ou_avisa(self):
+        with patch("main.exportar_painel", return_value="painel/dados.js"):
+            self.assertIn("Gravado em", saida_de("pnl")[1])
+        with patch("main.exportar_painel", side_effect=PermissionError):
+            self.assertIn("Não foi possível", saida_de("pnl")[1])
 
     def test_entrada_fechada_e_ctrl_c_encerram_sem_erro(self):
-        for erro in [EOFError, KeyboardInterrupt]:
+        for erro in [EOFError, KeyboardInterrupt, BrokenPipeError]:
             with patch("builtins.input", side_effect=erro):
                 with contextlib.redirect_stdout(io.StringIO()):
                     main.main()

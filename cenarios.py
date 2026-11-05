@@ -46,7 +46,8 @@ CENARIOS = [
      "titulo": "Bateria 40%, consumo 91 kW, previsão favorável (bateria subindo)",
      "leitura": {"hora": 11, "bateria_pct": 40, "geracao_solar_kw": 136, "vento_m_s": 10,
                  "temp_externa_c": -60},
-     "esperado": {"situacao": "ECONOMIA", "desligados": ["Laboratório", "Logística"]}},
+     "esperado": {"situacao": "ECONOMIA", "projecao_pct": 59.4,
+                  "desligados": ["Laboratório", "Logística"]}},
 
     {"id": "6", "origem": "Equipe", "colonia": "B",
      "titulo": "Bateria 40%, consumo 91 kW, previsão desfavorável (tempestade)",
@@ -123,7 +124,7 @@ CENARIOS = [
      "titulo": "Laboratório desligado há 2h, projeção com ele em 78%: zona morta, não religa",
      "leitura": {"hora": 12, "bateria_pct": 60, "geracao_solar_kw": 140, "vento_m_s": 10,
                  "temp_externa_c": -60, "desligados": {"Laboratório": 10}},
-     "esperado": {"desligados": ["Laboratório"]}},
+     "esperado": {"desligados": ["Laboratório"], "pendencia": "78,4%"}},
 
     {"id": "18", "origem": "Equipe", "colonia": "A",
      "titulo": "Colônia A em economia: religa só quem não faz voltar o MODO ECONOMIA",
@@ -148,10 +149,10 @@ CENARIOS = [
 
     {"id": "21", "origem": "Equipe", "colonia": "B",
      "titulo": "Nova medição de vento entra no histórico e refaz a reta",
-     # Vento 14 m/s rendeu 32 kW: abaixo da reta antiga (35 kW), então o R² cai de 1.
+     # Vento 14 m/s rendeu 32 kW: abaixo da reta antiga (35 kW), então o R² cai para 0,97.
      "leitura": {"hora": 12, "bateria_pct": 85, "geracao_solar_kw": 140, "vento_m_s": 14,
                  "temp_externa_c": -60, "eolica_medida_kw": 32},
-     "esperado": {"r2_abaixo_de_1": True}},
+     "esperado": {"r2": 0.97}},
 ]
 
 
