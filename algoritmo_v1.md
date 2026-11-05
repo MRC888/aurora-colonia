@@ -347,11 +347,11 @@ Base real: em 2018, uma tempestade global derrubou a geração do rover Opportun
 ### 6.7 projetar_bateria(colonia, leitura, β0, β1, fator) → % daqui a 3h
 ```text
 bateria_kwh ← leitura.bateria ÷ 100 × CAPACIDADE_BATERIA
-PARA k DE 1 ATÉ JANELA_PREVISAO FAÇA
+PARA k DE 0 ATÉ JANELA_PREVISAO − 1 FAÇA        // a hora atual e as duas seguintes (11.3, item 2)
     h        ← leitura.hora + k
     solar_k  ← solar_curva(h) × fator
     eolica_k ← prever(β0, β1, leitura.vento)           // hipótese: o vento atual se mantém por 3h
-    consumo_k ← Σ perfil_kw[h] dos módulos ligados
+    consumo_k ← SE k = 0: Σ consumo MEDIDO dos ligados · SENÃO: Σ perfil_kw[h] dos ligados
     bateria_kwh ← bateria_kwh + (solar_k + eolica_k − consumo_k) × 1 h
     limitar bateria_kwh entre 0 e CAPACIDADE_BATERIA
 FIM PARA
@@ -407,7 +407,7 @@ A bateria aparece **separada**: geração de um lado, reserva do outro (decisão
 | C | A bateria está crítica? | bateria < 20 |
 | B | A bateria está baixa? | bateria < 50 |
 | A | O consumo total está alto? | consumo > 80 |
-| P | A projeção é desfavorável? | bateria projetada em 3h < 70% |
+| P | A projeção é desfavorável? | bateria projetada em 3h < 70% **e caindo** (ver 11.3, item 1) |
 
 (Na versão 1, P era "geração prevista < consumo". Agora ela usa a projeção da seção 6.7.)
 
@@ -612,6 +612,18 @@ Problema (a Terra está longe, a colônia decide sozinha) → mapa vivo → diá
 
 ### 11.2 Em aberto
 Nenhum ponto em aberto na versão 1.1. Próximo passo: revisão da equipe e código.
+
+### 11.3 Decisões técnicas tomadas ao codar (04/11/2026) — **confirmar na equipe**
+O código foi montado em 04/11 a pedido do Douglas. Estes pontos não estavam fechados e precisaram de uma escolha:
+
+1. ⚠️ **P = projeção < 70% E bateria caindo** (`EXIGIR_QUEDA = True` em `dados.py`). Pela regra literal (só "< 70%"), a Colônia B, que amanhece com 53% por projeto, cortaria o Laboratório **toda manhã de céu limpo**, com a bateria subindo. A frase original da reunião ("caso **abaixe** ele corta") sustenta essa leitura. Para voltar à regra literal, basta trocar a constante para `False`.
+2. **Janela de 3h = a hora atual + as duas seguintes.** É o que faz a projeção das 17h cobrir 17h–20h, como a seção 3.3 promete.
+3. **Na hora atual, a projeção usa o consumo MEDIDO**; nas seguintes, o perfil. Sem isso, uma anomalia acontecendo agora nunca entraria na conta da bateria.
+4. **O reativo** usa as mesmas regras, mas sem projeção: o P dele é "geração atual < consumo atual". Ele corta só pela situação (CRÍTICO/ECONOMIA) e religa com tempo mínimo e "faz de conta" da situação.
+5. **Depois das 20h vale o perfil da noite** (47 kW), para a projeção das 18h e das 19h olhar para dentro da noite.
+6. **O "mundo" da simulação usa a reta** para a eólica (a mesma do planejamento). Com a física, não haveria crise (seção 7.1).
+7. **Fim do dia:** o resumo calcula com quanto a bateria **amanhece** (bateria das 20h − 220 kWh da noite) e se fica acima do piso da colônia.
+8. **Cenários ajustados** para caber nos números reais: no 5, a previsão favorável é "bateria subindo"; no 6, a desfavorável é "tempestade, caindo". No 18, o correto é religar **só a Logística**: ela sozinha dá 61 kW, abaixo de 80; com o Laboratório junto daria 91 kW e voltaria o MODO ECONOMIA. Entrou o cenário 19 (religa quando há folga).
 
 ---
 
