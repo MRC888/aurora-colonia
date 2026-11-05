@@ -86,7 +86,7 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 | 2 | Álgebra booleana e simplificação | Regras combinadas (AND/OR/NOT), com a simplificação mostrada no PDF |
 | 3 | Subalgoritmos: funções e procedimentos | Código em funções, separado em módulos `.py`; recursão para percorrer a hierarquia |
 | 4 | Árvores e tabelas hash | Dicionário (hash) para acesso rápido; árvore de sistemas → subsistemas |
-| 5 | Vetores e matrizes | Séries históricas como vetores (listas). NumPy é opcional |
+| 5 | Vetores e matrizes | Séries históricas e perfis de 24 horas como vetores (listas). Sem NumPy, por decisão da equipe |
 | 6 | Computadores, SO e CPU | Sensores IoT como camada de entrada; limites de hardware (contexto no PDF) |
 | 7 | Regressão linear simples | β₀ e β₁ por mínimos quadrados, previsão ŷ e R² |
 | 8 | Energia solar e eólica | Geração solar e eólica, P = ½·ρ·A·v³, excedente × déficit |
@@ -112,25 +112,31 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 
 ---
 
-## 6. Matriz requisito → evidência (preencher durante o trabalho)
+**Situação em 05/11/2026:** M0 a M5 prontos. M6 e M7 são da Alice. M8 fecha quando eles terminarem.
+
+---
+
+## 6. Matriz requisito → evidência
 
 | ID | Requisito | Arquivo / seção | Evidência | Situação |
 |---|---|---|---|---|
-| D1 | Listas e chave-valor | `dados.py` | `criar_colonia()` (dicionários) e `criar_historico()` (listas); `tests/test_colonia.py` | Atendido (M1) |
-| D2 | Hierarquia (energético → solar / eólico) | `dados.py`, `colonia.py` | Árvore de 4 níveis; `percorrer()` recursiva; `python colonia.py` | Atendido (M1) |
-| D3 | Acesso rápido a dados críticos | `colonia.py` | `buscar(colonia, "energetico/bateria/nivel_pct")` → 40; caminho inexistente → `None` | Atendido (M1) |
-| L1 | Regra simples (energia < 50) | `regras.py` | | Pendente |
-| L2 | Condição combinada (E) | `regras.py` | | Pendente |
-| L3 | Prioridade (suporte à vida) | `regras.py` | | Pendente |
-| L4 | Saída clara (40/70 → ALERTA) | `tests/` | | Pendente |
-| P1 | Reta ajustada aos dados históricos | `previsao.py` | | Pendente |
-| P2 | Vento 11 → ≈ 27 | `tests/` | | Pendente |
-| E1 | Consumo > geração → ALERTA | `energia.py` | | Pendente |
-| E2 | Geração > consumo → SUGESTÃO | `energia.py` | | Pendente |
-| I1 | Código em funções, sistema único | `main.py` | | Pendente |
-| I2 | Separação dados / lógica / decisões | estrutura de pastas | | Pendente |
-| R1 | README com exemplo de entrada e saída | `README.md` | | Pendente |
-| R2 | PDF com os 5 itens + link | `RELATORIO.pdf` | | Pendente |
+| D1 | Listas e chave-valor | `dados.py` | `criar_colonia()` (dicionários), `criar_historico()` e perfis (listas); `tests/test_dados_estrutura.py` | Atendido |
+| D2 | Hierarquia (energético → solar / eólico) | `dados.py`, `colonia.py` | Árvore de dicionários; `percorrer()` recursiva; opção `arv` do menu | Atendido |
+| D3 | Acesso rápido a dados críticos e alertas de falha | `colonia.py`, `energia.py` | `buscar(colonia, "energetico/bateria/nivel_pct")` → 53; `operacional/alertas_de_falha` (cenário 20) | Atendido |
+| D4 | Séries históricas | `dados.py`, `sistema.py` | `historico`; medição entra e refaz a reta (cenário 21) | Atendido |
+| L1 | Regra simples (energia < 50) | `regras.py` | `decidir()`, variável B; `tests/test_regras.py` | Atendido |
+| L2 | Condição combinada (E) | `regras.py` | ECONOMIA = B·A e RISCO = B·A·P; cenários 5 e 6 | Atendido |
+| L3 | Prioridade (suporte à vida) | `regras.py`, `colonia.py` | `fila_de_corte()`; `validar()` recusa essencial desligado; cenários 7, 12 e 13 | Atendido |
+| L4 | Saída clara (40/70 → ALERTA) | `tests/` | Cenário 1: `ALERTA: reduzir consumo` | Atendido |
+| P1 | Reta ajustada aos dados históricos | `previsao.py` | `ajustar_reta()`: β₁ = 2,5 e β₀ = 0; teste de mesa | Atendido |
+| P2 | Vento 11 → ≈ 27 | `tests/` | Cenário 4: 27,5 kW | Atendido |
+| P3 | Antecipar comportamentos | `energia.py`, `simulacao.py` | `projetar_bateria()`; simulações 9a a 9d | Atendido |
+| E1 | Consumo > geração → ALERTA | `energia.py` | Cenário 2: `ALERTA: consumo maior que geração` | Atendido |
+| E2 | Geração > consumo → SUGESTÃO | `energia.py` | Cenário 3: `SUGESTÃO: armazenar energia excedente` | Atendido |
+| I1 | Código em funções, sistema único | `main.py`, `sistema.py` | `python main.py`, opção `todos`; testes em `tests/` | Atendido |
+| I2 | Separação dados / lógica / decisões | estrutura de arquivos | `dados.py`, `colonia.py`, `previsao.py`, `energia.py`, `regras.py`, `sistema.py` | Atendido |
+| R1 | README com exemplo de entrada e saída | `README.md` | Seção "Exemplo de entrada e saída", igual à saída real | Atendido |
+| R2 | PDF com os 5 itens + link | PDF da equipe | Com a Alice (M7) | Pendente |
 
 ---
 
@@ -140,7 +146,7 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 |---|---|---|
 | Estruturação de dados | 2 | Dicionário hierárquico, históricos em listas, busca por chave |
 | Lógica de decisão | 2 | Regras simples, combinadas e com prioridade; expressão booleana simplificada |
-| Modelagem e previsão | 2 | Regressão por mínimos quadrados com β₀, β₁, ŷ e R²; fórmula da potência eólica |
+| Modelagem e previsão | 2 | Regressão por mínimos quadrados com β₀, β₁, ŷ e R²; curva solar; projeção da bateria; comparação com a física |
 | Implementação em Python | 2 | Funções pequenas, módulos separados, sistema único que roda, testes |
 | Documentação e organização | 2 | README com entrada e saída, PDF objetivo, painel alinhado aos dados |
 | **Total** | **10** | |

@@ -7,7 +7,7 @@ Proposta para a Alice (painel HTML + PDF). É um ponto de partida: a Alice tem a
 ## 1. A ideia central em uma frase
 
 > **"A colônia que vê o futuro."**
-> Mostrar, lado a lado, a mesma colônia vivendo o mesmo dia em Marte: uma **reage** (e quase apaga) e a outra **prevê** (e passa ilesa).
+> Mostrar, lado a lado, a mesma colônia vivendo o mesmo dia e a mesma noite em Marte: uma **reage** e chega à madrugada em CRÍTICO, e a outra **prevê** e amanhece com folga.
 
 A Fase 1 foi a sala de **decolagem**, a Fase 2 foi a sala de controle do **pouso**. A Fase 3 é o **Centro de Operações da Colônia**. A mesma família visual segue, agora vista do chão de Marte.
 
@@ -49,7 +49,7 @@ Continuidade com o painel da Fase 2, mais duas cores novas desta fase.
 
 ### Tela 2 — Mapa vivo da colônia (estrutura de dados)
 - A **árvore** da colônia desenhada: colônia → energético / ambiental / operacional → solar, eólico, bateria, módulos.
-- Ao clicar num nó, aparece a **chave e o valor**, por exemplo `energetico/eolico/geracao_kw = 25`.
+- Ao clicar num nó, aparece a **chave e o valor**, por exemplo `energetico/bateria/capacidade_kwh = 1100`. Em `dados.js`, o campo `arvore` traz as linhas prontas.
 - **Por quê:** mostra o critério "Estruturação de dados" sem precisar explicar. O dicionário aparece de verdade na tela.
 
 ### Tela 3 — Painel de energia
@@ -60,13 +60,16 @@ Continuidade com o painel da Fase 2, mais duas cores novas desta fase.
 ### Tela 4 — Previsão
 - Gráfico de pontos **vento × energia** com a **reta ajustada** por cima.
 - Ao lado: β₀, β₁ e R², cada um com uma frase em português. Exemplo: "a cada 1 m/s de vento, +2,5 kW".
-- Um seletor de vento mostra a previsão ŷ. Os valores vêm **prontos do Python**: o painel não refaz a conta.
+- Um seletor de vento (0 a 25 m/s) mostra a previsão ŷ. Os valores vêm **prontos do Python** em `previsao.seletor_vento`: o painel não refaz a conta.
+- Comparação reta × curva v³ calibrada × fórmula pura, em `previsao.reta_x_fisica`. Sempre escrever **calibrada**: a fórmula pura dá só 1,2 kW a 10 m/s.
 
 ### Tela 5 — Reativo × Preditivo (o "uau")
-- Tela dividida: **a mesma tempestade de poeira** nas duas metades.
-  - **Esquerda (reativo):** a bateria cai, e o sistema só age quando ela já está crítica. As luzes piscam.
-  - **Direita (preditivo):** a previsão enxerga a queda, desliga o Laboratório antes, e a bateria se mantém.
-- No fim, um placar: "energia economizada", "minutos em estado crítico", "suporte à vida: sempre ligado".
+- Tela dividida: **a mesma tempestade de poeira** nas duas metades, do dia até as 6h.
+  - **Esquerda (reativo):** não corta durante a tempestade. Na 9b, a bateria desce pela noite, entra em CRÍTICO às 2h e amanhece com 7,1%.
+  - **Direita (preditivo):** a projeção fura 70%, o Laboratório sai durante a tempestade, e a bateria amanhece com 50,7%, em NORMAL.
+- Seletores de **colônia** (A/B) e de **tempestade** (manhã/tarde): escolhem entre as simulações 9a a 9d.
+- No fim, um placar com os campos de `resumo`: bateria às 20h, amanhecer, horas em CRÍTICO, menor bateria e módulo-horas desligados.
+- **Importante:** de dia ninguém chega ao CRÍTICO, e o preditivo mantém módulos parados por mais tempo. O placar deve mostrar esse custo. Usar "age durante a tempestade", e não "age antes" ou "na primeira hora": isso só vale na 9c.
 
 ### Tela 6 — Diário de decisões
 - Lista de cada decisão com **hora, entrada, regra usada e motivo**. Exemplo: "B·A verdadeiro → MODO ECONOMIA → Laboratório desligado".
@@ -77,10 +80,11 @@ Continuidade com o painel da Fase 2, mais duas cores novas desta fase.
 ## 4. Contrato entre o código e o visual
 
 ```text
-Python (Marcelo e Douglas)  →  exportar_painel.py  →  painel/dados.js  →  HTML (Alice)
+Python (Marcelo e Douglas)  →  painel.py  →  painel/dados.js  →  HTML (Alice)
 ```
 - O HTML **só mostra**, não calcula. Assim, painel, README e PDF sempre têm os mesmos números.
-- Para começar antes do código ficar pronto, a Alice pode usar um `dados.js` de exemplo com os números do enunciado. Os nomes dos campos são combinados no marco M1.
+- O `painel/dados.js` real já existe no repositório. Para atualizar: `python painel.py`.
+- Campos principais: `arvore`, `colonias`, `tempestades`, `previsao`, `simulacoes` (9a a 9d, cada uma com `reativo` e `preditivo`, e dentro `linhas`, `diario` e `resumo`) e `cenarios`.
 - Deve funcionar abrindo o `index.html` direto no navegador (sem servidor) e ser publicado no GitHub Pages, como na Fase 2.
 
 ---
@@ -95,7 +99,7 @@ Sugestão: **6 a 8 páginas**. O enunciado não fixa um limite e pede objetivida
 | 2 | A história e a virada reativo → preditivo (1 diagrama) | contexto |
 | 3 | **Como os dados foram organizados**: desenho da árvore + trecho do dicionário | dados |
 | 4 | **Regras de decisão**: tabela B / A / P, expressão simplificada e tabela do `if/elif` | regras |
-| 5 | **Modelo de previsão**: conta à mão (β₁ = 2,5; β₀ = 0; ŷ = 27,5), gráfico e R² | previsão |
+| 5 | **Modelo de previsão**: curva solar, conta à mão (β₁ = 2,5; β₀ = 0; ŷ = 27,5), gráfico, R² e limites (3 pontos alinhados sempre dão R² = 1) | previsão |
 | 6 | **Como melhora o uso de energia**: o cenário reativo × preditivo com números | energia |
 | 7 | Exemplos de entrada e saída reais (print do terminal) + limites do protótipo | evidência |
 
@@ -118,8 +122,7 @@ Cinco atos, cerca de 3 minutos:
 
 - [ ] Escolher e validar a paleta (seção 2).
 - [ ] Rascunho das 6 telas (papel, Figma ou HTML direto).
-- [ ] Combinar os nomes dos campos do `dados.js` com Marcelo e Douglas (M1).
-- [ ] Montar o painel com dados de exemplo.
-- [ ] Trocar pelos dados reais (M6).
+- [ ] Montar o painel lendo o `painel/dados.js` real (M6).
+- [ ] Conferir os números da tela 5 com a saída de `python main.py`, opções `9a` a `9d`.
 - [ ] PDF com a estrutura da seção 5 (M7).
 - [ ] Testar no celular e no computador.

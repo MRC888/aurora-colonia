@@ -1,13 +1,22 @@
 # Algoritmo v1 — Sistema Inteligente da Colônia Aurora (Fase 3)
 
 **Equipe:** Alice Brenda, Douglas Goltz e Marcelo Santos · FIAP · Ciência da Computação · 2026
-**Versão:** 1.1 (03/11/2026, 20:22). Rascunho para a equipe revisar antes de codar.
+**Versão:** 1.2 (05/11/2026). Versão final: descreve o sistema entregue, depois da auditoria.
 
 Este documento descreve **em português, passo a passo**, tudo o que o sistema faz: dados, previsão, energia, decisões, sistema principal e painel visual.
 Cada subalgoritmo daqui vira uma função ou um procedimento em Python.
 **Regra:** se uma regra mudar, ela muda primeiro neste documento e só depois no código.
 
-Os pontos marcados com **[DECIDIR]** estão listados na seção 11, para a reunião da equipe.
+As decisões e o motivo de cada uma estão na seção 11.
+
+### O que mudou da versão 1.1 para a 1.2 (auditoria de 05/11/2026)
+Nenhuma decisão da reunião mudou. A versão 1.2 corrige falhas e fecha pontos abertos:
+1. A validação ficou mais forte: hora inteira de 0 a 23, sem NaN nem infinito, e **nenhum módulo essencial pode começar desligado**.
+2. A simulação segue **pela noite até as 6h**, hora a hora, com o sistema decidindo. O amanhecer deixou de ser uma conta fixa.
+3. A comparação com a física deixa claro o que é fórmula pura e o que é curva **calibrada**.
+4. A regra "e caindo" (`EXIGIR_QUEDA`) foi mantida e agora consta no algoritmo.
+5. As saídas explicam o corte preventivo, o alerta sem corte e o motivo de quem não religou.
+6. O campo `estado` agora gera **alerta de falha**, e uma medição real de eólica entra no histórico e refaz a reta.
 
 ### O que mudou da versão 1 para a 1.1 (debate de 03/11/2026)
 1. O consumo de cada módulo passou a variar **por hora** (perfil de uso), em vez de ser um valor fixo.
@@ -71,32 +80,33 @@ A ideia que guia tudo: **sair de um sistema reativo** (que age depois que o prob
 | LIMITE_ANOMALIA | 30 % | Acima do esperado para a hora, o consumo do setor é anomalia |
 | FATOR_POEIRA_TEMPESTADE | 0,05 | Na tempestade, o solar fica em 5% do normal |
 | VENTO_TEMPESTADE | 20 m/s | Vento durante a tempestade |
-| NASCER_SOL / POR_DO_SOL | 6 h / 18 h | Limites da curva solar **[DECIDIR]** |
+| NASCER_SOL / POR_DO_SOL | 6 h / 18 h | Limites da curva solar |
 | PICO_SOLAR | 140 kW | Geração solar ao meio-dia com céu limpo (equilíbrio do dia ≈ 126 kW + folga) |
 | CAPACIDADE_BATERIA | Colônia A: 440 kWh · Colônia B: 1100 kWh | Duas colônias, com piso de 20% e de 50% ao amanhecer (seção 3.3) |
-| DENSIDADE_AR_MARTE | 0,020 kg/m³ | Usada na potência eólica (hipótese didática) |
+| DENSIDADE_AR_MARTE / AREA_PAS | 0,020 kg/m³ / 120 m² | Usadas na fórmula pura da potência eólica (hipóteses didáticas) |
 
 Por que o consumo alto fica acima de 80: no enunciado, energia 40 com consumo 70 precisa dar `ALERTA: reduzir consumo`, e não modo economia. Então 70 não pode contar como consumo alto.
-⚠️ Na versão 1, a soma de todos os módulos dava no máximo 75 kW, e por isso o consumo **nunca** passava de 80. Com o consumo variando por hora e com as anomalias, os picos passam de 80. Os perfis da seção 3.3 precisam garantir isso.
+⚠️ Na versão 1, a soma de todos os módulos dava no máximo 75 kW, e por isso o consumo **nunca** passava de 80. Com o consumo variando por hora, o expediente chega a 91 kW (seção 3.3).
 
 ### 3.2 Colônia: dicionário em árvore (tabela hash + hierarquia)
 ```text
 colonia
 ├── energetico
-│   ├── solar    → geracao_kw, irradiancia_w_m2
+│   ├── solar    → geracao_kw, pico_kw
 │   ├── eolico   → geracao_kw, vento_m_s, area_pas_m2
-│   └── bateria  → nivel_pct, capacidade_kwh
+│   └── bateria  → nivel_pct, capacidade_kwh, piso_pct
 ├── ambiental    → temp_interna_c, temp_externa_c, vento_m_s, tempestade (sim/não)
 └── operacional
     └── modulos
-        ├── Energia      base  5 kW · prioridade 1 · essencial (mantém os outros vivos)
-        ├── Habitação    base 25 kW · prioridade 2 · essencial (suporte à vida)
-        ├── Médico       base 10 kW · prioridade 2 · essencial (suporte à vida)
-        ├── Logística    base 15 kW · prioridade 3 · não essencial
-        └── Laboratório  base 20 kW · prioridade 4 · não essencial
+        ├── Energia      prioridade 1 · essencial (mantém os outros vivos)
+        ├── Habitação    prioridade 2 · essencial (suporte à vida)
+        ├── Médico       prioridade 2 · essencial (suporte à vida)
+        ├── Logística    prioridade 3 · não essencial
+        └── Laboratório  prioridade 4 · não essencial
+    └── alertas_de_falha  lista com os módulos em falha na última leitura
 ```
 Cada módulo guarda:
-- `ligado` (verdadeiro/falso) e `estado` ("ok" ou "falha");
+- `ligado` (verdadeiro/falso), `desligado_desde` e `estado` ("ok" ou "falha"; a falha só avisa, seção 5.7);
 - `consumo_atual_kw`: o que o sensor leu agora;
 - `perfil_kw`: lista com o consumo **esperado** em cada hora (seção 3.3).
 
@@ -131,7 +141,7 @@ ANTES (8h–9h)         chegada e preparação: Energia 5 + Habitação alto 30 
 - O fim do expediente (18h) coincide com o pôr do sol: a colônia ainda está em 91 kW quando o solar chega a zero.
 
 ```text
-perfil_kw[modulo] = lista com um valor por hora da simulação (8h a 20h), montada a partir dos níveis acima
+perfil_kw[modulo] = lista com um valor para cada uma das 24 horas, montada a partir dos níveis acima
 ```
 
 **A noite e o tamanho da bateria.** A simulação acaba às 20h, mas a colônia precisa durar até o sol voltar (≈ 6h), ou seja, 10h só com vento e bateria.
@@ -171,6 +181,7 @@ Com a bateria cheia, essa folga não tem onde ficar: é o "possível desperdíci
 vento          = [8, 10, 12]            m/s   (enunciado)
 energia_eolica = [20, 25, 30]           kW    (enunciado)
 ```
+Quando uma leitura traz a eólica **medida** (`eolica_medida_kw`), o par entra no histórico e a reta é refeita (cenário 21). A simulação não usa medições, então nela a reta continua a do enunciado.
 
 ### 3.5 Diário de decisões: lista
 Cada decisão é guardada como um registro com: hora, entrada, anomalias, bateria projetada, regra usada, situação, ações e motivo.
@@ -185,8 +196,6 @@ INÍCIO
     colonia   ← criar_colonia()
     historico ← criar_historico()
     diario    ← lista vazia
-    (β0, β1)  ← ajustar_reta(historico.vento, historico.energia_eolica)
-    qualidade ← r2(historico.vento, historico.energia_eolica, β0, β1)
 
     // 1. ENTRADA — o avaliador escolhe o cenário num menu
     cenario ← escolher_cenario()
@@ -195,10 +204,14 @@ INÍCIO
         ESCREVA "ERRO: leitura inválida —", motivo
         ENCERRE
     FIM SE
+    SE a leitura traz eólica medida ENTÃO acrescentar ao historico
+    (β0, β1)  ← ajustar_reta(historico.vento, historico.energia_eolica)
+    qualidade ← r2(historico.vento, historico.energia_eolica, β0, β1)
     atualizar a colonia com a leitura
 
-    // 2. ANOMALIAS (só avisam)
+    // 2. ANOMALIAS E FALHAS (só avisam)
     anomalias ← detectar_anomalias(colonia.operacional.modulos, leitura.hora)
+    falhas    ← detectar_falhas(colonia.operacional.modulos)
 
     // 3. PREVISÃO HÍBRIDA + PROJEÇÃO
     fator    ← fator_poeira(leitura.geracao_solar, leitura.hora)
@@ -215,15 +228,16 @@ INÍCIO
     // 6. AÇÃO
     SE situacao = "CRÍTICO" OU situacao = "MODO ECONOMIA" ENTÃO
         acoes ← cortar_cargas(colonia, leitura, anomalias, β0, β1, fator, modo = "todos")
-    SENÃO SE projecao < RESERVA_MINIMA_PROJETADA ENTÃO
+    SENÃO SE P ENTÃO                                           // projeção < 70% e caindo
         acoes ← cortar_cargas(colonia, leitura, anomalias, β0, β1, fator, modo = "até 70%")
     SENÃO
-        acoes ← religar_cargas(colonia, leitura, β0, β1, fator)   // [DECIDIR] histerese
+        acoes ← religar_cargas(colonia, leitura, β0, β1, fator)   // histerese, seção 8.5
     FIM SE
 
     // 7. SAÍDA
-    exibir_relatorio(leitura, anomalias, β0, β1, qualidade, projecao,
-                     mensagem_balanco, situacao, acoes)
+    observacao ← explicar quando situação e ação parecem discordar (seção 8.7)
+    exibir_relatorio(leitura, anomalias, falhas, β0, β1, qualidade, projecao,
+                     mensagem_balanco, situacao, observacao, acoes)
     registrar(diario, leitura, anomalias, projecao, situacao, acoes)
 FIM
 ```
@@ -244,7 +258,7 @@ PARA CADA chave EM partes do caminho separadas por "/" FAÇA
 FIM PARA
 RETORNE atual
 ```
-Exemplo: `buscar(colonia, "energetico/bateria/nivel_pct")` → 40.
+Exemplo: `buscar(colonia, "energetico/bateria/nivel_pct")` → 53 (Colônia B às 8h).
 
 ### 5.2 percorrer(no, nivel) → linhas (recursivo)
 ```text
@@ -267,13 +281,19 @@ Soma o `consumo_atual_kw` apenas dos módulos com `ligado = verdadeiro`.
 ### 5.4 geracao_total(colonia) → kW
 Geração solar + geração eólica.
 
-### 5.5 validar(leitura) → verdadeiro / falso
+### 5.5 validar(leitura) → (verdadeiro/falso, motivo)
 ```text
-PARA CADA valor da leitura FAÇA
-    SE não é número                    → RETORNE falso ("valor não numérico")
-    SE é negativo (exceto temperatura) → RETORNE falso ("valor negativo")
+SE a leitura não é dicionário          → RETORNE falso
+PARA CADA campo obrigatório FAÇA
+    SE falta o campo                   → RETORNE falso ("falta o campo")
+    SE não é número finito             → RETORNE falso ("não é numérico")   // rejeita NaN e infinito
+    SE é negativo (exceto temperatura) → RETORNE falso ("é negativo")
 FIM PARA
-SE bateria < 0 OU bateria > 100        → RETORNE falso ("bateria fora de 0–100")
+SE hora não é inteira de 0 a 23        → RETORNE falso
+SE bateria > 100                       → RETORNE falso ("bateria fora de 0–100")
+SE solar > PICO_SOLAR                  → RETORNE falso ("solar acima do pico")
+SE consumo_kw, desligados ou estados têm tipo errado ou módulo desconhecido → RETORNE falso
+SE desligados contém módulo essencial  → RETORNE falso        // segurança antes de prioridade
 RETORNE verdadeiro
 ```
 
@@ -288,8 +308,11 @@ PARA CADA modulo LIGADO FAÇA
 FIM PARA
 RETORNE avisos
 ```
-A anomalia **não corta nada sozinha**. Exemplo: o Laboratório a 28 kW num dia de sol forte com a bateria a 90% continua ligado. Quem decide o corte é a projeção (seção 6.7).
-Por que porcentagem e não kW fixo: +10 kW é o triplo na Energia (5 kW), mas só 40% a mais na Habitação (25 kW). A porcentagem acompanha o tamanho de cada setor.
+A anomalia **não corta nada sozinha**. Exemplo: o Laboratório a 40 kW (esperado 30) num dia de sol forte com a bateria a 90% continua ligado. Quem decide o corte é a projeção (seção 6.7).
+Por que porcentagem e não kW fixo: +10 kW é o triplo na Energia (5 kW), mas menos da metade a mais na Habitação (22 kW). A porcentagem acompanha o tamanho de cada setor.
+
+### 5.7 detectar_falhas(modulos) → avisos
+Lista os módulos com `estado = "falha"`, grava em `operacional/alertas_de_falha` e mostra `FALHA: <módulo> informou defeito no equipamento`. Como a anomalia, a falha **só avisa**: não muda a situação nem corta nada.
 
 ---
 
@@ -299,11 +322,11 @@ Por que porcentagem e não kW fixo: +10 kW é o triplo na Energia (5 kW), mas s�
 
 ### 6.2 ajustar_reta(x, y) → (β0, β1) — mínimos quadrados
 ```text
-SE tamanho(x) ≠ tamanho(y) OU tamanho(x) < 2 ENTÃO RETORNE erro
+SE tamanho(x) ≠ tamanho(y) OU tamanho(x) < 2 ENTÃO RETORNE nada
 x̄ ← media(x);  ȳ ← media(y)
 numerador   ← Σ (xi − x̄) · (yi − ȳ)
 denominador ← Σ (xi − x̄)²
-SE denominador = 0 ENTÃO RETORNE erro    // todos os x iguais: não existe reta
+SE denominador ≈ 0 ENTÃO RETORNE nada    // todos os x iguais: não existe reta
 β1 ← numerador ÷ denominador      // inclinação: quanto y muda quando x sobe 1
 β0 ← ȳ − β1 · x̄                   // intercepto: valor de y quando x = 0
 RETORNE (β0, β1)
@@ -339,7 +362,7 @@ A curva conhece o dia **limpo**, mas não conhece a tempestade. Para enxergar a 
 fator_poeira(solar_medido, h):
     esperado ← solar_curva(h)
     SE esperado = 0 ENTÃO RETORNE 1          // à noite não há como medir a poeira
-    RETORNE solar_medido ÷ esperado          // 1 = céu limpo · 0,05 = tempestade
+    RETORNE o menor entre 1 e solar_medido ÷ esperado   // 1 = céu limpo · 0,05 = tempestade
 ```
 Hipótese: o fator medido agora **se mantém** pelas próximas 3h.
 Base real: em 2018, uma tempestade global derrubou a geração do rover Opportunity em mais de 95%, e a missão terminou. A luz difusa impede que chegue a zero absoluto, por isso o fator da tempestade é 0,05.
@@ -369,19 +392,24 @@ Esse é o **coração do preditivo**. Ele roda **de 1 em 1 hora**, sempre guarda
 ### 7.1 potencia_eolica(ρ, A, v) → P = ½ · ρ · A · v³ — física × reta
 A potência cresce com o cubo do vento: com o dobro de vento, há 8 vezes mais potência.
 
-| Vento | Reta (regressão) | Física (v³, calibrada em 10 m/s = 25 kW) |
-|---|---|---|
-| 10 m/s | 25 kW | 25 kW |
-| 12 m/s | 30 kW | 43 kW |
-| 20 m/s (tempestade) | **50 kW** | **200 kW** |
+| Vento | Reta (regressão) | Curva v³ calibrada (10 m/s = 25 kW) | Fórmula pura (ρ = 0,020; A = 120 m²) |
+|---|---|---|---|
+| 10 m/s | 25 kW | 25 kW | 1,2 kW |
+| 12 m/s | 30 kW | 43 kW | 2,1 kW |
+| 20 m/s (tempestade) | **50 kW** | **200 kW** | 9,6 kW |
+
+**O que cada coluna significa:**
+- **Fórmula pura:** com o ar rarefeito de Marte e 120 m² de pás, a geração é pequena. Isso mostra que os 25 kW do enunciado são uma **hipótese didática**.
+- **Curva calibrada:** aceita os 25 kW a 10 m/s como ponto de partida e aplica o crescimento com v³. Ela não é a fórmula pura.
+- A opção `fis` do menu mostra as três colunas.
 
 **Decisão da equipe:** o preditivo planeja **com a reta**.
-- Ela é **conservadora** (subestima no vento forte): o sistema corta mais cedo e protege a bateria. É a regra "segurança antes de prioridade".
-- Com a física, sobraria energia na tempestade e não haveria crise para o preditivo resolver.
+- Em relação à curva calibrada, ela é **conservadora** (cresce menos no vento forte): o sistema corta mais cedo e protege a bateria. É a regra "segurança antes de prioridade".
+- Com a curva calibrada, sobraria energia na tempestade e não haveria crise para o preditivo resolver.
 
 **Para o PDF:**
 - A reta foi ajustada com vento entre 8 e 12 m/s; usá-la a 20 m/s é **extrapolação**, ou seja, prever fora da faixa dos dados conhecidos.
-- Sugestão de redação: *"o modelo físico indica uma geração maior no vento forte; optamos pela reta por ser conservadora, priorizando a segurança da bateria e permitindo simular a crise"*.
+- Sugestão de redação: *"partindo dos 25 kW do enunciado, uma curva proporcional a v³ indica geração maior no vento forte; optamos pela reta por ser conservadora em relação a essa curva, priorizando a segurança da bateria e permitindo simular a crise"*.
 - Limitações: turbinas reais têm um teto de potência; e o ar de Marte (≈ 1% do da Terra) torna os valores do enunciado didáticos.
 - Base real: há estudos que propõem o vento como complemento ao solar em Marte, justamente à noite e nas tempestades. É o argumento do sistema híbrido.
 
@@ -425,7 +453,7 @@ Ou seja, todo caso de RISCO também é um caso de ECONOMIA. Por isso o teste do 
 C ← bateria < ENERGIA_CRITICA
 B ← bateria < ENERGIA_BAIXA
 A ← consumo > CONSUMO_ALTO
-P ← projecao < RESERVA_MINIMA_PROJETADA
+P ← projecao < RESERVA_MINIMA_PROJETADA E projecao < bateria     // abaixo de 70% e caindo
 
 SE C OU (B E A E P) ENTÃO
     RETORNE "CRÍTICO: modo emergência — só suporte à vida"
@@ -441,7 +469,7 @@ FIM SE
 ### 8.4 cortar_cargas(colonia, leitura, anomalias, β0, β1, fator, modo) → ações
 O corte é disparado de dois jeitos (seção 4):
 - **pela situação** (CRÍTICO ou MODO ECONOMIA), com `modo = "todos"`: desliga **todos** os não essenciais, como o nome da situação diz;
-- **só pela projeção** (< 70%), com `modo = "até 70%"`: desliga um por vez e para assim que a projeção volta a ≥ 70%.
+- **só pela projeção** (P: < 70% e caindo), com `modo = "até 70%"`: desliga um por vez e para assim que a projeção volta a ≥ 70%.
 
 ```text
 acoes ← lista vazia
@@ -450,9 +478,9 @@ fila  ← módulos NÃO essenciais EM ANOMALIA primeiro       // quem causou sai
 PARA CADA modulo NA fila FAÇA
     SE modo = "até 70%" E projetar_bateria(...) ≥ RESERVA_MINIMA_PROJETADA ENTÃO PARE
     modulo.ligado ← falso
-    adicionar a acoes: "Desligado: <módulo> — motivo: <anomalia ou bateria projetada em X%>"
+    adicionar a acoes: "Desligado: <módulo> — motivo: <situação, anomalia ou bateria projetada em X%>"
 FIM PARA
-SE projetar_bateria(...) < RESERVA_MINIMA_PROJETADA ENTÃO
+SE houve corte E o sistema projeta E projetar_bateria(...) < RESERVA_MINIMA_PROJETADA ENTÃO
     adicionar a acoes: "ATENÇÃO: só restou o suporte à vida; reserva projetada em X%"
 FIM SE
 RETORNE acoes
@@ -493,11 +521,18 @@ O "faz de conta" **não altera a colônia**: só chama `decidir` com o consumo s
 | 0 | 1 | 0 | – | ALERTA |
 | 0 | 0 | – | – | NORMAL |
 
+### 8.7 Quando a situação e a ação parecem discordar
+A situação olha o **agora**; a projeção olha as próximas 3 horas. Por isso a saída traz uma observação em dois casos:
+- **NORMAL com corte:** `CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia`.
+- **ALERTA sem corte:** `Sem corte agora: a projeção de X% não está caindo abaixo de 70%` (no reativo: `Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA`).
+
+Quem não religou aparece como `Aguardando: <módulo> — <motivo>`.
+
 ---
 
 ## 9. Reativo × preditivo (o cenário que mostra o valor do sistema)
 
-Simulação de **12 horas** (8h às 20h) de um dia marciano, com uma **tempestade de poeira de 3 horas**.
+Simulação de um dia marciano (8h às 20h) com uma **tempestade de poeira de 3 horas**, seguida da **noite até as 6h**, hora a hora, com o sistema ainda decidindo.
 Durante a tempestade: solar a **5%** do normal (`fator_poeira` = 0,05) e vento a **20 m/s**.
 Na tempestade, faltam ≈ 36 kW por hora (solar ≈ 5 + eólica 50 = 55 kW contra 91 kW do expediente), o que dá ≈ 108 kWh em 3h.
 
@@ -523,9 +558,21 @@ PARA CADA hora DA simulação FAÇA
     atualizar cada bateria: bateria ← bateria + (geração − consumo) ÷ capacidade × 100
     guardar as duas linhas para o painel
 FIM PARA
-comparar: horas em estado crítico, menor nível de bateria, módulos desligados
+comparar: bateria às 20h e ao amanhecer, horas em CRÍTICO, menor bateria, módulo-horas desligados
 ```
-Resultado esperado: o preditivo desliga os não essenciais **antes** da tempestade apertar, e a bateria não chega ao nível crítico. O reativo só age quando já é tarde.
+**Resultados reais** (bateria às 20h e às 6h; módulo-horas = módulos desligados × horas, de 8h a 6h):
+| Simulação | Reativo 20h → 6h | Preditivo 20h → 6h | Horas em CRÍTICO (reat. × pred.) | Módulo-horas (reat. × pred.) |
+|---|---|---|---|---|
+| 9a | 72,4% → 22,4% | 79,3% → 52,0% | 0 × 0 | 8 × 30 |
+| 9b | 48,0% → **7,1%** | 78,0% → 50,7% | **4** × 0 | 12 × 30 |
+| 9c | 64,5% → 44,5% (abaixo do piso) | 74,7% → 63,4% | 0 × 0 | 4 × 28 |
+| 9d | 63,1% → 43,1% (abaixo do piso) | 73,5% → 62,6% | 0 × 0 | 0 × 26 |
+
+Como ler:
+- O preditivo age **durante** a tempestade, assim que a projeção fura 70%: na 1ª hora na 9c, na 2ª na 9b e na 3ª na 9d. Na 9a os módulos já estavam fora desde as 9h, por MODO ECONOMIA.
+- De dia, nenhum sistema chega ao CRÍTICO. A diferença aparece à **noite**: na 9b o reativo entra em CRÍTICO às 2h.
+- O preditivo paga um preço: mantém módulos desligados por mais tempo.
+- A conta de 220 kWh (seção 3.3) é só o **dimensionamento** da bateria. O amanhecer vem da simulação.
 
 ---
 
@@ -534,7 +581,7 @@ Resultado esperado: o preditivo desliga os não essenciais **antes** da tempesta
 ### 10.1 Algoritmo do painel (contrato entre o código e o visual)
 ```text
 1. Python roda todos os cenários (seção 12) e a simulação da seção 9.
-2. exportar_painel grava tudo em painel/dados.js.
+2. painel.py grava tudo em painel/dados.js.
 3. O HTML lê dados.js e SÓ MOSTRA, sem recalcular nada.
 4. README, PDF e painel usam os mesmos números.
 ```
@@ -548,7 +595,7 @@ Resultado esperado: o preditivo desliga os não essenciais **antes** da tempesta
 | 2. Mapa vivo | A árvore da seção 3.2 desenhada; ao clicar num nó, mostra a chave e o valor | Estruturação de dados |
 | 3. Energia | Medidor da bateria (atual e projetada em 3h), solar e eólica, consumo e barra de balanço; módulos como luzes, anomalias piscando, suporte à vida com cadeado 🔒 | Uso de energia |
 | 4. Previsão | Curva solar com a poeira; gráfico vento × energia com a reta, β0, β1 e R²; comparação reta × física; seletor de vento mostrando ŷ | Modelagem e previsão |
-| 5. Reativo × Preditivo | Tela dividida, mesma tempestade nas duas metades; seletor de tempestade (manhã/tarde) e de colônia (A/B); placar no fim | O "uau" da apresentação |
+| 5. Reativo × Preditivo | Tela dividida, mesma tempestade nas duas metades, do dia à madrugada; seletor de tempestade (manhã/tarde) e de colônia (A/B); placar no fim | O "uau" da apresentação |
 | 6. Diário | Cada decisão com hora, entrada, anomalias, projeção, regra usada e motivo | Lógica de decisão |
 
 ### 10.3 Identidade visual
@@ -601,29 +648,29 @@ Problema (a Terra está longe, a colônia decide sozinha) → mapa vivo → diá
 | 14 | Vento na projeção | O vento atual se mantém pelas próximas 3h |
 
 | 15 | Jornada | Simulação 8h–20h; chegada 8h–9h (74 kW), expediente 9h–18h (91 kW), depois 18h–20h (74 kW) |
-| 16 | Noite | Perfil dormindo 47 kW; 70% às 20h garante até as 6h → bateria de 315 kWh |
+| 16 | Noite | Perfil dormindo 47 kW; 70% às 20h garante até as 6h (primeira conta deu 315 kWh; corrigida pelo item 19) |
 | 17 | Pico solar | 140 kW (equilíbrio ≈ 126 kW + folga) |
 | 18 | Tempestades | Duas: manhã (10h–13h) e tarde (14h–17h) |
 | 19 | Colônias | A (440 kWh, piso 20%) e B (1100 kWh, piso 50%) → 4 simulações (9a–9d) |
-| 20 | Colônia padrão | **B** nos cenários 1–8 e 10–15 (com a A, a bateria baixa de toda manhã contaminaria os testes) |
+| 20 | Colônia padrão | **B** em todos os cenários, exceto o 18 (com a A, a bateria baixa de toda manhã contaminaria os testes) |
 | 21 | Histerese | Religa só depois de ≥ 2h desligado **e** com a projeção ≥ 80% com o módulo ligado |
 | 22 | Religar × situação | Antes de religar, simula a situação com o módulo ligado; se der CRÍTICO / ECONOMIA, não religa |
 | 7 | NumPy | **Não usar em lugar nenhum.** Regressão à mão (Cap 7); os testes comparam com o teste de mesa da 6.5; roda com Python puro |
 
 ### 11.2 Em aberto
-Nenhum ponto em aberto na versão 1.1. Próximo passo: revisão da equipe e código.
+Nenhum ponto em aberto.
 
-### 11.3 Decisões técnicas tomadas ao codar (04/11/2026) — **confirmar na equipe**
-O código foi montado em 04/11 a pedido do Douglas. Estes pontos não estavam fechados e precisaram de uma escolha:
+### 11.3 Decisões técnicas tomadas ao codar (04/11/2026), mantidas em 05/11/2026
+O código foi montado em 04/11 a pedido do Douglas. Estes pontos não estavam fechados e precisaram de uma escolha. Na auditoria, Marcelo pediu para manter as decisões do Douglas:
 
-1. ⚠️ **P = projeção < 70% E bateria caindo** (`EXIGIR_QUEDA = True` em `dados.py`). Pela regra literal (só "< 70%"), a Colônia B, que amanhece com 53% por projeto, cortaria o Laboratório **toda manhã de céu limpo**, com a bateria subindo. A frase original da reunião ("caso **abaixe** ele corta") sustenta essa leitura. Para voltar à regra literal, basta trocar a constante para `False`.
+1. **P = projeção < 70% E bateria caindo** (`EXIGIR_QUEDA = True` em `dados.py`). Pela regra literal (só "< 70%"), a Colônia B, que amanhece com 53% por projeto, cortaria o Laboratório **toda manhã de céu limpo**, com a bateria subindo. A frase original da reunião ("caso **abaixe** ele corta") sustenta essa leitura. Com `False`, vale a regra literal; a saída se ajusta, mas 3 testes supõem `True` e precisam mudar junto.
 2. **Janela de 3h = a hora atual + as duas seguintes.** É o que faz a projeção das 17h cobrir 17h–20h, como a seção 3.3 promete.
 3. **Na hora atual, a projeção usa o consumo MEDIDO**; nas seguintes, o perfil. Sem isso, uma anomalia acontecendo agora nunca entraria na conta da bateria.
 4. **O reativo** usa as mesmas regras, mas sem projeção: o P dele é "geração atual < consumo atual". Ele corta só pela situação (CRÍTICO/ECONOMIA) e religa com tempo mínimo e "faz de conta" da situação.
 5. **Depois das 20h vale o perfil da noite** (47 kW), para a projeção das 18h e das 19h olhar para dentro da noite.
 6. **O "mundo" da simulação usa a reta** para a eólica (a mesma do planejamento). Com a física, não haveria crise (seção 7.1).
-7. **Fim do dia:** o resumo calcula com quanto a bateria **amanhece** (bateria das 20h − 220 kWh da noite) e se fica acima do piso da colônia.
-8. **Cenários ajustados** para caber nos números reais: no 5, a previsão favorável é "bateria subindo"; no 6, a desfavorável é "tempestade, caindo". No 18, o correto é religar **só a Logística**: ela sozinha dá 61 kW, abaixo de 80; com o Laboratório junto daria 91 kW e voltaria o MODO ECONOMIA. Entrou o cenário 19 (religa quando há folga).
+7. **Fim do dia:** o resumo diz com quanto a bateria **amanhece** às 6h e se fica acima do piso da colônia. Na 1.2, esse valor vem da simulação da noite, e não mais de uma conta fixa.
+8. **Cenários ajustados** para caber nos números reais: no 5, a previsão favorável é "bateria subindo"; no 6, a desfavorável é "tempestade, caindo". No 18, o correto é religar **só a Logística**: ela sozinha dá 61 kW, abaixo de 80; com o Laboratório junto daria 91 kW e voltaria o MODO ECONOMIA. Entrou o cenário 19 (religa quando há folga). Na 1.2 entraram o 20 (falha) e o 21 (medição no histórico).
 
 ---
 
@@ -635,23 +682,26 @@ O código foi montado em 04/11 a pedido do Douglas. Estes pontos não estavam fe
 | 2 | geração 40, consumo 70 | `ALERTA: consumo maior que geração` | Enunciado |
 | 3 | geração 80, consumo 30 | `SUGESTÃO: armazenar energia excedente` | Enunciado |
 | 4 | vento 11 | ŷ = 27,5 (β1 = 2,5; β0 = 0; R² = 1) | Enunciado |
-| 5 | bateria 40, consumo 90, projeção ≥ 70% | `MODO ECONOMIA` + Laboratório **e** Logística desligados (corte pela situação) | Equipe |
-| 6 | bateria 40, consumo 90, projeção < 70% | `CRÍTICO` (B·A·P) | Equipe |
+| 5 | bateria 40, consumo 91, bateria subindo (projeção 59,4%) | `MODO ECONOMIA` + Laboratório **e** Logística desligados (corte pela situação) | Equipe |
+| 6 | bateria 40, consumo 91, tempestade, bateria caindo | `CRÍTICO` (B·A·P) | Equipe |
 | 7 | bateria 15 | `CRÍTICO`; só o suporte à vida fica ligado | Equipe |
 | 8 | bateria 85, consumo 50 | `NORMAL` | Equipe |
-| 9a | Colônia A, tempestade da manhã | o preditivo corta na 1ª hora; a colônia recarrega à tarde e religa os módulos | Equipe |
-| 9b | Colônia A, tempestade da tarde | o preditivo corta na 1ª hora e chega às 20h com ≥ 70%; o reativo não chega | Equipe |
-| 9c | Colônia B, tempestade da manhã | idem 9a, com a bateria grande | Equipe |
-| 9d | Colônia B, tempestade da tarde | idem 9b, com a bateria grande | Equipe |
-| 10 | bateria −5 ou "abc" | Mensagem de erro, sem quebrar | Equipe |
-| 11 | Laboratório 28 kW (esperado 20), bateria 90%, projeção ≥ 70% | `ANOMALIA` avisada, **nada desligado** | Equipe |
+| 9a | Colônia A, tempestade da manhã | módulos já fora desde as 9h (ECONOMIA); recarrega à tarde, religa às 13h | Equipe |
+| 9b | Colônia A, tempestade da tarde | o preditivo corta às 15h e chega às 20h com ≥ 70%; o reativo entra em CRÍTICO de madrugada | Equipe |
+| 9c | Colônia B, tempestade da manhã | o preditivo corta às 10h (1ª hora) e amanhece acima do piso; o reativo, não | Equipe |
+| 9d | Colônia B, tempestade da tarde | o preditivo corta às 16h e amanhece acima do piso; o reativo, não | Equipe |
+| 10a / 10b | bateria −5 / vento "abc" | Mensagem de erro, sem quebrar | Equipe |
+| 11 | Laboratório 40 kW (esperado 30), bateria 90%, sol forte | `ANOMALIA` avisada, **nada desligado** | Equipe |
 | 12 | Logística em anomalia, projeção < 70% | Logística desligada **antes** do Laboratório | Equipe |
 | 13 | Médico em anomalia, projeção < 70% | Médico **segue ligado**; corta Laboratório → Logística | Equipe |
 | 14 | sol 12h, tempestade (solar medido = 5% da curva) | `fator_poeira` = 0,05 | Equipe |
 | 15 | hora noturna (curva = 0) | `fator_poeira` = 1, sem divisão por zero | Equipe |
-| 16 | módulo desligado há 1h, projeção 85% | **não** religa (tempo mínimo de 2h) | Equipe |
-| 17 | desligado há 2h, projeção com ele ligado 75% | **não** religa (zona morta 70–80%) | Equipe |
-| 18 | Colônia A, Laboratório e Logística desligados por ECONOMIA, projeção boa | **não** religa: com eles ligados, a situação volta a ECONOMIA | Equipe |
+| 16 | módulo desligado há 1h, energia sobrando | **não** religa (tempo mínimo de 2h) | Equipe |
+| 17 | desligado há 2h, projeção com ele ligado 78,4% | **não** religa (zona morta 70–80%) | Equipe |
+| 18 | Colônia A, Laboratório e Logística desligados por ECONOMIA, projeção boa | religa **só a Logística** (61 kW); com o Laboratório, a situação voltaria a ECONOMIA | Equipe |
+| 19 | desligado há 2h, energia sobrando | religa | Equipe |
+| 20 | Logística com estado "falha" | `FALHA` avisada; situação segue NORMAL | Equipe |
+| 21 | medição real: vento 14 m/s rendeu 32 kW | entra no histórico; a reta muda e o R² cai para 0,97 | Equipe |
 
-Os números exatos dos cenários 5, 6, 9, 11, 12 e 13 são calculados com a Colônia B (padrão).
+Todos os cenários usam a Colônia B (padrão), exceto o 18 e as simulações 9a e 9b.
 Cada linha vira um teste automático. Nada é entregue com teste falhando.

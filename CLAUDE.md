@@ -10,8 +10,8 @@ Equipe: Marcelo e Douglas (código), Alice (painel HTML e PDF).
 
 ## Regras do projeto
 - Usar **só conceitos dos capítulos da Fase 3**: funções e procedimentos, módulos, recursão, dicionário/hash, árvore, listas, `if/elif/else`, álgebra booleana, regressão por mínimos quadrados, R² e P = ½ρAv³.
-- **Núcleo em Python puro**, sem bibliotecas externas. Sem classes (não foram ensinadas).
-- Separar **dados** (`dados.py`), **estrutura** (`colonia.py`), **modelos** (`previsao.py`, `energia.py`), **decisões** (`regras.py`) e o **sistema** (`main.py`).
+- **Núcleo em Python puro**, sem bibliotecas externas e sem classes (não foram ensinadas). `unittest` e `json` ficam só nos testes e na exportação.
+- Separar **dados** (`dados.py`), **estrutura** (`colonia.py`), **modelos** (`previsao.py`, `energia.py`), **decisões** (`regras.py`), **sistema** (`sistema.py`), **demonstração** (`simulacao.py`, `cenarios.py`) e **interface** (`main.py`, `painel.py`).
 - **Segurança antes de prioridade:** suporte à vida nunca é desligado.
 - O painel lê `painel/dados.js` gerado pelo Python e **não recalcula** nada.
 - Todo exemplo do enunciado vira um teste. Rodar: `python3 -m unittest discover -s tests -t .`
@@ -30,7 +30,7 @@ Equipe: Marcelo e Douglas (código), Alice (painel HTML e PDF).
 | PDF (M7) | `pdf` (gerar e conferir páginas) |
 | Fim do dia | `/fim-de-sessao` (Obsidian, commit e push) |
 
-## Estado atual
-- M0 pronto: documentos.
-- M1 pronto: `dados.py`, `colonia.py` e 11 testes passando. Pode mudar depois da revisão do algoritmo.
-- **Próximo:** reunião da equipe para fechar a seção 11 do `algoritmo_v1.md` (pontos a decidir). Depois, M2 (previsão).
+## Estado atual (05/11/2026)
+- M0 a M5 prontos e na `main`: sistema completo, 21 cenários, 4 simulações (dia e noite) e 136 testes.
+- **Próximo:** M6 (painel HTML) e M7 (PDF da equipe), com a Alice. Ela deve ler `docs/VISUAL.md`.
+- M8 (fechamento) depois disso: rodar `verificador-alinhamento` e marcar R2 na matriz do ROADMAP.

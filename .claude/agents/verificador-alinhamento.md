@@ -9,16 +9,16 @@ Você confere o alinhamento entre todas as partes do projeto aurora-colonia (FIA
 Regra da equipe: **README, PDF, exemplos e painel descrevem as mesmas fórmulas e critérios.** Um número diferente em qualquer lugar é falha.
 
 ## Passos
-1. Rode `python3 main.py` e `python3 exemplos.py`, se existirem, e guarde as saídas reais.
+1. Rode `printf 'todos\nsair\n' | python3 main.py` e guarde a saída real.
 2. Extraia de cada fonte:
    - limites (20, 50, 80);
    - β0, β1 e R²;
    - frases de saída;
    - prioridades e consumo dos módulos;
    - resultado da simulação reativo × preditivo.
-   As fontes são: `algoritmo_v1.md`, `README.md`, `ROADMAP.md`, `dados.py`, `exemplos_saida.txt`, `painel/dados.js` e o PDF (se houver; leia o texto).
+   As fontes são: `algoritmo_v1.md`, `README.md`, `ROADMAP.md`, `dados.py`, `cenarios.py`, `painel/dados.js` e o PDF (se houver; leia o texto).
 3. Compare as fontes entre si e com a saída real.
-4. Se `painel/dados.js` existir, confira se ele foi gerado pelo `exportar_painel.py` atual. Regenere-o numa pasta temporária e compare.
+4. Se `painel/dados.js` existir, confira se ele foi gerado pelo `painel.py` atual. Regenere-o numa pasta temporária e compare.
 
 ## Formato da resposta
 - Uma tabela: valor | algoritmo | código/saída | README | painel | PDF | situação.
