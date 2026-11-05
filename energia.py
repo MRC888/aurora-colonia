@@ -2,7 +2,7 @@
 # Balanço geração × consumo, anomalias, física do vento e a projeção da
 # bateria, que é o coração do preditivo.
 
-from dados import JANELA_PREVISAO, LIMITE_ANOMALIA
+from dados import JANELA_PREVISAO, LIMITE_ANOMALIA, DENSIDADE_AR_MARTE, AREA_PAS
 from colonia import modulos_da
 from previsao import solar_previsto, eolica_prevista
 
@@ -14,9 +14,17 @@ def potencia_eolica(densidade, area, vento):
     return 0.5 * densidade * area * vento ** 3
 
 
+def eolica_fisica_pura(vento):
+    # Função: a fórmula pura com os valores do projeto, em kW.
+    # Dá só 1,2 kW a 10 m/s: o ar de Marte é muito rarefeito. Por isso os 25 kW do
+    # enunciado são uma hipótese didática, e a curva abaixo é CALIBRADA por eles.
+    return potencia_eolica(DENSIDADE_AR_MARTE, AREA_PAS, vento) / 1000
+
+
 def eolica_fisica_calibrada(vento, vento_ref=10, energia_ref=25):
-    # Função: a física proporcional a v³, calibrada para bater com a reta
-    # em 10 m/s = 25 kW. Mostra quanto a reta subestima no vento forte.
+    # Função: curva proporcional a v³, CALIBRADA para bater com a reta em
+    # 10 m/s = 25 kW. Não é a fórmula pura: mostra só como a reta cresce menos
+    # que v³ no vento forte, se aceitarmos os 25 kW do enunciado.
     return energia_ref * (vento / vento_ref) ** 3
 
 
@@ -46,6 +54,17 @@ def detectar_anomalias(modulos, hora):
             anomalias.append({"modulo": nome, "atual": modulo["consumo_atual_kw"],
                               "esperado": esperado, "aviso": aviso})
     return anomalias
+
+
+def detectar_falhas(modulos):
+    # Função: lista os módulos com estado "falha" (acesso rápido a alertas de falha).
+    # Como a anomalia, a falha SÓ AVISA: o sistema não muda de situação por causa dela.
+    falhas = []
+    for nome in modulos:
+        if modulos[nome]["estado"] == "falha":
+            aviso = "FALHA: " + nome + " informou defeito no equipamento"
+            falhas.append({"modulo": nome, "aviso": aviso})
+    return falhas
 
 
 def consumo_previsto(modulos, hora, usar_medido):
@@ -91,5 +110,12 @@ def limitar(valor, minimo, maximo):
 
 def formatar(numero, casas=1):
     # Função: número com vírgula decimal, como se escreve em português.
-    molde = "%." + str(casas) + "f"        # ex.: "%.1f" → 1 casa decimal
-    return (molde % numero).replace(".", ",")
+    if casas == 2:
+        return f"{numero:.2f}".replace(".", ",")
+    return f"{numero:.1f}".replace(".", ",")
+
+
+def formatar_abaixo(numero):
+    # Função: 1 casa decimal cortando, sem arredondar para cima.
+    # Assim 69,99 aparece como 69,9, e nunca "70,0% (abaixo de 70%)".
+    return formatar(int(numero * 10) / 10)

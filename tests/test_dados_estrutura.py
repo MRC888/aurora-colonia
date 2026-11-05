@@ -167,6 +167,60 @@ class TestValidar(unittest.TestCase):
     def test_consumo_invalido(self):
         self.assertFalse(validar(self.leitura(consumo_kw={"Laboratório": -3}))[0])
 
+    def test_limites_da_bateria_sao_validos(self):
+        self.assertTrue(validar(self.leitura(bateria_pct=0))[0])
+        self.assertTrue(validar(self.leitura(bateria_pct=100))[0])
+
+    def test_nan_e_infinito_sao_rejeitados(self):
+        for campo in ["bateria_pct", "geracao_solar_kw", "vento_m_s", "temp_externa_c"]:
+            for valor in [float("nan"), float("inf"), float("-inf")]:
+                with self.subTest(campo=campo, valor=valor):
+                    self.assertFalse(validar(self.leitura(**{campo: valor}))[0])
+
+    def test_hora_precisa_ser_inteira_de_0_a_23(self):
+        for hora in [12.0, 12.5, 24, 100, -1, float("nan")]:
+            with self.subTest(hora=hora):
+                self.assertFalse(validar(self.leitura(hora=hora))[0])
+        self.assertTrue(validar(self.leitura(hora=0))[0])
+        self.assertTrue(validar(self.leitura(hora=23))[0])
+
+    def test_leitura_que_nao_e_dicionario(self):
+        self.assertFalse(validar(None)[0])
+        self.assertFalse(validar([1, 2])[0])
+
+    def test_opcionais_com_tipo_errado(self):
+        for campo in ["consumo_kw", "desligados", "estados"]:
+            for valor in [None, [1, 2], "abc"]:
+                with self.subTest(campo=campo, valor=valor):
+                    self.assertFalse(validar(self.leitura(**{campo: valor}))[0])
+
+    def test_modulo_desconhecido(self):
+        self.assertFalse(validar(self.leitura(consumo_kw={"Nuclear": 5}))[0])
+        self.assertFalse(validar(self.leitura(desligados={"Nuclear": 5}))[0])
+        self.assertFalse(validar(self.leitura(estados={"Nuclear": "ok"}))[0])
+
+    def test_essencial_nao_comeca_desligado(self):
+        # Segurança antes de prioridade: nem um cenário pode desligar o suporte à vida.
+        for nome in ["Energia", "Habitação", "Médico"]:
+            ok, motivo = validar(self.leitura(desligados={nome: 5}))
+            self.assertFalse(ok)
+            self.assertIn("essencial", motivo)
+
+    def test_hora_de_desligamento_invalida(self):
+        self.assertFalse(validar(self.leitura(desligados={"Laboratório": "x"}))[0])
+
+    def test_estado_invalido(self):
+        self.assertFalse(validar(self.leitura(estados={"Logística": "quebrado"}))[0])
+        self.assertTrue(validar(self.leitura(estados={"Logística": "falha"}))[0])
+
+    def test_solar_acima_do_pico(self):
+        self.assertFalse(validar(self.leitura(geracao_solar_kw=500))[0])
+        self.assertTrue(validar(self.leitura(geracao_solar_kw=140))[0])
+
+    def test_eolica_medida_invalida(self):
+        self.assertFalse(validar(self.leitura(eolica_medida_kw=-1))[0])
+        self.assertFalse(validar(self.leitura(eolica_medida_kw="abc"))[0])
+
 
 if __name__ == "__main__":
     unittest.main()

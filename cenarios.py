@@ -1,13 +1,15 @@
 # Aurora Siger - Fase 3: CENÁRIOS PRONTOS (algoritmo, seção 12).
 # O avaliador escolhe um destes no menu do main.py.
 # Cada cenário é uma leitura de sensores + o que se espera que o sistema diga.
-# Os mesmos cenários são conferidos automaticamente em tests/test_cenarios.py.
+# Os mesmos cenários são conferidos automaticamente em tests/test_cenarios_simulacao.py.
 #
 # Campos da leitura:
 #   hora, bateria_pct, geracao_solar_kw, vento_m_s, temp_externa_c (obrigatórios)
 #   consumo_kw  = {módulo: kW medido}  (sem ele, cada andar gasta o esperado da hora)
 #   desligados  = {módulo: hora em que foi desligado}
 #   tempestade  = True/False
+#   estados     = {módulo: "ok" ou "falha"}
+#   eolica_medida_kw = geração eólica medida (entra no histórico e refaz a reta)
 
 CENARIOS = [
     {"id": "1", "origem": "Enunciado", "colonia": "B",
@@ -137,6 +139,19 @@ CENARIOS = [
      "leitura": {"hora": 12, "bateria_pct": 85, "geracao_solar_kw": 140, "vento_m_s": 10,
                  "temp_externa_c": -60, "desligados": {"Laboratório": 10}},
      "esperado": {"desligados": []}},
+
+    {"id": "20", "origem": "Equipe", "colonia": "B",
+     "titulo": "Falha no equipamento da Logística: o sistema avisa na hora",
+     "leitura": {"hora": 12, "bateria_pct": 85, "geracao_solar_kw": 140, "vento_m_s": 10,
+                 "temp_externa_c": -60, "estados": {"Logística": "falha"}},
+     "esperado": {"falhas": ["Logística"], "situacao": "NORMAL"}},
+
+    {"id": "21", "origem": "Equipe", "colonia": "B",
+     "titulo": "Nova medição de vento entra no histórico e refaz a reta",
+     # Vento 14 m/s rendeu 32 kW: abaixo da reta antiga (35 kW), então o R² cai de 1.
+     "leitura": {"hora": 12, "bateria_pct": 85, "geracao_solar_kw": 140, "vento_m_s": 14,
+                 "temp_externa_c": -60, "eolica_medida_kw": 32},
+     "esperado": {"r2_abaixo_de_1": True}},
 ]
 
 

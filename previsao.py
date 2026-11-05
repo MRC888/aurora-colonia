@@ -17,12 +17,10 @@ def media(lista):
 
 def ajustar_reta(x, y):
     # Função: ajusta y = β0 + β1·x pelos mínimos quadrados.
-    # Devolve (β0, β1). Levanta ValueError quando não existe reta,
-    # para o erro aparecer cedo em vez de virar um número errado.
-    if len(x) != len(y):
-        raise ValueError("x e y precisam ter o mesmo tamanho")
-    if len(x) < 2:
-        raise ValueError("são necessários pelo menos 2 pontos")
+    # Devolve (β0, β1), ou None quando não existe reta. Assim o erro aparece
+    # cedo, em vez de virar um número errado.
+    if len(x) != len(y) or len(x) < 2:
+        return None
     x_medio = media(x)
     y_medio = media(y)
     numerador = 0
@@ -30,8 +28,8 @@ def ajustar_reta(x, y):
     for i in range(len(x)):
         numerador = numerador + (x[i] - x_medio) * (y[i] - y_medio)
         denominador = denominador + (x[i] - x_medio) ** 2
-    if denominador == 0:
-        raise ValueError("todos os x são iguais: não existe reta")
+    if denominador < 0.000000001:   # todos os x iguais (com folga para arredondamento)
+        return None
     beta1 = numerador / denominador      # inclinação: quanto y muda quando x sobe 1
     beta0 = y_medio - beta1 * x_medio    # intercepto: valor de y quando x = 0
     return beta0, beta1
@@ -52,7 +50,10 @@ def r2(x, y, beta0, beta1):
         sq_residuos = sq_residuos + (y[i] - prever(beta0, beta1, x[i])) ** 2
         sq_total = sq_total + (y[i] - y_medio) ** 2
     if sq_total == 0:
-        return 1.0   # todos os y iguais: a reta horizontal explica tudo
+        # Todos os y iguais: só a reta que passa neles explica os dados.
+        if sq_residuos == 0:
+            return 1.0
+        return 0.0
     return 1 - sq_residuos / sq_total
 
 
@@ -71,10 +72,14 @@ def fator_poeira(solar_medido, hora):
     # Função: quanto do sol está chegando, comparando o medido com a curva.
     # 1 = céu limpo · 0,05 = tempestade. À noite a curva vale 0 e não dá
     # para medir a poeira: devolve 1 (e evita a divisão por zero).
+    # O teto é 1: poeira não aumenta o sol, e medir acima da curva é ruído do sensor.
     esperado = solar_curva(hora)
     if esperado == 0:
         return 1.0
-    return solar_medido / esperado
+    fator = solar_medido / esperado
+    if fator > 1:
+        return 1.0
+    return fator
 
 
 def solar_previsto(hora, fator):
@@ -85,8 +90,8 @@ def solar_previsto(hora, fator):
 
 def eolica_prevista(beta0, beta1, vento):
     # Função: eólica pela reta (vento → energia). Nunca negativa.
-    # Escolha da equipe: planejar com a reta, que é CONSERVADORA no vento
-    # forte (a física dá 4 vezes mais a 20 m/s). Ver energia.potencia_eolica.
+    # Escolha da equipe: planejar com a reta, que cresce menos que a curva v³
+    # calibrada no vento forte (50 × 200 kW a 20 m/s). Ver energia.py.
     valor = prever(beta0, beta1, vento)
     if valor < 0:
         return 0

@@ -7,7 +7,7 @@ from dados import (ENERGIA_CRITICA, ENERGIA_BAIXA, CONSUMO_ALTO,
                    RESERVA_MINIMA_PROJETADA, MARGEM_RELIGAR,
                    TEMPO_MINIMO_DESLIGADO, EXIGIR_QUEDA)
 from colonia import modulos_da, consumo_total
-from energia import projetar_bateria, formatar
+from energia import projetar_bateria, formatar, formatar_abaixo
 
 # Código da situação → mensagem exibida. A mesma cor/situação em todo lugar.
 SITUACOES = {
@@ -137,15 +137,16 @@ def cortar_cargas(colonia, hora, anomalias, modo, motivo, prev):
         if nome in nomes_em_anomalia:
             porque = "anomalia de consumo (quem causou sai primeiro); " + motivo
         acoes.append("Desligado: " + nome + " — motivo: " + porque)
-    if modo == "ate_70":
+    # O aviso só sai na hora em que houve corte, e só quem projeta pode dar o aviso.
+    if acoes and prev is not None:
         final = projetar(colonia, hora, prev)
         if final < RESERVA_MINIMA_PROJETADA:
             acoes.append("ATENÇÃO: só restou o suporte à vida; reserva projetada em "
-                         + formatar(final) + "%")
+                         + formatar_abaixo(final) + "%")
     return acoes
 
 
-def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0):
+def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0, pendencias=None):
     # Função: religa sozinho, do mais importante para o menos (seção 8.5).
     # Histerese híbrida, para não virar pisca-pisca:
     #   1. desligado há pelo menos 2 horas;
@@ -153,6 +154,9 @@ def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0):
     #   3. "faz de conta" que religou: a situação não pode voltar a CRÍTICO/ECONOMIA.
     # usar_projecao=False é o modo REATIVO (só as condições 1 e 3).
     # O faz de conta liga o módulo, mede e DESFAZ se alguma condição falhar.
+    # pendencias: lista opcional que recebe o motivo de quem não religou.
+    if pendencias is None:
+        pendencias = []
     modulos = modulos_da(colonia)
     bateria_pct = colonia["energetico"]["bateria"]["nivel_pct"]
     desligados = []
@@ -163,7 +167,11 @@ def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0):
     acoes = []
     for nome in ordenar_por_prioridade(desligados, modulos, False):
         modulo = modulos[nome]
-        if modulo["desligado_desde"] is not None and hora - modulo["desligado_desde"] < TEMPO_MINIMO_DESLIGADO:
+        # % 24 para a conta funcionar na virada do dia (desligado às 23h, agora 1h: 2h).
+        tempo_fora = (hora - modulo["desligado_desde"]) % 24
+        if tempo_fora < TEMPO_MINIMO_DESLIGADO:
+            pendencias.append("Aguardando: " + nome + " — desligado há só " + str(tempo_fora)
+                              + "h (mínimo de " + str(TEMPO_MINIMO_DESLIGADO) + "h)")
             continue
         # Faz de conta: liga com o consumo esperado da hora.
         modulo["ligado"] = True
@@ -171,11 +179,13 @@ def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0):
         consumo_se_religar = consumo_total(modulos)
         aprovado = True
         texto_projecao = ""
+        motivo = ""
         if usar_projecao:
             projecao = projetar(colonia, hora, prev)
             texto_projecao = " — projeção em " + formatar(projecao) + "%"
             if projecao < MARGEM_RELIGAR:
                 aprovado = False
+                motivo = "projeção com ele ligado em " + formatar_abaixo(projecao) + "% (mínimo de 80%)"
             situacao = decidir(bateria_pct, consumo_se_religar,
                                projecao_desfavoravel(bateria_pct, projecao))
         else:
@@ -184,9 +194,11 @@ def religar_cargas(colonia, hora, prev, usar_projecao, geracao_atual=0):
                                geracao_atual < consumo_se_religar)
         if situacao == "CRITICO" or situacao == "ECONOMIA":
             aprovado = False
+            motivo = "voltaria à situação " + SITUACOES[situacao].split(":")[0]
         if aprovado:
             modulo["desligado_desde"] = None
             acoes.append("Religado: " + nome + texto_projecao)
         else:
             modulo["ligado"] = False   # desfaz o faz de conta
+            pendencias.append("Aguardando: " + nome + " — " + motivo)
     return acoes

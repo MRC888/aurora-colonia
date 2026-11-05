@@ -3,9 +3,9 @@
 import unittest
 
 from dados import criar_colonia, criar_historico
-from colonia import modulos_da
+from colonia import modulos_da, buscar
 from cenarios import CENARIOS, buscar_cenario
-from sistema import processar_leitura
+from sistema import processar_leitura, registrar
 from simulacao import comparar, simular_dia, simular_todas, deficit_da_noite
 
 
@@ -56,12 +56,58 @@ class TestCenarios(unittest.TestCase):
                                   resultado["acoes"][0])
                 for nome in esperado.get("ligados", []):
                     self.assertTrue(modulos_da(colonia)[nome]["ligado"])
+                if "falhas" in esperado:
+                    self.assertEqual(resultado["falhas"][0]["modulo"], esperado["falhas"][0])
+                if "r2_abaixo_de_1" in esperado:
+                    self.assertLess(resultado["r2"], 1)
                 for nome in esperado.get("religados", []):
                     self.assertTrue(any("Religado: " + nome in a for a in resultado["acoes"]))
 
     def test_cenario_1_mensagem_do_enunciado(self):
         _, resultado = rodar(buscar_cenario("1"))
         self.assertEqual(resultado["mensagem"], "ALERTA: reduzir consumo")
+
+    def test_medicao_entra_no_historico(self):
+        historico = criar_historico()
+        processar_leitura(criar_colonia(), dict(buscar_cenario("21")["leitura"]), historico)
+        self.assertEqual(historico["vento"], [8, 10, 12, 14])
+        self.assertEqual(historico["energia_eolica"], [20, 25, 30, 32])
+
+    def test_medicao_vale_como_geracao_atual(self):
+        _, resultado = rodar(buscar_cenario("21"))
+        self.assertAlmostEqual(resultado["geracao_kw"], 172)   # 140 solar + 32 medidos
+
+    def test_alerta_de_falha_fica_na_arvore(self):
+        colonia, _ = rodar(buscar_cenario("20"))
+        self.assertEqual(buscar(colonia, "operacional/alertas_de_falha")[0]["modulo"], "Logística")
+        self.assertEqual(buscar(colonia, "operacional/modulos/Logística/estado"), "falha")
+
+    def test_historico_invalido_vira_erro(self):
+        historico = {"vento": [5, 5], "energia_eolica": [1, 2]}
+        resultado = processar_leitura(criar_colonia(), dict(buscar_cenario("8")["leitura"]), historico)
+        self.assertIn("histórico inválido", resultado["erro"])
+
+    def test_observacao_explica_corte_preventivo(self):
+        _, resultado = rodar(buscar_cenario("12"))
+        self.assertEqual(resultado["situacao"], "NORMAL")
+        self.assertIn("CORTE PREVENTIVO", resultado["observacao"])
+
+    def test_observacao_explica_alerta_sem_corte(self):
+        leitura = {"hora": 8, "bateria_pct": 40, "geracao_solar_kw": 77, "vento_m_s": 10,
+                   "temp_externa_c": -60}
+        resultado = processar_leitura(criar_colonia(), leitura, criar_historico())
+        self.assertEqual(resultado["acoes"], [])
+        self.assertIn("Sem corte agora", resultado["observacao"])
+        resultado = processar_leitura(criar_colonia(), dict(leitura), criar_historico(), False)
+        self.assertIn("reativo", resultado["observacao"])
+
+    def test_diario_guarda_a_decisao(self):
+        _, resultado = rodar(buscar_cenario("20"))
+        diario = []
+        registrar(diario, resultado)
+        registrar(diario, {"erro": "ERRO: teste"})
+        self.assertIn("FALHA: Logística", diario[0]["anomalias"][0])
+        self.assertEqual(diario[1], {"erro": "ERRO: teste"})
 
     def test_ids_unicos(self):
         ids = []
@@ -76,10 +122,15 @@ class TestSimulacao(unittest.TestCase):
     def setUpClass(cls):
         cls.todas = simular_todas()
 
-    def test_quatro_simulacoes_de_12_horas(self):
+    def test_quatro_simulacoes_das_8h_as_6h(self):
         self.assertEqual(sorted(self.todas), ["9a", "9b", "9c", "9d"])
         for codigo in self.todas:
-            self.assertEqual(len(self.todas[codigo]["preditivo"]["linhas"]), 12)
+            linhas = self.todas[codigo]["preditivo"]["linhas"]
+            self.assertEqual(len(linhas), 22)     # 12 de dia + 10 de noite
+            self.assertEqual(linhas[0]["hora"], 8)
+            self.assertEqual(linhas[-1]["hora"], 5)
+            self.assertTrue(linhas[12]["noite"])
+            self.assertFalse(linhas[11]["noite"])
 
     def test_deficit_da_noite_220_kwh(self):
         self.assertAlmostEqual(deficit_da_noite(), 220)
@@ -101,11 +152,68 @@ class TestSimulacao(unittest.TestCase):
             with self.subTest(simulacao=codigo):
                 self.assertTrue(self.todas[codigo]["preditivo"]["resumo"]["amanhece_acima_do_piso"])
 
-    def test_reativo_nao_aguenta_a_noite_na_tempestade_da_tarde(self):
-        # 9b: a Colônia A reativa esgota a bateria antes do amanhecer.
-        self.assertLess(self.todas["9b"]["reativo"]["resumo"]["amanhecer_pct"], 0)
+    def test_reativo_entra_em_critico_na_noite_da_9b(self):
+        # A tempestade da tarde cobra a conta de madrugada: bateria abaixo de 20%.
+        resumo = self.todas["9b"]["reativo"]["resumo"]
+        self.assertEqual(resumo["horas_criticas_dia"], 0)
+        self.assertEqual(resumo["horas_criticas"], 4)
+        self.assertAlmostEqual(resumo["amanhecer_pct"], 7.08, places=1)
+        self.assertFalse(resumo["amanhece_acima_do_piso"])
 
-    def test_preditivo_age_na_primeira_hora_da_tempestade(self):
+    def test_preditivo_nunca_fica_critico(self):
+        for codigo in self.todas:
+            self.assertEqual(self.todas[codigo]["preditivo"]["resumo"]["horas_criticas"], 0)
+
+    def test_menor_bateria_conta_o_inicio_do_dia(self):
+        self.assertEqual(self.todas["9b"]["preditivo"]["resumo"]["menor_bateria_pct"], 29)
+        self.assertEqual(self.todas["9d"]["preditivo"]["resumo"]["menor_bateria_pct"], 53)
+
+    def test_placar_de_modulo_horas(self):
+        dia = []
+        for codigo in ["9a", "9b", "9c", "9d"]:
+            dia.append((self.todas[codigo]["reativo"]["resumo"]["modulo_horas_desligados_dia"],
+                        self.todas[codigo]["preditivo"]["resumo"]["modulo_horas_desligados_dia"]))
+        self.assertEqual(dia, [(8, 10), (4, 10), (4, 9), (0, 6)])
+
+    def test_mundo_cobra_o_consumo_depois_das_acoes(self):
+        # 9h da Colônia A: corta Log e Lab; a hora já é cobrada com 39 kW, não 91.
+        linha = self.todas["9b"]["preditivo"]["linhas"][1]
+        self.assertEqual(linha["consumo_kw"], 39)
+
+    def test_conta_de_energia_fecha_em_cada_hora(self):
+        for codigo in self.todas:
+            tipo = codigo in ["9a", "9b"]
+            capacidade = 1100
+            if tipo:
+                capacidade = 440
+            for sistema in ["reativo", "preditivo"]:
+                for linha in self.todas[codigo][sistema]["linhas"]:
+                    if 0 < linha["bateria_fim_pct"] < 100:
+                        saldo = (linha["geracao_kw"] - linha["consumo_kw"]) / capacidade * 100
+                        self.assertAlmostEqual(linha["bateria_fim_pct"],
+                                               linha["bateria_inicio_pct"] + saldo)
+
+    def test_desperdicio_quando_a_bateria_enche(self):
+        # 9b: a bateria enche ao meio-dia e o excedente é registrado.
+        self.assertAlmostEqual(self.todas["9b"]["preditivo"]["resumo"]["desperdicio_kwh"], 132, places=0)
+
+    def test_preditivo_corta_durante_a_tempestade_antes_do_reativo(self):
+        # 9b, 9c e 9d: o preditivo corta com a tempestade em curso; o reativo, não.
+        for codigo in ["9b", "9c", "9d"]:
+            with self.subTest(simulacao=codigo):
+                cortou_p = False
+                cortou_r = False
+                for i in range(12):
+                    p = self.todas[codigo]["preditivo"]["linhas"][i]
+                    r = self.todas[codigo]["reativo"]["linhas"][i]
+                    if p["tempestade"] and p["desligados"]:
+                        cortou_p = True
+                    if r["tempestade"] and r["desligados"]:
+                        cortou_r = True
+                self.assertTrue(cortou_p)
+                self.assertFalse(cortou_r)
+
+    def test_na_9c_o_corte_vem_na_primeira_hora(self):
         # 9c: tempestade às 10h; o preditivo corta já às 10h, o reativo não.
         linhas_p = self.todas["9c"]["preditivo"]["linhas"]
         linhas_r = self.todas["9c"]["reativo"]["linhas"]
@@ -124,7 +232,7 @@ class TestSimulacao(unittest.TestCase):
     def test_dia_limpo_na_colonia_b_nao_corta_nada(self):
         # Por isso o EXIGIR_QUEDA: amanhecer com 53% não é emergência.
         resumo = simular_dia("B", None, True)["resumo"]
-        self.assertEqual(resumo["modulo_horas_desligados"], 0)
+        self.assertEqual(resumo["modulo_horas_desligados_dia"], 0)
 
     def test_bateria_sempre_entre_0_e_100(self):
         for codigo in self.todas:

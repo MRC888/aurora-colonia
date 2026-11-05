@@ -60,7 +60,8 @@ const DADOS = {
   "            estado = ok",
   "            consumo_atual_kw = 15",
   "            perfil_kw = lista com 24 valores",
-  "            desligado_desde = None"
+  "            desligado_desde = None",
+  "    alertas_de_falha = lista com 0 valores"
  ],
  "colonias": {
   "A": {
@@ -106,27 +107,138 @@ const DADOS = {
    {
     "vento_m_s": 8,
     "reta_kw": 20.0,
-    "fisica_kw": 12.800000000000002
+    "fisica_calibrada_kw": 12.800000000000002,
+    "fisica_pura_kw": 0.6144
    },
    {
     "vento_m_s": 10,
     "reta_kw": 25.0,
-    "fisica_kw": 25.0
+    "fisica_calibrada_kw": 25.0,
+    "fisica_pura_kw": 1.2
    },
    {
     "vento_m_s": 12,
     "reta_kw": 30.0,
-    "fisica_kw": 43.199999999999996
+    "fisica_calibrada_kw": 43.199999999999996,
+    "fisica_pura_kw": 2.0736
    },
    {
     "vento_m_s": 15,
     "reta_kw": 37.5,
-    "fisica_kw": 84.375
+    "fisica_calibrada_kw": 84.375,
+    "fisica_pura_kw": 4.05
    },
    {
     "vento_m_s": 20,
     "reta_kw": 50.0,
-    "fisica_kw": 200.0
+    "fisica_calibrada_kw": 200.0,
+    "fisica_pura_kw": 9.6
+   }
+  ],
+  "seletor_vento": [
+   {
+    "vento_m_s": 0,
+    "previsao_kw": 0.0
+   },
+   {
+    "vento_m_s": 1,
+    "previsao_kw": 2.5
+   },
+   {
+    "vento_m_s": 2,
+    "previsao_kw": 5.0
+   },
+   {
+    "vento_m_s": 3,
+    "previsao_kw": 7.5
+   },
+   {
+    "vento_m_s": 4,
+    "previsao_kw": 10.0
+   },
+   {
+    "vento_m_s": 5,
+    "previsao_kw": 12.5
+   },
+   {
+    "vento_m_s": 6,
+    "previsao_kw": 15.0
+   },
+   {
+    "vento_m_s": 7,
+    "previsao_kw": 17.5
+   },
+   {
+    "vento_m_s": 8,
+    "previsao_kw": 20.0
+   },
+   {
+    "vento_m_s": 9,
+    "previsao_kw": 22.5
+   },
+   {
+    "vento_m_s": 10,
+    "previsao_kw": 25.0
+   },
+   {
+    "vento_m_s": 11,
+    "previsao_kw": 27.5
+   },
+   {
+    "vento_m_s": 12,
+    "previsao_kw": 30.0
+   },
+   {
+    "vento_m_s": 13,
+    "previsao_kw": 32.5
+   },
+   {
+    "vento_m_s": 14,
+    "previsao_kw": 35.0
+   },
+   {
+    "vento_m_s": 15,
+    "previsao_kw": 37.5
+   },
+   {
+    "vento_m_s": 16,
+    "previsao_kw": 40.0
+   },
+   {
+    "vento_m_s": 17,
+    "previsao_kw": 42.5
+   },
+   {
+    "vento_m_s": 18,
+    "previsao_kw": 45.0
+   },
+   {
+    "vento_m_s": 19,
+    "previsao_kw": 47.5
+   },
+   {
+    "vento_m_s": 20,
+    "previsao_kw": 50.0
+   },
+   {
+    "vento_m_s": 21,
+    "previsao_kw": 52.5
+   },
+   {
+    "vento_m_s": 22,
+    "previsao_kw": 55.0
+   },
+   {
+    "vento_m_s": 23,
+    "previsao_kw": 57.5
+   },
+   {
+    "vento_m_s": 24,
+    "previsao_kw": 60.0
+   },
+   {
+    "vento_m_s": 25,
+    "previsao_kw": 62.5
    }
   ]
  },
@@ -140,6 +252,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 29,
       "bateria_fim_pct": 35.54040404040404,
       "geracao_kw": 102.77777777777777,
@@ -152,6 +265,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 35.54040404040404,
       "bateria_fim_pct": 56.222222222222214,
       "geracao_kw": 130.0,
@@ -170,6 +284,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 56.222222222222214,
       "bateria_fim_pct": 60.13636363636363,
       "geracao_kw": 56.22222222222222,
@@ -185,6 +300,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 60.13636363636363,
       "bateria_fim_pct": 52.364898989898975,
       "geracao_kw": 56.80555555555556,
@@ -200,6 +316,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 52.364898989898975,
       "bateria_fim_pct": 44.63762626262625,
       "geracao_kw": 57.0,
@@ -212,6 +329,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 44.63762626262625,
       "bateria_fim_pct": 72.39015151515152,
       "geracao_kw": 161.11111111111111,
@@ -230,6 +348,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 72.39015151515152,
       "bateria_fim_pct": 97.49116161616162,
       "geracao_kw": 149.44444444444446,
@@ -245,6 +364,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 97.49116161616162,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 130.0,
@@ -260,6 +380,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 102.77777777777777,
@@ -272,6 +393,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 94.72222222222221,
       "geracao_kw": 67.77777777777777,
@@ -284,6 +406,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 94.72222222222221,
       "bateria_fim_pct": 83.58585858585859,
       "geracao_kw": 25.0,
@@ -296,11 +419,142 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 83.58585858585859,
       "bateria_fim_pct": 72.44949494949495,
       "geracao_kw": 25.0,
       "consumo_kw": 74,
       "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 72.44949494949495,
+      "bateria_fim_pct": 67.44949494949495,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 67.44949494949495,
+      "bateria_fim_pct": 62.44949494949494,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 62.44949494949494,
+      "bateria_fim_pct": 57.44949494949495,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 57.44949494949495,
+      "bateria_fim_pct": 52.44949494949495,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 52.44949494949495,
+      "bateria_fim_pct": 47.44949494949495,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 47.44949494949495,
+      "bateria_fim_pct": 42.44949494949495,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 42.44949494949495,
+      "bateria_fim_pct": 37.44949494949495,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 37.44949494949495,
+      "bateria_fim_pct": 32.44949494949495,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 32.44949494949495,
+      "bateria_fim_pct": 27.449494949494945,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 27.449494949494945,
+      "bateria_fim_pct": 22.449494949494945,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
       "projecao_pct": null,
       "acoes": [],
       "desligados": []
@@ -314,7 +568,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "B: bateria < 50%",
       "situacao": "ALERTA: reduzir consumo",
-      "acoes": []
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
      },
      {
       "hora": 9,
@@ -326,7 +581,8 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: situação MODO ECONOMIA",
        "Desligado: Logística — motivo: situação MODO ECONOMIA"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -335,7 +591,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 11,
@@ -347,7 +604,8 @@ const DADOS = {
       "acoes": [
        "Religado: Logística",
        "Religado: Laboratório"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -356,7 +614,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -368,7 +627,8 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: situação MODO ECONOMIA",
        "Desligado: Logística — motivo: situação MODO ECONOMIA"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -377,7 +637,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -389,7 +650,8 @@ const DADOS = {
       "acoes": [
        "Religado: Logística",
        "Religado: Laboratório"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 16,
@@ -398,7 +660,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 17,
@@ -407,7 +670,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -416,7 +680,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 19,
@@ -425,17 +690,120 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 72,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 67,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 62,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 57,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 52,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 47,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 42,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 37,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 32,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 27,4%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
      }
     ],
     "resumo": {
      "bateria_20h_pct": 72.44949494949495,
-     "menor_bateria_pct": 35.54040404040404,
+     "menor_bateria_pct": 22.449494949494945,
      "horas_criticas": 0,
+     "horas_criticas_dia": 0,
      "modulo_horas_desligados": 8,
+     "modulo_horas_desligados_dia": 8,
      "desperdicio_kwh": 39.73888888888888,
      "reserva_para_noite": true,
-     "amanhecer_pct": 22.449494949494948,
+     "amanhecer_pct": 22.449494949494945,
      "amanhece_acima_do_piso": true
     }
    },
@@ -447,6 +815,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 29,
       "bateria_fim_pct": 35.54040404040404,
       "geracao_kw": 102.77777777777777,
@@ -459,6 +828,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 35.54040404040404,
       "bateria_fim_pct": 56.222222222222214,
       "geracao_kw": 130.0,
@@ -477,6 +847,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 56.222222222222214,
       "bateria_fim_pct": 60.13636363636363,
       "geracao_kw": 56.22222222222222,
@@ -492,6 +863,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 60.13636363636363,
       "bateria_fim_pct": 64.18308080808079,
       "geracao_kw": 56.80555555555556,
@@ -507,6 +879,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 64.18308080808079,
       "bateria_fim_pct": 68.27398989898987,
       "geracao_kw": 57.0,
@@ -522,6 +895,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 68.27398989898987,
       "bateria_fim_pct": 84.20833333333331,
       "geracao_kw": 161.11111111111111,
@@ -537,6 +911,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 84.20833333333331,
       "bateria_fim_pct": 97.4911616161616,
       "geracao_kw": 149.44444444444446,
@@ -549,6 +924,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 97.4911616161616,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 130.0,
@@ -561,6 +937,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 102.77777777777777,
@@ -573,6 +950,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 94.72222222222221,
       "geracao_kw": 67.77777777777777,
@@ -585,6 +963,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 94.72222222222221,
       "bateria_fim_pct": 86.9949494949495,
       "geracao_kw": 25.0,
@@ -601,6 +980,7 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 86.9949494949495,
       "bateria_fim_pct": 79.26767676767676,
       "geracao_kw": 25.0,
@@ -609,6 +989,168 @@ const DADOS = {
       "projecao_pct": 71.54040404040404,
       "acoes": [],
       "desligados": [
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 79.26767676767676,
+      "bateria_fim_pct": 76.54040404040404,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 67.67676767676768,
+      "acoes": [
+       "Desligado: Logística — motivo: bateria projetada em 67,6% em 3h (abaixo de 70% e caindo)"
+      ],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 76.54040404040404,
+      "bateria_fim_pct": 73.81313131313131,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 68.35858585858585,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 73.81313131313131,
+      "bateria_fim_pct": 71.08585858585859,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 65.63131313131314,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 71.08585858585859,
+      "bateria_fim_pct": 68.35858585858585,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 62.90404040404041,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 68.35858585858585,
+      "bateria_fim_pct": 65.63131313131314,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 60.176767676767675,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 65.63131313131314,
+      "bateria_fim_pct": 62.904040404040416,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 57.44949494949496,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 62.904040404040416,
+      "bateria_fim_pct": 60.17676767676768,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 54.722222222222236,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 60.17676767676768,
+      "bateria_fim_pct": 57.44949494949496,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 51.9949494949495,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 57.44949494949496,
+      "bateria_fim_pct": 54.722222222222236,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 49.267676767676775,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 54.722222222222236,
+      "bateria_fim_pct": 51.994949494949516,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 56.262626262626284,
+      "acoes": [],
+      "desligados": [
+       "Logística",
        "Laboratório"
       ]
      }
@@ -621,7 +1163,8 @@ const DADOS = {
       "projecao_pct": 57.686868686868685,
       "regra": "B: bateria < 50%",
       "situacao": "ALERTA: reduzir consumo",
-      "acoes": []
+      "acoes": [],
+      "observacao": "Sem corte agora: a projeção de 57,7% não está caindo abaixo de 70%"
      },
      {
       "hora": 9,
@@ -633,7 +1176,8 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: situação MODO ECONOMIA",
        "Desligado: Logística — motivo: situação MODO ECONOMIA"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -642,7 +1186,8 @@ const DADOS = {
       "projecao_pct": 68.27398989898988,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 11,
@@ -651,7 +1196,8 @@ const DADOS = {
       "projecao_pct": 72.32070707070706,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -660,7 +1206,8 @@ const DADOS = {
       "projecao_pct": 76.23484848484846,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -672,7 +1219,8 @@ const DADOS = {
       "acoes": [
        "Religado: Logística — projeção em 100,0%",
        "Religado: Laboratório — projeção em 100,0%"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -681,7 +1229,8 @@ const DADOS = {
       "projecao_pct": 100.0,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -690,7 +1239,8 @@ const DADOS = {
       "projecao_pct": 94.72222222222221,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 16,
@@ -699,7 +1249,8 @@ const DADOS = {
       "projecao_pct": 83.58585858585859,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 17,
@@ -708,7 +1259,8 @@ const DADOS = {
       "projecao_pct": 72.44949494949495,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -719,7 +1271,8 @@ const DADOS = {
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 67,4% em 3h (abaixo de 70% e caindo)"
-      ]
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
      },
      {
       "hora": 19,
@@ -728,17 +1281,122 @@ const DADOS = {
       "projecao_pct": 71.54040404040404,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 79,3%, geração 25,0 kW, consumo 42,0 kW",
+      "anomalias": [],
+      "projecao_pct": 67.67676767676768,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [
+       "Desligado: Logística — motivo: bateria projetada em 67,6% em 3h (abaixo de 70% e caindo)"
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 76,5%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 68.35858585858585,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 73,8%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 65.63131313131314,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 71,1%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 62.90404040404041,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 68,4%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 60.176767676767675,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 65,6%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 57.44949494949496,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 62,9%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 54.722222222222236,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 60,2%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 51.9949494949495,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 57,4%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 49.267676767676775,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 54,7%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 56.262626262626284,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
      }
     ],
     "resumo": {
      "bateria_20h_pct": 79.26767676767676,
-     "menor_bateria_pct": 35.54040404040404,
+     "menor_bateria_pct": 29,
      "horas_criticas": 0,
-     "modulo_horas_desligados": 10,
+     "horas_criticas_dia": 0,
+     "modulo_horas_desligados": 30,
+     "modulo_horas_desligados_dia": 10,
      "desperdicio_kwh": 39.73888888888882,
      "reserva_para_noite": true,
-     "amanhecer_pct": 29.267676767676765,
+     "amanhecer_pct": 51.994949494949516,
      "amanhece_acima_do_piso": true
     }
    }
@@ -752,6 +1410,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 29,
       "bateria_fim_pct": 35.54040404040404,
       "geracao_kw": 102.77777777777777,
@@ -764,6 +1423,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 35.54040404040404,
       "bateria_fim_pct": 56.222222222222214,
       "geracao_kw": 130.0,
@@ -782,6 +1442,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 56.222222222222214,
       "bateria_fim_pct": 81.32323232323232,
       "geracao_kw": 149.44444444444446,
@@ -797,6 +1458,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 81.32323232323232,
       "bateria_fim_pct": 97.25757575757574,
       "geracao_kw": 161.11111111111111,
@@ -812,6 +1474,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 97.25757575757574,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 165.0,
@@ -824,6 +1487,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 161.11111111111111,
@@ -836,6 +1500,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 92.0959595959596,
       "geracao_kw": 56.22222222222222,
@@ -848,6 +1513,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 92.0959595959596,
       "bateria_fim_pct": 83.9709595959596,
       "geracao_kw": 55.25,
@@ -860,6 +1526,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 83.9709595959596,
       "bateria_fim_pct": 75.53661616161615,
       "geracao_kw": 53.888888888888886,
@@ -872,6 +1539,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 75.53661616161615,
       "bateria_fim_pct": 70.25883838383837,
       "geracao_kw": 67.77777777777777,
@@ -884,6 +1552,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 70.25883838383837,
       "bateria_fim_pct": 59.122474747474726,
       "geracao_kw": 25.0,
@@ -896,6 +1565,7 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 59.122474747474726,
       "bateria_fim_pct": 47.98611111111109,
       "geracao_kw": 25.0,
@@ -904,6 +1574,151 @@ const DADOS = {
       "projecao_pct": null,
       "acoes": [],
       "desligados": []
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 47.98611111111109,
+      "bateria_fim_pct": 42.98611111111109,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 42.98611111111109,
+      "bateria_fim_pct": 37.98611111111109,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 37.98611111111109,
+      "bateria_fim_pct": 32.986111111111086,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 32.986111111111086,
+      "bateria_fim_pct": 27.98611111111109,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 27.98611111111109,
+      "bateria_fim_pct": 22.98611111111109,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 22.98611111111109,
+      "bateria_fim_pct": 17.986111111111093,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 17.986111111111093,
+      "bateria_fim_pct": 15.258838383838363,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "CRITICO",
+      "projecao_pct": null,
+      "acoes": [
+       "Desligado: Laboratório — motivo: situação CRÍTICO",
+       "Desligado: Logística — motivo: situação CRÍTICO"
+      ],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 15.258838383838363,
+      "bateria_fim_pct": 12.531565656565636,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "CRITICO",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 12.531565656565636,
+      "bateria_fim_pct": 9.804292929292908,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "CRITICO",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 9.804292929292908,
+      "bateria_fim_pct": 7.07702020202018,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "CRITICO",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
      }
     ],
     "diario": [
@@ -914,7 +1729,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "B: bateria < 50%",
       "situacao": "ALERTA: reduzir consumo",
-      "acoes": []
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
      },
      {
       "hora": 9,
@@ -926,7 +1742,8 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: situação MODO ECONOMIA",
        "Desligado: Logística — motivo: situação MODO ECONOMIA"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -935,7 +1752,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 11,
@@ -947,7 +1765,8 @@ const DADOS = {
       "acoes": [
        "Religado: Logística",
        "Religado: Laboratório"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -956,7 +1775,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -965,7 +1785,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -974,7 +1795,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -983,7 +1805,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 16,
@@ -992,7 +1815,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 17,
@@ -1001,7 +1825,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -1010,7 +1835,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 19,
@@ -1019,17 +1845,123 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 48,0%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 43,0%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 38,0%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 33,0%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 28,0%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 23,0%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 18,0%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "C: bateria < 20%",
+      "situacao": "CRÍTICO: modo emergência — só suporte à vida",
+      "acoes": [
+       "Desligado: Laboratório — motivo: situação CRÍTICO",
+       "Desligado: Logística — motivo: situação CRÍTICO"
+      ],
+      "observacao": ""
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 15,3%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "C: bateria < 20%",
+      "situacao": "CRÍTICO: modo emergência — só suporte à vida",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 12,5%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "C: bateria < 20%",
+      "situacao": "CRÍTICO: modo emergência — só suporte à vida",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 9,8%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "C: bateria < 20%",
+      "situacao": "CRÍTICO: modo emergência — só suporte à vida",
+      "acoes": [],
+      "observacao": ""
      }
     ],
     "resumo": {
      "bateria_20h_pct": 47.98611111111109,
-     "menor_bateria_pct": 35.54040404040404,
-     "horas_criticas": 0,
-     "modulo_horas_desligados": 4,
+     "menor_bateria_pct": 7.07702020202018,
+     "horas_criticas": 4,
+     "horas_criticas_dia": 0,
+     "modulo_horas_desligados": 12,
+     "modulo_horas_desligados_dia": 4,
      "desperdicio_kwh": 132.0444444444443,
      "reserva_para_noite": false,
-     "amanhecer_pct": -2.0138888888889093,
+     "amanhecer_pct": 7.07702020202018,
      "amanhece_acima_do_piso": false
     }
    },
@@ -1041,6 +1973,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 29,
       "bateria_fim_pct": 35.54040404040404,
       "geracao_kw": 102.77777777777777,
@@ -1053,6 +1986,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 35.54040404040404,
       "bateria_fim_pct": 56.222222222222214,
       "geracao_kw": 130.0,
@@ -1071,6 +2005,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 56.222222222222214,
       "bateria_fim_pct": 81.32323232323232,
       "geracao_kw": 149.44444444444446,
@@ -1086,6 +2021,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 81.32323232323232,
       "bateria_fim_pct": 97.25757575757574,
       "geracao_kw": 161.11111111111111,
@@ -1101,6 +2037,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 97.25757575757574,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 165.0,
@@ -1113,6 +2050,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 100.0,
       "geracao_kw": 161.11111111111111,
@@ -1125,6 +2063,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 100.0,
       "bateria_fim_pct": 92.0959595959596,
       "geracao_kw": 56.22222222222222,
@@ -1137,6 +2076,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 92.0959595959596,
       "bateria_fim_pct": 90.78914141414141,
       "geracao_kw": 55.25,
@@ -1153,6 +2093,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 90.78914141414141,
       "bateria_fim_pct": 89.17297979797979,
       "geracao_kw": 53.888888888888886,
@@ -1167,6 +2108,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 89.17297979797979,
       "bateria_fim_pct": 90.71338383838383,
       "geracao_kw": 67.77777777777777,
@@ -1181,6 +2123,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 90.71338383838383,
       "bateria_fim_pct": 82.9861111111111,
       "geracao_kw": 25.0,
@@ -1195,6 +2138,7 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 82.9861111111111,
       "bateria_fim_pct": 77.9861111111111,
       "geracao_kw": 25.0,
@@ -1204,6 +2148,166 @@ const DADOS = {
       "acoes": [
        "Desligado: Logística — motivo: bateria projetada em 67,5% em 3h (abaixo de 70% e caindo)"
       ],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 77.9861111111111,
+      "bateria_fim_pct": 75.25883838383838,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 69.80429292929293,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 75.25883838383838,
+      "bateria_fim_pct": 72.53156565656565,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 67.0770202020202,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 72.53156565656565,
+      "bateria_fim_pct": 69.80429292929293,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 64.34974747474746,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 69.80429292929293,
+      "bateria_fim_pct": 67.07702020202021,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 61.622474747474755,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 67.07702020202021,
+      "bateria_fim_pct": 64.34974747474747,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 58.89520202020203,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 64.34974747474747,
+      "bateria_fim_pct": 61.622474747474755,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 56.167929292929294,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 61.622474747474755,
+      "bateria_fim_pct": 58.89520202020203,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 53.440656565656575,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 58.89520202020203,
+      "bateria_fim_pct": 56.167929292929294,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 50.71338383838384,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 56.167929292929294,
+      "bateria_fim_pct": 53.440656565656575,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 47.98611111111112,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 53.440656565656575,
+      "bateria_fim_pct": 50.71338383838384,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 54.98106060606061,
+      "acoes": [],
       "desligados": [
        "Logística",
        "Laboratório"
@@ -1218,7 +2322,8 @@ const DADOS = {
       "projecao_pct": 57.686868686868685,
       "regra": "B: bateria < 50%",
       "situacao": "ALERTA: reduzir consumo",
-      "acoes": []
+      "acoes": [],
+      "observacao": "Sem corte agora: a projeção de 57,7% não está caindo abaixo de 70%"
      },
      {
       "hora": 9,
@@ -1230,7 +2335,8 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: situação MODO ECONOMIA",
        "Desligado: Logística — motivo: situação MODO ECONOMIA"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -1239,7 +2345,8 @@ const DADOS = {
       "projecao_pct": 100.0,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 11,
@@ -1251,7 +2358,8 @@ const DADOS = {
       "acoes": [
        "Religado: Logística — projeção em 100,0%",
        "Religado: Laboratório — projeção em 100,0%"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -1260,7 +2368,8 @@ const DADOS = {
       "projecao_pct": 100.0,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -1269,7 +2378,8 @@ const DADOS = {
       "projecao_pct": 100.0,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -1278,7 +2388,8 @@ const DADOS = {
       "projecao_pct": 75.53661616161615,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -1289,7 +2400,8 @@ const DADOS = {
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 66,7% em 3h (abaixo de 70% e caindo)"
-      ]
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
      },
      {
       "hora": 16,
@@ -1298,7 +2410,8 @@ const DADOS = {
       "projecao_pct": 85.11363636363637,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 17,
@@ -1307,7 +2420,8 @@ const DADOS = {
       "projecao_pct": 75.25883838383838,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -1316,7 +2430,8 @@ const DADOS = {
       "projecao_pct": 71.395202020202,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 19,
@@ -1327,17 +2442,120 @@ const DADOS = {
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Logística — motivo: bateria projetada em 67,5% em 3h (abaixo de 70% e caindo)"
-      ]
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 78,0%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 69.80429292929293,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 75,3%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 67.0770202020202,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 72,5%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 64.34974747474746,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 69,8%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 61.622474747474755,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 67,1%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 58.89520202020203,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 64,3%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 56.167929292929294,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 61,6%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 53.440656565656575,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 58,9%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 50.71338383838384,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 56,2%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 47.98611111111112,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 53,4%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 54.98106060606061,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
      }
     ],
     "resumo": {
      "bateria_20h_pct": 77.9861111111111,
-     "menor_bateria_pct": 35.54040404040404,
+     "menor_bateria_pct": 29,
      "horas_criticas": 0,
-     "modulo_horas_desligados": 10,
+     "horas_criticas_dia": 0,
+     "modulo_horas_desligados": 30,
+     "modulo_horas_desligados_dia": 10,
      "desperdicio_kwh": 132.0444444444443,
      "reserva_para_noite": true,
-     "amanhecer_pct": 27.986111111111107,
+     "amanhecer_pct": 50.71338383838384,
      "amanhece_acima_do_piso": true
     }
    }
@@ -1351,6 +2569,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 53,
       "bateria_fim_pct": 55.61616161616162,
       "geracao_kw": 102.77777777777777,
@@ -1363,6 +2582,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 55.61616161616162,
       "bateria_fim_pct": 59.16161616161617,
       "geracao_kw": 130.0,
@@ -1375,6 +2595,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 59.16161616161617,
       "bateria_fim_pct": 56.00000000000001,
       "geracao_kw": 56.22222222222222,
@@ -1387,6 +2608,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 56.00000000000001,
       "bateria_fim_pct": 52.89141414141415,
       "geracao_kw": 56.80555555555556,
@@ -1399,6 +2621,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 52.89141414141415,
       "bateria_fim_pct": 49.80050505050506,
       "geracao_kw": 57.0,
@@ -1411,6 +2634,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 49.80050505050506,
       "bateria_fim_pct": 60.90151515151516,
       "geracao_kw": 161.11111111111111,
@@ -1429,6 +2653,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 60.90151515151516,
       "bateria_fim_pct": 70.9419191919192,
       "geracao_kw": 149.44444444444446,
@@ -1444,6 +2669,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 70.9419191919192,
       "bateria_fim_pct": 74.48737373737374,
       "geracao_kw": 130.0,
@@ -1459,6 +2685,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 74.48737373737374,
       "bateria_fim_pct": 75.5580808080808,
       "geracao_kw": 102.77777777777777,
@@ -1471,6 +2698,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 75.5580808080808,
       "bateria_fim_pct": 73.4469696969697,
       "geracao_kw": 67.77777777777777,
@@ -1483,6 +2711,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 73.4469696969697,
       "bateria_fim_pct": 68.99242424242425,
       "geracao_kw": 25.0,
@@ -1495,11 +2724,142 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 68.99242424242425,
       "bateria_fim_pct": 64.53787878787878,
       "geracao_kw": 25.0,
       "consumo_kw": 74,
       "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 64.53787878787878,
+      "bateria_fim_pct": 62.537878787878775,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 62.537878787878775,
+      "bateria_fim_pct": 60.537878787878775,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 60.537878787878775,
+      "bateria_fim_pct": 58.537878787878775,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 58.537878787878775,
+      "bateria_fim_pct": 56.53787878787877,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 56.53787878787877,
+      "bateria_fim_pct": 54.53787878787878,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 54.53787878787878,
+      "bateria_fim_pct": 52.53787878787879,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 52.53787878787879,
+      "bateria_fim_pct": 50.53787878787879,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 50.53787878787879,
+      "bateria_fim_pct": 48.53787878787878,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 48.53787878787878,
+      "bateria_fim_pct": 46.53787878787878,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 46.53787878787878,
+      "bateria_fim_pct": 44.53787878787878,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
       "projecao_pct": null,
       "acoes": [],
       "desligados": []
@@ -1513,7 +2873,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 9,
@@ -1522,7 +2883,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -1531,7 +2893,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 11,
@@ -1540,7 +2903,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -1549,7 +2913,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -1561,7 +2926,8 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: situação MODO ECONOMIA",
        "Desligado: Logística — motivo: situação MODO ECONOMIA"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -1570,7 +2936,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -1582,7 +2949,8 @@ const DADOS = {
       "acoes": [
        "Religado: Logística",
        "Religado: Laboratório"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 16,
@@ -1591,7 +2959,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 17,
@@ -1600,7 +2969,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -1609,7 +2979,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 19,
@@ -1618,17 +2989,120 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 64,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 62,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 60,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 58,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 56,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 54,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 52,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 50,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 48,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 46,5%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
      }
     ],
     "resumo": {
      "bateria_20h_pct": 64.53787878787878,
-     "menor_bateria_pct": 49.80050505050506,
+     "menor_bateria_pct": 44.53787878787878,
      "horas_criticas": 0,
+     "horas_criticas_dia": 0,
      "modulo_horas_desligados": 4,
+     "modulo_horas_desligados_dia": 4,
      "desperdicio_kwh": 0,
      "reserva_para_noite": false,
-     "amanhecer_pct": 44.537878787878775,
+     "amanhecer_pct": 44.53787878787878,
      "amanhece_acima_do_piso": false
     }
    },
@@ -1640,6 +3114,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 53,
       "bateria_fim_pct": 55.61616161616162,
       "geracao_kw": 102.77777777777777,
@@ -1652,6 +3127,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 55.61616161616162,
       "bateria_fim_pct": 59.16161616161617,
       "geracao_kw": 130.0,
@@ -1664,6 +3140,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 59.16161616161617,
       "bateria_fim_pct": 60.72727272727273,
       "geracao_kw": 56.22222222222222,
@@ -1673,7 +3150,7 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 49,8% em 3h (abaixo de 70% e caindo)",
        "Desligado: Logística — motivo: bateria projetada em 49,8% em 3h (abaixo de 70% e caindo)",
-       "ATENÇÃO: só restou o suporte à vida; reserva projetada em 64,0%"
+       "ATENÇÃO: só restou o suporte à vida; reserva projetada em 63,9%"
       ],
       "desligados": [
        "Logística",
@@ -1683,6 +3160,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 60.72727272727273,
       "bateria_fim_pct": 62.3459595959596,
       "geracao_kw": 56.80555555555556,
@@ -1698,6 +3176,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 62.3459595959596,
       "bateria_fim_pct": 63.98232323232323,
       "geracao_kw": 57.0,
@@ -1713,6 +3192,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 63.98232323232323,
       "bateria_fim_pct": 73.08333333333333,
       "geracao_kw": 161.11111111111111,
@@ -1729,6 +3209,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 73.08333333333333,
       "bateria_fim_pct": 78.39646464646465,
       "geracao_kw": 149.44444444444446,
@@ -1743,6 +3224,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 78.39646464646465,
       "bateria_fim_pct": 81.94191919191918,
       "geracao_kw": 130.0,
@@ -1755,6 +3237,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 81.94191919191918,
       "bateria_fim_pct": 83.01262626262627,
       "geracao_kw": 102.77777777777777,
@@ -1767,6 +3250,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 83.01262626262627,
       "bateria_fim_pct": 80.90151515151516,
       "geracao_kw": 67.77777777777777,
@@ -1779,6 +3263,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 80.90151515151516,
       "bateria_fim_pct": 77.81060606060606,
       "geracao_kw": 25.0,
@@ -1786,7 +3271,7 @@ const DADOS = {
       "situacao": "NORMAL",
       "projecao_pct": 69.99242424242425,
       "acoes": [
-       "Desligado: Laboratório — motivo: bateria projetada em 70,0% em 3h (abaixo de 70% e caindo)"
+       "Desligado: Laboratório — motivo: bateria projetada em 69,9% em 3h (abaixo de 70% e caindo)"
       ],
       "desligados": [
        "Laboratório"
@@ -1795,6 +3280,7 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 77.81060606060606,
       "bateria_fim_pct": 74.71969696969697,
       "geracao_kw": 25.0,
@@ -1803,6 +3289,168 @@ const DADOS = {
       "projecao_pct": 71.62878787878788,
       "acoes": [],
       "desligados": [
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 74.71969696969697,
+      "bateria_fim_pct": 73.17424242424242,
+      "geracao_kw": 25.0,
+      "consumo_kw": 42,
+      "situacao": "NORMAL",
+      "projecao_pct": 70.08333333333333,
+      "acoes": [],
+      "desligados": [
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 73.17424242424242,
+      "bateria_fim_pct": 72.08333333333333,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 68.53787878787878,
+      "acoes": [
+       "Desligado: Logística — motivo: bateria projetada em 68,5% em 3h (abaixo de 70% e caindo)",
+       "ATENÇÃO: só restou o suporte à vida; reserva projetada em 69,9%"
+      ],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 72.08333333333333,
+      "bateria_fim_pct": 70.99242424242424,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 68.81060606060606,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 70.99242424242424,
+      "bateria_fim_pct": 69.90151515151514,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 67.71969696969697,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 69.90151515151514,
+      "bateria_fim_pct": 68.81060606060605,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 66.62878787878786,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 68.81060606060605,
+      "bateria_fim_pct": 67.71969696969695,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 65.53787878787878,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 67.71969696969695,
+      "bateria_fim_pct": 66.62878787878786,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 64.44696969696967,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 66.62878787878786,
+      "bateria_fim_pct": 65.53787878787878,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 63.356060606060595,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 65.53787878787878,
+      "bateria_fim_pct": 64.44696969696967,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 62.26515151515151,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 64.44696969696967,
+      "bateria_fim_pct": 63.35606060606058,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 65.06313131313128,
+      "acoes": [],
+      "desligados": [
+       "Logística",
        "Laboratório"
       ]
      }
@@ -1815,7 +3463,8 @@ const DADOS = {
       "projecao_pct": 64.47474747474749,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 9,
@@ -1824,7 +3473,8 @@ const DADOS = {
       "projecao_pct": 70.84848484848484,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -1836,8 +3486,9 @@ const DADOS = {
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 49,8% em 3h (abaixo de 70% e caindo)",
        "Desligado: Logística — motivo: bateria projetada em 49,8% em 3h (abaixo de 70% e caindo)",
-       "ATENÇÃO: só restou o suporte à vida; reserva projetada em 64,0%"
-      ]
+       "ATENÇÃO: só restou o suporte à vida; reserva projetada em 63,9%"
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
      },
      {
       "hora": 11,
@@ -1846,7 +3497,8 @@ const DADOS = {
       "projecao_pct": 65.60101010101009,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -1855,7 +3507,8 @@ const DADOS = {
       "projecao_pct": 67.16666666666666,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -1866,7 +3519,8 @@ const DADOS = {
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Religado: Logística — projeção em 87,4%"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -1877,7 +3531,8 @@ const DADOS = {
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Religado: Laboratório — projeção em 83,0%"
-      ]
+      ],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -1886,7 +3541,8 @@ const DADOS = {
       "projecao_pct": 80.90151515151516,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 16,
@@ -1895,7 +3551,8 @@ const DADOS = {
       "projecao_pct": 76.4469696969697,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 17,
@@ -1904,7 +3561,8 @@ const DADOS = {
       "projecao_pct": 71.99242424242425,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -1914,8 +3572,9 @@ const DADOS = {
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
-       "Desligado: Laboratório — motivo: bateria projetada em 70,0% em 3h (abaixo de 70% e caindo)"
-      ]
+       "Desligado: Laboratório — motivo: bateria projetada em 69,9% em 3h (abaixo de 70% e caindo)"
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
      },
      {
       "hora": 19,
@@ -1924,17 +3583,123 @@ const DADOS = {
       "projecao_pct": 71.62878787878788,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 74,7%, geração 25,0 kW, consumo 42,0 kW",
+      "anomalias": [],
+      "projecao_pct": 70.08333333333333,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 73,2%, geração 25,0 kW, consumo 42,0 kW",
+      "anomalias": [],
+      "projecao_pct": 68.53787878787878,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [
+       "Desligado: Logística — motivo: bateria projetada em 68,5% em 3h (abaixo de 70% e caindo)",
+       "ATENÇÃO: só restou o suporte à vida; reserva projetada em 69,9%"
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 72,1%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 68.81060606060606,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 71,0%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 67.71969696969697,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 69,9%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 66.62878787878786,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 68,8%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 65.53787878787878,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 67,7%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 64.44696969696967,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 66,6%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 63.356060606060595,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 65,5%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 62.26515151515151,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 64,4%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 65.06313131313128,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
      }
     ],
     "resumo": {
      "bateria_20h_pct": 74.71969696969697,
-     "menor_bateria_pct": 55.61616161616162,
+     "menor_bateria_pct": 53,
      "horas_criticas": 0,
-     "modulo_horas_desligados": 9,
+     "horas_criticas_dia": 0,
+     "modulo_horas_desligados": 28,
+     "modulo_horas_desligados_dia": 9,
      "desperdicio_kwh": 0,
      "reserva_para_noite": true,
-     "amanhecer_pct": 54.71969696969696,
+     "amanhecer_pct": 63.35606060606058,
      "amanhece_acima_do_piso": true
     }
    }
@@ -1948,6 +3713,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 53,
       "bateria_fim_pct": 55.61616161616162,
       "geracao_kw": 102.77777777777777,
@@ -1960,6 +3726,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 55.61616161616162,
       "bateria_fim_pct": 59.16161616161617,
       "geracao_kw": 130.0,
@@ -1972,6 +3739,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 59.16161616161617,
       "bateria_fim_pct": 64.47474747474749,
       "geracao_kw": 149.44444444444446,
@@ -1984,6 +3752,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 64.47474747474749,
       "bateria_fim_pct": 70.84848484848484,
       "geracao_kw": 161.11111111111111,
@@ -1996,6 +3765,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 70.84848484848484,
       "bateria_fim_pct": 77.57575757575758,
       "geracao_kw": 165.0,
@@ -2008,6 +3778,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 77.57575757575758,
       "bateria_fim_pct": 83.94949494949495,
       "geracao_kw": 161.11111111111111,
@@ -2020,6 +3791,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 83.94949494949495,
       "bateria_fim_pct": 80.78787878787878,
       "geracao_kw": 56.22222222222222,
@@ -2032,6 +3804,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 80.78787878787878,
       "bateria_fim_pct": 77.53787878787878,
       "geracao_kw": 55.25,
@@ -2044,6 +3817,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 77.53787878787878,
       "bateria_fim_pct": 74.1641414141414,
       "geracao_kw": 53.888888888888886,
@@ -2056,6 +3830,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 74.1641414141414,
       "bateria_fim_pct": 72.05303030303027,
       "geracao_kw": 67.77777777777777,
@@ -2068,6 +3843,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 72.05303030303027,
       "bateria_fim_pct": 67.59848484848482,
       "geracao_kw": 25.0,
@@ -2080,11 +3856,142 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 67.59848484848482,
       "bateria_fim_pct": 63.14393939393936,
       "geracao_kw": 25.0,
       "consumo_kw": 74,
       "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 63.14393939393936,
+      "bateria_fim_pct": 61.14393939393936,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 61.14393939393936,
+      "bateria_fim_pct": 59.14393939393937,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 59.14393939393937,
+      "bateria_fim_pct": 57.14393939393937,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 57.14393939393937,
+      "bateria_fim_pct": 55.14393939393937,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 55.14393939393937,
+      "bateria_fim_pct": 53.14393939393936,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 53.14393939393936,
+      "bateria_fim_pct": 51.14393939393936,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 51.14393939393936,
+      "bateria_fim_pct": 49.14393939393937,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "NORMAL",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 49.14393939393937,
+      "bateria_fim_pct": 47.14393939393936,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 47.14393939393936,
+      "bateria_fim_pct": 45.143939393939355,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
+      "projecao_pct": null,
+      "acoes": [],
+      "desligados": []
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 45.143939393939355,
+      "bateria_fim_pct": 43.14393939393935,
+      "geracao_kw": 25.0,
+      "consumo_kw": 47,
+      "situacao": "ALERTA",
       "projecao_pct": null,
       "acoes": [],
       "desligados": []
@@ -2098,7 +4005,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 9,
@@ -2107,7 +4015,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -2116,7 +4025,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 11,
@@ -2125,7 +4035,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -2134,7 +4045,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -2143,7 +4055,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -2152,7 +4065,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -2161,7 +4075,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 16,
@@ -2170,7 +4085,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 17,
@@ -2179,7 +4095,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -2188,7 +4105,8 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 19,
@@ -2197,17 +4115,120 @@ const DADOS = {
       "projecao_pct": null,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 63,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 61,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 59,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 57,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 55,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 53,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 51,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 49,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 47,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 45,1%, geração 25,0 kW, consumo 47,0 kW",
+      "anomalias": [],
+      "projecao_pct": null,
+      "regra": "B: bateria < 50%",
+      "situacao": "ALERTA: reduzir consumo",
+      "acoes": [],
+      "observacao": "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
      }
     ],
     "resumo": {
      "bateria_20h_pct": 63.14393939393936,
-     "menor_bateria_pct": 55.61616161616162,
+     "menor_bateria_pct": 43.14393939393935,
      "horas_criticas": 0,
+     "horas_criticas_dia": 0,
      "modulo_horas_desligados": 0,
+     "modulo_horas_desligados_dia": 0,
      "desperdicio_kwh": 0,
      "reserva_para_noite": false,
-     "amanhecer_pct": 43.14393939393937,
+     "amanhecer_pct": 43.14393939393935,
      "amanhece_acima_do_piso": false
     }
    },
@@ -2219,6 +4240,7 @@ const DADOS = {
      {
       "hora": 8,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 53,
       "bateria_fim_pct": 55.61616161616162,
       "geracao_kw": 102.77777777777777,
@@ -2231,6 +4253,7 @@ const DADOS = {
      {
       "hora": 9,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 55.61616161616162,
       "bateria_fim_pct": 59.16161616161617,
       "geracao_kw": 130.0,
@@ -2243,6 +4266,7 @@ const DADOS = {
      {
       "hora": 10,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 59.16161616161617,
       "bateria_fim_pct": 64.47474747474749,
       "geracao_kw": 149.44444444444446,
@@ -2255,6 +4279,7 @@ const DADOS = {
      {
       "hora": 11,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 64.47474747474749,
       "bateria_fim_pct": 70.84848484848484,
       "geracao_kw": 161.11111111111111,
@@ -2267,6 +4292,7 @@ const DADOS = {
      {
       "hora": 12,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 70.84848484848484,
       "bateria_fim_pct": 77.57575757575758,
       "geracao_kw": 165.0,
@@ -2279,6 +4305,7 @@ const DADOS = {
      {
       "hora": 13,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 77.57575757575758,
       "bateria_fim_pct": 83.94949494949495,
       "geracao_kw": 161.11111111111111,
@@ -2291,6 +4318,7 @@ const DADOS = {
      {
       "hora": 14,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 83.94949494949495,
       "bateria_fim_pct": 80.78787878787878,
       "geracao_kw": 56.22222222222222,
@@ -2303,6 +4331,7 @@ const DADOS = {
      {
       "hora": 15,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 80.78787878787878,
       "bateria_fim_pct": 77.53787878787878,
       "geracao_kw": 55.25,
@@ -2315,6 +4344,7 @@ const DADOS = {
      {
       "hora": 16,
       "tempestade": true,
+      "noite": false,
       "bateria_inicio_pct": 77.53787878787878,
       "bateria_fim_pct": 76.89141414141413,
       "geracao_kw": 53.888888888888886,
@@ -2331,6 +4361,7 @@ const DADOS = {
      {
       "hora": 17,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 76.89141414141413,
       "bateria_fim_pct": 77.50757575757575,
       "geracao_kw": 67.77777777777777,
@@ -2345,6 +4376,7 @@ const DADOS = {
      {
       "hora": 18,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 77.50757575757575,
       "bateria_fim_pct": 75.50757575757575,
       "geracao_kw": 25.0,
@@ -2352,7 +4384,7 @@ const DADOS = {
       "situacao": "NORMAL",
       "projecao_pct": 69.78030303030303,
       "acoes": [
-       "Desligado: Logística — motivo: bateria projetada em 69,8% em 3h (abaixo de 70% e caindo)"
+       "Desligado: Logística — motivo: bateria projetada em 69,7% em 3h (abaixo de 70% e caindo)"
       ],
       "desligados": [
        "Logística",
@@ -2362,12 +4394,173 @@ const DADOS = {
      {
       "hora": 19,
       "tempestade": false,
+      "noite": false,
       "bateria_inicio_pct": 75.50757575757575,
       "bateria_fim_pct": 73.50757575757575,
       "geracao_kw": 25.0,
       "consumo_kw": 47,
       "situacao": "NORMAL",
       "projecao_pct": 71.32575757575756,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 20,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 73.50757575757575,
+      "bateria_fim_pct": 72.41666666666666,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 70.23484848484848,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 21,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 72.41666666666666,
+      "bateria_fim_pct": 71.32575757575756,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 69.14393939393939,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 22,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 71.32575757575756,
+      "bateria_fim_pct": 70.23484848484848,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 68.0530303030303,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 23,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 70.23484848484848,
+      "bateria_fim_pct": 69.1439393939394,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 66.96212121212122,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 0,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 69.1439393939394,
+      "bateria_fim_pct": 68.0530303030303,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 65.87121212121212,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 1,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 68.0530303030303,
+      "bateria_fim_pct": 66.9621212121212,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 64.78030303030302,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 2,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 66.9621212121212,
+      "bateria_fim_pct": 65.87121212121212,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 63.68939393939394,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 3,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 65.87121212121212,
+      "bateria_fim_pct": 64.78030303030302,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 62.59848484848484,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 4,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 64.78030303030302,
+      "bateria_fim_pct": 63.68939393939394,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 61.50757575757575,
+      "acoes": [],
+      "desligados": [
+       "Logística",
+       "Laboratório"
+      ]
+     },
+     {
+      "hora": 5,
+      "tempestade": false,
+      "noite": true,
+      "bateria_inicio_pct": 63.68939393939394,
+      "bateria_fim_pct": 62.59848484848484,
+      "geracao_kw": 25.0,
+      "consumo_kw": 37,
+      "situacao": "NORMAL",
+      "projecao_pct": 64.30555555555554,
       "acoes": [],
       "desligados": [
        "Logística",
@@ -2383,7 +4576,8 @@ const DADOS = {
       "projecao_pct": 64.47474747474749,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 9,
@@ -2392,7 +4586,8 @@ const DADOS = {
       "projecao_pct": 70.84848484848484,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 10,
@@ -2401,7 +4596,8 @@ const DADOS = {
       "projecao_pct": 77.57575757575758,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 11,
@@ -2410,7 +4606,8 @@ const DADOS = {
       "projecao_pct": 83.94949494949495,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 12,
@@ -2419,7 +4616,8 @@ const DADOS = {
       "projecao_pct": 89.26262626262627,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 13,
@@ -2428,7 +4626,8 @@ const DADOS = {
       "projecao_pct": 92.8080808080808,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 14,
@@ -2437,7 +4636,8 @@ const DADOS = {
       "projecao_pct": 74.16414141414141,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 15,
@@ -2446,7 +4646,8 @@ const DADOS = {
       "projecao_pct": 70.63131313131314,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 16,
@@ -2457,7 +4658,8 @@ const DADOS = {
       "situacao": "NORMAL: operação padrão",
       "acoes": [
        "Desligado: Laboratório — motivo: bateria projetada em 68,4% em 3h (abaixo de 70% e caindo)"
-      ]
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
      },
      {
       "hora": 17,
@@ -2466,7 +4668,8 @@ const DADOS = {
       "projecao_pct": 71.32575757575756,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
      },
      {
       "hora": 18,
@@ -2476,8 +4679,9 @@ const DADOS = {
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
       "acoes": [
-       "Desligado: Logística — motivo: bateria projetada em 69,8% em 3h (abaixo de 70% e caindo)"
-      ]
+       "Desligado: Logística — motivo: bateria projetada em 69,7% em 3h (abaixo de 70% e caindo)"
+      ],
+      "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
      },
      {
       "hora": 19,
@@ -2486,17 +4690,120 @@ const DADOS = {
       "projecao_pct": 71.32575757575756,
       "regra": "nenhuma regra de alerta",
       "situacao": "NORMAL: operação padrão",
-      "acoes": []
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 20,
+      "entrada": "bateria 73,5%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 70.23484848484848,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 21,
+      "entrada": "bateria 72,4%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 69.14393939393939,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 22,
+      "entrada": "bateria 71,3%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 68.0530303030303,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 23,
+      "entrada": "bateria 70,2%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 66.96212121212122,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 0,
+      "entrada": "bateria 69,1%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 65.87121212121212,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 1,
+      "entrada": "bateria 68,1%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 64.78030303030302,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 2,
+      "entrada": "bateria 67,0%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 63.68939393939394,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 3,
+      "entrada": "bateria 65,9%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 62.59848484848484,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 4,
+      "entrada": "bateria 64,8%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 61.50757575757575,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
+     },
+     {
+      "hora": 5,
+      "entrada": "bateria 63,7%, geração 25,0 kW, consumo 37,0 kW",
+      "anomalias": [],
+      "projecao_pct": 64.30555555555554,
+      "regra": "nenhuma regra de alerta",
+      "situacao": "NORMAL: operação padrão",
+      "acoes": [],
+      "observacao": ""
      }
     ],
     "resumo": {
      "bateria_20h_pct": 73.50757575757575,
-     "menor_bateria_pct": 55.61616161616162,
+     "menor_bateria_pct": 53,
      "horas_criticas": 0,
-     "modulo_horas_desligados": 6,
+     "horas_criticas_dia": 0,
+     "modulo_horas_desligados": 26,
+     "modulo_horas_desligados_dia": 6,
      "desperdicio_kwh": 0,
      "reserva_para_noite": true,
-     "amanhecer_pct": 53.50757575757575,
+     "amanhecer_pct": 62.59848484848484,
      "amanhece_acima_do_piso": true
     }
    }
@@ -2540,6 +4847,7 @@ const DADOS = {
     "consumo_depois_kw": 47,
     "balanco": "ALERTA: consumo maior que geração",
     "anomalias": [],
+    "falhas": [],
     "situacao": "ALERTA",
     "mensagem": "ALERTA: reduzir consumo",
     "regra": "B: bateria < 50%",
@@ -2547,7 +4855,9 @@ const DADOS = {
      "Desligado: Laboratório — motivo: bateria projetada em 31,9% em 3h (abaixo de 70% e caindo)",
      "Desligado: Logística — motivo: bateria projetada em 31,9% em 3h (abaixo de 70% e caindo)",
      "ATENÇÃO: só restou o suporte à vida; reserva projetada em 35,8%"
-    ]
+    ],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2569,10 +4879,13 @@ const DADOS = {
     "consumo_depois_kw": 70,
     "balanco": "ALERTA: consumo maior que geração",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2594,10 +4907,16 @@ const DADOS = {
     "consumo_depois_kw": 30,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [
+     "Aguardando: Logística — desligado há só 1h (mínimo de 2h)",
+     "Aguardando: Laboratório — desligado há só 1h (mínimo de 2h)"
+    ],
+    "observacao": ""
    }
   },
   {
@@ -2619,10 +4938,13 @@ const DADOS = {
     "consumo_depois_kw": 91,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2644,13 +4966,16 @@ const DADOS = {
     "consumo_depois_kw": 39,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "ECONOMIA",
     "mensagem": "MODO ECONOMIA: desligar sistemas não essenciais",
     "regra": "B·A: bateria baixa e consumo alto",
     "acoes": [
      "Desligado: Laboratório — motivo: situação MODO ECONOMIA",
      "Desligado: Logística — motivo: situação MODO ECONOMIA"
-    ]
+    ],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2672,13 +4997,17 @@ const DADOS = {
     "consumo_depois_kw": 39,
     "balanco": "ALERTA: consumo maior que geração",
     "anomalias": [],
+    "falhas": [],
     "situacao": "CRITICO",
     "mensagem": "CRÍTICO: modo emergência — só suporte à vida",
     "regra": "B·A·P: bateria baixa, consumo alto e previsão desfavorável",
     "acoes": [
      "Desligado: Laboratório — motivo: situação CRÍTICO",
-     "Desligado: Logística — motivo: situação CRÍTICO"
-    ]
+     "Desligado: Logística — motivo: situação CRÍTICO",
+     "ATENÇÃO: só restou o suporte à vida; reserva projetada em 42,8%"
+    ],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2700,13 +5029,17 @@ const DADOS = {
     "consumo_depois_kw": 39,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "CRITICO",
     "mensagem": "CRÍTICO: modo emergência — só suporte à vida",
     "regra": "C: bateria < 20%",
     "acoes": [
      "Desligado: Laboratório — motivo: situação CRÍTICO",
-     "Desligado: Logística — motivo: situação CRÍTICO"
-    ]
+     "Desligado: Logística — motivo: situação CRÍTICO",
+     "ATENÇÃO: só restou o suporte à vida; reserva projetada em 48,6%"
+    ],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2728,10 +5061,13 @@ const DADOS = {
     "consumo_depois_kw": 50,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2776,10 +5112,13 @@ const DADOS = {
       "aviso": "ANOMALIA: Laboratório consumindo 40,0 kW (esperado 30,0 kW)"
      }
     ],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2808,6 +5147,7 @@ const DADOS = {
       "aviso": "ANOMALIA: Logística consumindo 30,0 kW (esperado 22,0 kW)"
      }
     ],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
@@ -2815,7 +5155,9 @@ const DADOS = {
      "Desligado: Logística — motivo: anomalia de consumo (quem causou sai primeiro); bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
      "Desligado: Laboratório — motivo: bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
      "ATENÇÃO: só restou o suporte à vida; reserva projetada em 62,8%"
-    ]
+    ],
+    "pendencias": [],
+    "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
    }
   },
   {
@@ -2844,6 +5186,7 @@ const DADOS = {
       "aviso": "ANOMALIA: Médico consumindo 20,0 kW (esperado 12,0 kW)"
      }
     ],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
@@ -2851,7 +5194,9 @@ const DADOS = {
      "Desligado: Laboratório — motivo: bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
      "Desligado: Logística — motivo: bateria projetada em 50,2% em 3h (abaixo de 70% e caindo)",
      "ATENÇÃO: só restou o suporte à vida; reserva projetada em 62,1%"
-    ]
+    ],
+    "pendencias": [],
+    "observacao": "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
    }
   },
   {
@@ -2873,10 +5218,13 @@ const DADOS = {
     "consumo_depois_kw": 91,
     "balanco": "ALERTA: consumo maior que geração",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2898,10 +5246,13 @@ const DADOS = {
     "consumo_depois_kw": 47,
     "balanco": "ALERTA: consumo maior que geração",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
    }
   },
   {
@@ -2923,10 +5274,15 @@ const DADOS = {
     "consumo_depois_kw": 61,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [
+     "Aguardando: Laboratório — desligado há só 1h (mínimo de 2h)"
+    ],
+    "observacao": ""
    }
   },
   {
@@ -2948,10 +5304,15 @@ const DADOS = {
     "consumo_depois_kw": 61,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
-    "acoes": []
+    "acoes": [],
+    "pendencias": [
+     "Aguardando: Laboratório — projeção com ele ligado em 78,4% (mínimo de 80%)"
+    ],
+    "observacao": ""
    }
   },
   {
@@ -2973,12 +5334,17 @@ const DADOS = {
     "consumo_depois_kw": 61,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "ALERTA",
     "mensagem": "ALERTA: reduzir consumo",
     "regra": "B: bateria < 50%",
     "acoes": [
      "Religado: Logística — projeção em 100,0%"
-    ]
+    ],
+    "pendencias": [
+     "Aguardando: Laboratório — voltaria à situação MODO ECONOMIA"
+    ],
+    "observacao": "Sem corte agora: a projeção de 100,0% não está caindo abaixo de 70%"
    }
   },
   {
@@ -3000,12 +5366,76 @@ const DADOS = {
     "consumo_depois_kw": 91,
     "balanco": "SUGESTÃO: armazenar energia excedente",
     "anomalias": [],
+    "falhas": [],
     "situacao": "NORMAL",
     "mensagem": "NORMAL: operação padrão",
     "regra": "nenhuma regra de alerta",
     "acoes": [
      "Religado: Laboratório — projeção em 100,0%"
-    ]
+    ],
+    "pendencias": [],
+    "observacao": ""
+   }
+  },
+  {
+   "id": "20",
+   "titulo": "Falha no equipamento da Logística: o sistema avisa na hora",
+   "origem": "Equipe",
+   "resultado": {
+    "hora": 12,
+    "bateria_pct": 85,
+    "beta0": 0.0,
+    "beta1": 2.5,
+    "r2": 1.0,
+    "eolica_prevista_kw": 25.0,
+    "fator_poeira": 1.0,
+    "projecao_pct": 100.0,
+    "projecao_depois_pct": 100.0,
+    "geracao_kw": 165.0,
+    "consumo_kw": 91,
+    "consumo_depois_kw": 91,
+    "balanco": "SUGESTÃO: armazenar energia excedente",
+    "anomalias": [],
+    "falhas": [
+     {
+      "modulo": "Logística",
+      "aviso": "FALHA: Logística informou defeito no equipamento"
+     }
+    ],
+    "situacao": "NORMAL",
+    "mensagem": "NORMAL: operação padrão",
+    "regra": "nenhuma regra de alerta",
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
+   }
+  },
+  {
+   "id": "21",
+   "titulo": "Nova medição de vento entra no histórico e refaz a reta",
+   "origem": "Equipe",
+   "resultado": {
+    "hora": 12,
+    "bateria_pct": 85,
+    "beta0": 4.200000000000003,
+    "beta1": 2.05,
+    "r2": 0.9688760806916427,
+    "eolica_prevista_kw": 32.9,
+    "fator_poeira": 1.0,
+    "projecao_pct": 100.0,
+    "projecao_depois_pct": 100.0,
+    "geracao_kw": 172,
+    "consumo_kw": 91,
+    "consumo_depois_kw": 91,
+    "balanco": "SUGESTÃO: armazenar energia excedente",
+    "anomalias": [],
+    "falhas": [],
+    "situacao": "NORMAL",
+    "mensagem": "NORMAL: operação padrão",
+    "regra": "nenhuma regra de alerta",
+    "acoes": [],
+    "pendencias": [],
+    "observacao": ""
    }
   }
  ]

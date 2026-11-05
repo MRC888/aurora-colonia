@@ -6,9 +6,43 @@
 from colonia import (validar, aplicar_leitura, modulos_da, consumo_total,
                      geracao_total)
 from previsao import ajustar_reta, r2, eolica_prevista, fator_poeira
-from energia import balanco, detectar_anomalias, formatar
+from energia import (balanco, detectar_anomalias, detectar_falhas, formatar,
+                     formatar_abaixo)
 from regras import (SITUACOES, decidir, regra_usada, projecao_desfavoravel,
                     projetar, cortar_cargas, religar_cargas)
+from dados import EXIGIR_QUEDA
+
+
+def atualizar_historico(historico, leitura):
+    # Procedimento: uma medição real de eólica entra na série histórica.
+    # Assim a reta é refeita com mais dados a cada leitura medida.
+    if "eolica_medida_kw" in leitura:
+        historico["vento"].append(leitura["vento_m_s"])
+        historico["energia_eolica"].append(leitura["eolica_medida_kw"])
+
+
+def motivo_da_projecao(projecao):
+    # Função: o texto do corte preditivo, coerente com a regra em uso.
+    texto = "bateria projetada em " + formatar_abaixo(projecao) + "% em 3h (abaixo de 70%"
+    if EXIGIR_QUEDA:
+        texto = texto + " e caindo"
+    return texto + ")"
+
+
+def observacao_da_decisao(situacao, acoes, preditivo, projecao):
+    # Função: explica os dois casos em que a situação e a ação parecem discordar.
+    houve_corte = False
+    for acao in acoes:
+        if acao.startswith("Desligado"):
+            houve_corte = True
+    if situacao == "NORMAL" and houve_corte:
+        return "CORTE PREVENTIVO: a bateria está boa agora, mas a projeção de 3h pede economia"
+    if situacao == "ALERTA" and not houve_corte:
+        if preditivo:
+            return ("Sem corte agora: a projeção de " + formatar(projecao)
+                    + "% não está caindo abaixo de 70%")
+        return "Sem corte agora: o reativo só corta em CRÍTICO ou MODO ECONOMIA"
+    return ""
 
 
 def processar_leitura(colonia, leitura, historico, preditivo=True):
@@ -19,11 +53,16 @@ def processar_leitura(colonia, leitura, historico, preditivo=True):
     if not valida:
         return {"erro": "ERRO: leitura inválida — " + motivo}
 
-    # Previsão eólica: a reta é ajustada sobre o histórico do enunciado.
-    beta0, beta1 = ajustar_reta(historico["vento"], historico["energia_eolica"])
+    # Previsão eólica: a reta é ajustada sobre o histórico (enunciado + medições).
+    atualizar_historico(historico, leitura)
+    reta = ajustar_reta(historico["vento"], historico["energia_eolica"])
+    if reta is None:
+        return {"erro": "ERRO: histórico inválido — não existe reta com esses dados"}
+    beta0, beta1 = reta
     qualidade = r2(historico["vento"], historico["energia_eolica"], beta0, beta1)
     eolica = eolica_prevista(beta0, beta1, leitura["vento_m_s"])
-    aplicar_leitura(colonia, leitura, eolica)
+    eolica_atual = leitura.get("eolica_medida_kw", eolica)
+    aplicar_leitura(colonia, leitura, eolica_atual)
 
     hora = leitura["hora"]
     bateria_pct = leitura["bateria_pct"]
@@ -31,6 +70,8 @@ def processar_leitura(colonia, leitura, historico, preditivo=True):
 
     # Energia: o que entra, o que sai e quem está fora do normal.
     anomalias = detectar_anomalias(modulos, hora)
+    falhas = detectar_falhas(modulos)
+    colonia["operacional"]["alertas_de_falha"] = falhas
     geracao = geracao_total(colonia)
     consumo = consumo_total(modulos)
     mensagem_balanco = balanco(geracao, consumo)
@@ -53,15 +94,15 @@ def processar_leitura(colonia, leitura, historico, preditivo=True):
     regra = regra_usada(bateria_pct, consumo, previsao_ruim)
 
     # Ação: corte pela situação, corte pela projeção, ou tentativa de religar.
+    pendencias = []
     if situacao == "CRITICO" or situacao == "ECONOMIA":
         acoes = cortar_cargas(colonia, hora, anomalias, "todos",
                               "situação " + SITUACOES[situacao].split(":")[0], prev)
     elif preditivo and previsao_ruim:
         acoes = cortar_cargas(colonia, hora, anomalias, "ate_70",
-                              "bateria projetada em " + formatar(projecao)
-                              + "% em 3h (abaixo de 70% e caindo)", prev)
+                              motivo_da_projecao(projecao), prev)
     else:
-        acoes = religar_cargas(colonia, hora, prev, preditivo, geracao)
+        acoes = religar_cargas(colonia, hora, prev, preditivo, geracao, pendencias)
 
     projecao_depois = None
     if preditivo:
@@ -80,10 +121,13 @@ def processar_leitura(colonia, leitura, historico, preditivo=True):
         "consumo_depois_kw": consumo_total(modulos),
         "balanco": mensagem_balanco,
         "anomalias": anomalias,
+        "falhas": falhas,
         "situacao": situacao,
         "mensagem": SITUACOES[situacao],
         "regra": regra,
         "acoes": acoes,
+        "pendencias": pendencias,
+        "observacao": observacao_da_decisao(situacao, acoes, preditivo, projecao),
     }
 
 
@@ -95,6 +139,8 @@ def registrar(diario, resultado):
     avisos = []
     for anomalia in resultado["anomalias"]:
         avisos.append(anomalia["aviso"])
+    for falha in resultado["falhas"]:
+        avisos.append(falha["aviso"])
     diario.append({
         "hora": resultado["hora"],
         "entrada": "bateria " + formatar(resultado["bateria_pct"]) + "%, geração "
@@ -105,4 +151,5 @@ def registrar(diario, resultado):
         "regra": resultado["regra"],
         "situacao": resultado["mensagem"],
         "acoes": resultado["acoes"],
+        "observacao": resultado["observacao"],
     })

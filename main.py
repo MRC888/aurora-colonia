@@ -1,17 +1,21 @@
 # Aurora Siger - Fase 3: SISTEMA INTELIGENTE DA COLÔNIA (ponto de entrada).
 # O avaliador escolhe num menu o que quer ver:
 #   - um cenário pronto (entrada → regra → saída);
-#   - uma das 4 simulações do dia (reativo × preditivo);
+#   - uma das 4 simulações do dia e da noite (reativo × preditivo);
 #   - a árvore de dados da colônia;
+#   - a comparação entre a reta e a física do vento;
 #   - a exportação dos números para o painel.
 #
 # Uso: python main.py → abre o menu; digite a opção (ex.: 1, 9b, todos) e Enter.
 
+import sys
+
 from dados import criar_colonia, criar_historico, COLONIAS, TEMPESTADES
 from colonia import mostrar_arvore
-from energia import formatar
+from previsao import ajustar_reta, prever
+from energia import formatar, eolica_fisica_calibrada, eolica_fisica_pura
 from cenarios import CENARIOS, buscar_cenario
-from sistema import processar_leitura
+from sistema import processar_leitura, registrar
 from simulacao import SIMULACOES, comparar
 from painel import exportar_painel
 
@@ -36,7 +40,7 @@ def exibir_relatorio(cenario, resultado):
     print()
     print("PREVISÃO")
     print("  reta eólica: ŷ = " + formatar(resultado["beta0"]) + " + "
-          + formatar(resultado["beta1"]) + "·vento   (R² = " + formatar(resultado["r2"]) + ")")
+          + formatar(resultado["beta1"]) + "·vento   (R² = " + formatar(resultado["r2"], 2) + ")")
     print("  eólica prevista:", formatar(resultado["eolica_prevista_kw"]), "kW ·",
           "fator de poeira:", formatar(resultado["fator_poeira"], 2))
     print("  bateria projetada em 3h:", formatar(resultado["projecao_pct"]), "%")
@@ -47,24 +51,46 @@ def exibir_relatorio(cenario, resultado):
     print(" ", resultado["balanco"])
     for anomalia in resultado["anomalias"]:
         print(" ", anomalia["aviso"])
+    for falha in resultado["falhas"]:
+        print(" ", falha["aviso"])
     print()
     print("DECISÃO")
     print("  regra usada:", resultado["regra"])
     print(" ", resultado["mensagem"])
-    if resultado["acoes"]:
+    if resultado["observacao"]:
+        print(" ", resultado["observacao"])
+    if resultado["acoes"] or resultado["pendencias"]:
         print()
         print("AÇÕES")
-        for acao in resultado["acoes"]:
+        for acao in resultado["acoes"] + resultado["pendencias"]:
             print("  -", acao)
+    if resultado["acoes"]:
         print("  consumo depois das ações:", formatar(resultado["consumo_depois_kw"]),
               "kW · projeção depois:", formatar(resultado["projecao_depois_pct"]), "%")
 
 
 def rodar_cenario(cenario):
-    # Procedimento: processa um cenário numa colônia nova e mostra o relatório.
+    # Procedimento: processa um cenário numa colônia nova, registra e mostra o relatório.
     colonia = criar_colonia(cenario["colonia"])
+    diario = []
     resultado = processar_leitura(colonia, dict(cenario["leitura"]), criar_historico())
+    registrar(diario, resultado)
     exibir_relatorio(cenario, resultado)
+    print()
+    print("Registros no diário:", len(diario))
+
+
+def exibir_placar(sistema, resumo):
+    # Procedimento: uma linha do placar para cada sistema.
+    texto = "ABAIXO DO PISO"
+    if resumo["amanhece_acima_do_piso"]:
+        texto = "acima do piso"
+    print(f"  {sistema:<9} às 20h: {formatar(resumo['bateria_20h_pct'])}%"
+          f" · amanhece com {formatar(resumo['amanhecer_pct'])}% ({texto})"
+          f" · menor: {formatar(resumo['menor_bateria_pct'])}%")
+    print(f"  {'':<9} horas em CRÍTICO: {resumo['horas_criticas']}"
+          f" · módulo-horas desligados: {resumo['modulo_horas_desligados_dia']} de dia,"
+          f" {resumo['modulo_horas_desligados']} no total")
 
 
 def exibir_simulacao(codigo):
@@ -82,26 +108,45 @@ def exibir_simulacao(codigo):
     for i in range(len(reativo)):
         r = reativo[i]
         p = preditivo[i]
-        marca = "☁" if r["tempestade"] else " "
-        print(" %2dh%s | %6s%%  %-9s %-14s | %6s%%  %5s%%  %-9s %s" % (
-            r["hora"], marca, formatar(r["bateria_fim_pct"]), r["situacao"],
-            abreviar(r["desligados"]), formatar(p["bateria_fim_pct"]),
-            formatar(p["projecao_pct"]), p["situacao"], abreviar(p["desligados"])))
+        if i > 0 and r["noite"] and not reativo[i - 1]["noite"]:
+            print(" ---- noite: sem sol, consumo de 47 kW com tudo ligado ----")
+        marca = " "
+        if r["tempestade"]:
+            marca = "☁"
+        print(f" {r['hora']:2d}h{marca} | {formatar(r['bateria_fim_pct']):>6}%  {r['situacao']:<9}"
+              f" {abreviar(r['desligados']):<14} | {formatar(p['bateria_fim_pct']):>6}%"
+              f"  {formatar(p['projecao_pct']):>5}%  {p['situacao']:<9} {abreviar(p['desligados'])}")
     print()
     print("PLACAR (☁ = hora de tempestade)")
     for sistema in ["reativo", "preditivo"]:
-        resumo = resultado[sistema]["resumo"]
-        print("  %-9s às 20h: %s%% · menor: %s%% · horas críticas: %d · amanhece com %s%% (%s)" % (
-            sistema, formatar(resumo["bateria_20h_pct"]), formatar(resumo["menor_bateria_pct"]),
-            resumo["horas_criticas"], formatar(resumo["amanhecer_pct"]),
-            "acima do piso" if resumo["amanhece_acima_do_piso"] else "ABAIXO DO PISO"))
+        exibir_placar(sistema, resultado[sistema]["resumo"])
     print()
     print("Diário do preditivo (só as horas com ação):")
     for registro in resultado["preditivo"]["diario"]:
         if registro.get("acoes"):
-            print("  %2dh · %s · regra: %s" % (registro["hora"], registro["situacao"], registro["regra"]))
+            print(f"  {registro['hora']:2d}h · {registro['situacao']} · regra: {registro['regra']}")
+            if registro["observacao"]:
+                print("        ", registro["observacao"])
             for acao in registro["acoes"]:
                 print("        -", acao)
+
+
+def exibir_fisica():
+    # Procedimento: compara a reta, a curva v³ calibrada e a fórmula pura.
+    historico = criar_historico()
+    beta0, beta1 = ajustar_reta(historico["vento"], historico["energia_eolica"])
+    print(LINHA)
+    print("Vento: reta × física")
+    print(LINHA)
+    print(" vento | reta (planejamento) | curva v³ calibrada | P = ½·ρ·A·v³ pura")
+    for vento in [8, 10, 12, 15, 20]:
+        print(f" {vento:3d} m/s | {formatar(prever(beta0, beta1, vento)):>9} kW"
+              f"        | {formatar(eolica_fisica_calibrada(vento)):>9} kW"
+              f"       | {formatar(eolica_fisica_pura(vento)):>7} kW")
+    print()
+    print("A fórmula pura mostra que o ar de Marte gera pouco: os 25 kW do enunciado")
+    print("são uma hipótese didática. A curva calibrada aceita essa hipótese e mostra")
+    print("que, a partir dela, a reta cresce menos que v³ no vento forte.")
 
 
 def abreviar(nomes):
@@ -120,11 +165,12 @@ def mostrar_menu():
     print("COLÔNIA AURORA — Centro de Operações (escolha o que quer ver)")
     print(LINHA)
     for cenario in CENARIOS:
-        print("  %-4s %s" % (cenario["id"], cenario["titulo"]))
+        print(f"  {cenario['id']:<4} {cenario['titulo']}")
     for codigo in SIMULACOES:
         tipo, chave = SIMULACOES[codigo]
-        print("  %-4s Simulação: %s × %s" % (codigo, COLONIAS[tipo]["nome"], TEMPESTADES[chave]["nome"]))
+        print(f"  {codigo:<4} Simulação: {COLONIAS[tipo]['nome']} × {TEMPESTADES[chave]['nome']}")
     print("  arv  Árvore de dados da colônia")
+    print("  fis  Vento: reta × física")
     print("  pnl  Exportar os números para o painel (painel/dados.js)")
     print("  todos  Rodar tudo · sair  Encerrar")
 
@@ -132,8 +178,10 @@ def mostrar_menu():
 def executar(opcao):
     # Função: executa uma opção do menu. Devolve False quando é para sair.
     opcao = opcao.strip().lower()
-    if opcao in ["sair", "q", ""]:
+    if opcao == "sair" or opcao == "q":
         return False
+    if opcao == "":
+        return True   # Enter sem opção: só mostra o menu de novo
     if opcao == "todos":
         for cenario in CENARIOS:
             rodar_cenario(cenario)
@@ -141,9 +189,13 @@ def executar(opcao):
         for codigo in SIMULACOES:
             exibir_simulacao(codigo)
             print()
+        exibir_fisica()
         return True
     if opcao == "arv":
         mostrar_arvore(criar_colonia())
+        return True
+    if opcao == "fis":
+        exibir_fisica()
         return True
     if opcao == "pnl":
         print("Gravado em", exportar_painel())
@@ -166,7 +218,8 @@ def main():
         mostrar_menu()
         try:
             opcao = input("Opção: ")
-        except EOFError:   # entrada fechada (ex.: rodando por um script)
+        except (EOFError, KeyboardInterrupt):   # entrada fechada ou Ctrl+C: sai sem erro
+            print()
             break
         print()
         continuar = executar(opcao)
@@ -174,4 +227,5 @@ def main():
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8")   # acentos e símbolos também no Windows
     main()

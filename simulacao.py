@@ -1,5 +1,6 @@
 # Aurora Siger - Fase 3: SIMULAÇÃO de um dia marciano (algoritmo, seção 9).
-# 12 horas (8h às 20h) com uma tempestade de poeira de 3 horas.
+# O dia de trabalho (8h às 20h) com uma tempestade de poeira de 3 horas,
+# seguido da noite até as 6h, hora a hora, com o sistema ainda decidindo.
 # A mesma tempestade é vivida por duas colônias iguais:
 #   - uma com o sistema REATIVO (só olha a hora atual);
 #   - outra com o sistema PREDITIVO (projeta a bateria 3h à frente).
@@ -7,7 +8,8 @@
 # o SISTEMA só lê os sensores e decide.
 
 from dados import (criar_colonia, criar_historico, COLONIAS, TEMPESTADES,
-                   HORA_INICIO_SIMULACAO, HORA_FIM_SIMULACAO, DURACAO_TEMPESTADE,
+                   HORA_INICIO_SIMULACAO, HORA_FIM_SIMULACAO, HORA_AMANHECER,
+                   DURACAO_TEMPESTADE,
                    FATOR_POEIRA_TEMPESTADE, VENTO_NORMAL, VENTO_TEMPESTADE,
                    RESERVA_MINIMA_PROJETADA, HORAS_DE_NOITE, consumo_esperado,
                    MODULOS)
@@ -35,7 +37,8 @@ def clima_do_mundo(hora, chave_tempestade):
 
 
 def deficit_da_noite():
-    # Função: quanto a noite tira da bateria (kWh): 10 h × (consumo dormindo − eólica).
+    # Função: conta de DIMENSIONAMENTO da bateria (kWh): 10 h × (consumo dormindo − eólica).
+    # Vale com todos os módulos ligados. O amanhecer real vem da simulação da noite.
     historico = criar_historico()
     beta0, beta1 = ajustar_reta(historico["vento"], historico["energia_eolica"])
     consumo_noite = 0
@@ -46,7 +49,8 @@ def deficit_da_noite():
 
 
 def simular_dia(tipo_colonia, chave_tempestade, preditivo):
-    # Função: simula as 12 horas e devolve as linhas (hora a hora) e o resumo.
+    # Função: simula das 8h às 6h do dia seguinte e devolve as linhas e o resumo.
+    # A contagem segue além de 24 (26 = 2h da madrugada); os sensores leem hora % 24.
     colonia = criar_colonia(tipo_colonia)
     historico = criar_historico()
     beta0, beta1 = ajustar_reta(historico["vento"], historico["energia_eolica"])
@@ -55,10 +59,10 @@ def simular_dia(tipo_colonia, chave_tempestade, preditivo):
     linhas = []
     desperdicio_kwh = 0
 
-    for hora in range(HORA_INICIO_SIMULACAO, HORA_FIM_SIMULACAO):
+    for hora in range(HORA_INICIO_SIMULACAO, HORA_AMANHECER):
         clima = clima_do_mundo(hora, chave_tempestade)
         bateria_inicio = colonia["energetico"]["bateria"]["nivel_pct"]
-        leitura = {"hora": hora, "bateria_pct": bateria_inicio,
+        leitura = {"hora": hora % 24, "bateria_pct": bateria_inicio,
                    "geracao_solar_kw": clima["solar_kw"],
                    "vento_m_s": clima["vento_m_s"], "temp_externa_c": -60,
                    "tempestade": clima["tempestade"]}
@@ -81,17 +85,21 @@ def simular_dia(tipo_colonia, chave_tempestade, preditivo):
             if not modulos[nome]["ligado"]:
                 desligados.append(nome)
         linhas.append({
-            "hora": hora, "tempestade": clima["tempestade"],
+            "hora": hora % 24, "tempestade": clima["tempestade"],
+            "noite": hora >= HORA_FIM_SIMULACAO,
             "bateria_inicio_pct": bateria_inicio, "bateria_fim_pct": bateria_fim,
             "geracao_kw": geracao, "consumo_kw": consumo,
             "situacao": resultado["situacao"], "projecao_pct": resultado["projecao_pct"],
             "acoes": resultado["acoes"], "desligados": desligados,
         })
 
+    sistema = "reativo"
+    if preditivo:
+        sistema = "preditivo"
     return {
         "colonia": tipo_colonia,
         "tempestade": chave_tempestade,
-        "sistema": "preditivo" if preditivo else "reativo",
+        "sistema": sistema,
         "linhas": linhas,
         "diario": diario,
         "resumo": resumir(linhas, capacidade, COLONIAS[tipo_colonia]["piso_pct"],
@@ -100,25 +108,33 @@ def simular_dia(tipo_colonia, chave_tempestade, preditivo):
 
 
 def resumir(linhas, capacidade, piso_pct, desperdicio_kwh):
-    # Função: o placar do dia (o que o painel e o PDF comparam).
-    menor = 100
+    # Função: o placar do dia e da noite (o que o painel e o PDF comparam).
+    menor = linhas[0]["bateria_inicio_pct"]   # o início do dia também conta
     horas_criticas = 0
-    modulo_horas_desligados = 0
+    horas_criticas_dia = 0
+    modulo_horas = 0
+    modulo_horas_dia = 0
+    bateria_20h = 0
     for linha in linhas:
         if linha["bateria_fim_pct"] < menor:
             menor = linha["bateria_fim_pct"]
+        fora = len(linha["desligados"])
+        modulo_horas = modulo_horas + fora
         if linha["situacao"] == "CRITICO":
             horas_criticas = horas_criticas + 1
-        modulo_horas_desligados = modulo_horas_desligados + len(linha["desligados"])
-    bateria_20h = linhas[-1]["bateria_fim_pct"]
-    # E a noite? Das 20h às 6h a bateria perde o déficit da noite.
-    amanhecer_kwh = bateria_20h / 100 * capacidade - deficit_da_noite()
-    amanhecer_pct = amanhecer_kwh / capacidade * 100
+        if not linha["noite"]:
+            bateria_20h = linha["bateria_fim_pct"]
+            modulo_horas_dia = modulo_horas_dia + fora
+            if linha["situacao"] == "CRITICO":
+                horas_criticas_dia = horas_criticas_dia + 1
+    amanhecer_pct = linhas[len(linhas) - 1]["bateria_fim_pct"]
     return {
         "bateria_20h_pct": bateria_20h,
         "menor_bateria_pct": menor,
         "horas_criticas": horas_criticas,
-        "modulo_horas_desligados": modulo_horas_desligados,
+        "horas_criticas_dia": horas_criticas_dia,
+        "modulo_horas_desligados": modulo_horas,
+        "modulo_horas_desligados_dia": modulo_horas_dia,
         "desperdicio_kwh": desperdicio_kwh,
         "reserva_para_noite": bateria_20h >= RESERVA_MINIMA_PROJETADA,
         "amanhecer_pct": amanhecer_pct,

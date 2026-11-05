@@ -10,7 +10,7 @@ import os
 from dados import criar_colonia, criar_historico, COLONIAS, TEMPESTADES
 from colonia import percorrer
 from previsao import ajustar_reta, r2, prever
-from energia import eolica_fisica_calibrada
+from energia import eolica_fisica_calibrada, eolica_fisica_pura
 from simulacao import simular_todas, SIMULACOES
 from cenarios import CENARIOS
 from sistema import processar_leitura
@@ -24,11 +24,17 @@ def dados_previsao():
     for vento in [8, 10, 12, 15, 20]:
         comparacao.append({"vento_m_s": vento,
                            "reta_kw": prever(beta0, beta1, vento),
-                           "fisica_kw": eolica_fisica_calibrada(vento)})
+                           "fisica_calibrada_kw": eolica_fisica_calibrada(vento),
+                           "fisica_pura_kw": eolica_fisica_pura(vento)})
+    # Previsão pronta para cada vento do seletor: o painel não refaz a conta.
+    seletor = []
+    for vento in range(0, 26):
+        seletor.append({"vento_m_s": vento, "previsao_kw": prever(beta0, beta1, vento)})
     return {"beta0": beta0, "beta1": beta1,
             "r2": r2(historico["vento"], historico["energia_eolica"], beta0, beta1),
             "pontos": {"vento": historico["vento"], "energia": historico["energia_eolica"]},
-            "reta_x_fisica": comparacao}
+            "reta_x_fisica": comparacao,
+            "seletor_vento": seletor}
 
 
 def dados_cenarios():
@@ -42,8 +48,12 @@ def dados_cenarios():
     return saida
 
 
-def exportar_painel(caminho=os.path.join("painel", "dados.js")):
-    # Procedimento: grava todos os números num arquivo JavaScript.
+def exportar_painel(caminho=None):
+    # Função: grava todos os números num arquivo JavaScript e devolve o caminho.
+    # Sem caminho, usa a pasta do projeto, de onde quer que o programa seja rodado.
+    if caminho is None:
+        projeto = os.path.dirname(os.path.abspath(__file__))
+        caminho = os.path.join(projeto, "painel", "dados.js")
     pasta = os.path.dirname(caminho)
     if pasta and not os.path.isdir(pasta):
         os.makedirs(pasta)

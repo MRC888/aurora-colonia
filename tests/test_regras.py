@@ -1,10 +1,11 @@
 # Testes das REGRAS DE DECISÃO (seção 8): tabela-verdade, corte e religar.
 import unittest
+from unittest.mock import patch
 
 from dados import criar_colonia
 from colonia import modulos_da
-from regras import (decidir, projecao_desfavoravel, fila_de_corte, ordenar_por_prioridade,
-                    cortar_cargas, religar_cargas)
+from regras import (decidir, regra_usada, projecao_desfavoravel, fila_de_corte,
+                    ordenar_por_prioridade, cortar_cargas, religar_cargas)
 
 PREV_LIMPO = {"fator": 1.0, "vento": 10, "beta0": 0, "beta1": 2.5}
 
@@ -35,6 +36,22 @@ class TestTabelaVerdade(unittest.TestCase):
         self.assertEqual(decidir(50, 90, False), "NORMAL")     # 50 não é < 50
         self.assertEqual(decidir(40, 80, False), "ALERTA")     # 80 não é > 80
 
+    def test_logo_depois_dos_limites(self):
+        self.assertEqual(decidir(19.5, 30, False), "CRITICO")
+        self.assertEqual(decidir(49.5, 90, False), "ECONOMIA")
+        self.assertEqual(decidir(49.5, 30, False), "ALERTA")
+        self.assertEqual(decidir(40, 80.5, False), "ECONOMIA")
+
+
+class TestRegraUsada(unittest.TestCase):
+
+    def test_cada_regra_explica_a_decisao(self):
+        self.assertIn("C:", regra_usada(15, 30, False))
+        self.assertIn("B·A·P", regra_usada(40, 90, True))
+        self.assertIn("B·A:", regra_usada(40, 90, False))
+        self.assertIn("B:", regra_usada(40, 70, False))
+        self.assertEqual(regra_usada(85, 50, False), "nenhuma regra de alerta")
+
 
 class TestProjecaoDesfavoravel(unittest.TestCase):
 
@@ -47,6 +64,12 @@ class TestProjecaoDesfavoravel(unittest.TestCase):
 
     def test_acima_de_70(self):
         self.assertFalse(projecao_desfavoravel(90, 75))
+
+    def test_limites_exatos(self):
+        self.assertFalse(projecao_desfavoravel(75, 70))      # 70 libera
+        self.assertFalse(projecao_desfavoravel(75, 70.5))
+        self.assertTrue(projecao_desfavoravel(75, 69.5))
+        self.assertFalse(projecao_desfavoravel(60, 60))      # parada não é queda
 
 
 class TestCorte(unittest.TestCase):
@@ -98,6 +121,28 @@ class TestCorte(unittest.TestCase):
         self.assertTrue(modulos["Logística"]["ligado"])
         self.assertEqual(len(acoes), 1)
 
+    def test_desligar_anota_a_hora_e_o_motivo(self):
+        colonia = criar_colonia()
+        acoes = cortar_cargas(colonia, 14, [{"modulo": "Logística"}], "todos", "teste", None)
+        self.assertEqual(modulos_da(colonia)["Laboratório"]["desligado_desde"], 14)
+        self.assertIn("quem causou sai primeiro", acoes[0])
+        self.assertEqual(acoes[1], "Desligado: Laboratório — motivo: teste")
+
+    def test_atencao_quando_so_resta_o_suporte_a_vida(self):
+        colonia = criar_colonia()
+        colonia["energetico"]["bateria"]["nivel_pct"] = 30
+        prev = {"fator": 0.05, "vento": 10, "beta0": 0, "beta1": 2.5}
+        acoes = cortar_cargas(colonia, 16, [], "todos", "teste", prev)
+        self.assertIn("ATENÇÃO", acoes[-1])
+
+    def test_sem_corte_nao_ha_atencao(self):
+        colonia = criar_colonia()
+        for nome in ["Laboratório", "Logística"]:
+            modulos_da(colonia)[nome]["ligado"] = False
+        colonia["energetico"]["bateria"]["nivel_pct"] = 30
+        prev = {"fator": 0.05, "vento": 10, "beta0": 0, "beta1": 2.5}
+        self.assertEqual(cortar_cargas(colonia, 16, [], "ate_70", "teste", prev), [])
+
 
 class TestReligar(unittest.TestCase):
 
@@ -140,6 +185,54 @@ class TestReligar(unittest.TestCase):
         religar_cargas(colonia, 11, PREV_LIMPO, True)
         self.assertTrue(modulos_da(colonia)["Logística"]["ligado"])       # 61 kW: ok
         self.assertFalse(modulos_da(colonia)["Laboratório"]["ligado"])    # 91 kW: não
+
+    def test_margem_exata_de_80(self):
+        colonia = self.colonia_com_lab_desligado(90, 10)
+        with patch("regras.projetar", return_value=80):
+            religar_cargas(colonia, 12, PREV_LIMPO, True)
+        self.assertTrue(modulos_da(colonia)["Laboratório"]["ligado"])
+        colonia = self.colonia_com_lab_desligado(90, 10)
+        with patch("regras.projetar", return_value=79.9):
+            religar_cargas(colonia, 12, PREV_LIMPO, True)
+        self.assertFalse(modulos_da(colonia)["Laboratório"]["ligado"])
+
+    def test_tempo_exato_de_2h(self):
+        colonia = self.colonia_com_lab_desligado(95, 10)
+        religar_cargas(colonia, 12, PREV_LIMPO, True)
+        self.assertTrue(modulos_da(colonia)["Laboratório"]["ligado"])
+        self.assertIsNone(modulos_da(colonia)["Laboratório"]["desligado_desde"])
+
+    def test_virada_do_dia(self):
+        colonia = self.colonia_com_lab_desligado(95, 23)   # desligado às 23h, agora 1h: 2h
+        religar_cargas(colonia, 1, PREV_LIMPO, True)
+        self.assertTrue(modulos_da(colonia)["Laboratório"]["ligado"])
+
+    def test_pendencias_explicam_quem_nao_religou(self):
+        colonia = self.colonia_com_lab_desligado(95, 11)
+        pendencias = []
+        religar_cargas(colonia, 12, PREV_LIMPO, True, 0, pendencias)
+        self.assertIn("desligado há só 1h", pendencias[0])
+        colonia = self.colonia_com_lab_desligado(60, 10)
+        pendencias = []
+        religar_cargas(colonia, 12, PREV_LIMPO, True, 0, pendencias)
+        self.assertIn("78,4%", pendencias[0])
+
+    def test_reativo_nao_projeta_e_nao_volta_a_critico(self):
+        # Reativo, bateria 15%: religar daria CRÍTICO → fica desligado.
+        colonia = self.colonia_com_lab_desligado(15, 10)
+        self.assertEqual(religar_cargas(colonia, 12, None, False, 200), [])
+        self.assertFalse(modulos_da(colonia)["Laboratório"]["ligado"])
+
+    def test_reativo_nao_volta_ao_risco(self):
+        # Bateria 40%, consumo 91 kW se religar: com geração baixa daria CRÍTICO (B·A·P),
+        # com geração alta daria ECONOMIA. Nos dois casos fica desligado.
+        for geracao in [50, 200]:
+            colonia = self.colonia_com_lab_desligado(40, 10)
+            self.assertEqual(religar_cargas(colonia, 12, None, False, geracao), [])
+
+    def test_reativo_religa_quando_a_situacao_permite(self):
+        colonia = self.colonia_com_lab_desligado(90, 10)
+        self.assertIn("Religado: Laboratório", religar_cargas(colonia, 12, None, False, 200)[0])
 
     def test_religa_do_mais_importante_para_o_menos(self):
         colonia = criar_colonia()

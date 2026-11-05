@@ -18,10 +18,10 @@ JANELA_PREVISAO = 3            # horas que o preditivo olha para frente
 MARGEM_RELIGAR = 80            # %: só religa se a projeção com o módulo ligado ficar aqui ou acima
 TEMPO_MINIMO_DESLIGADO = 2     # horas que um módulo fica desligado antes de poder religar
 LIMITE_ANOMALIA = 0.30         # 30% acima do esperado para a hora = anomalia
-# Proposta do código (algoritmo, seção 11.3): a projeção só é "desfavorável" se,
-# além de ficar abaixo de 70%, a bateria estiver CAINDO. Sem isso, a Colônia B
-# cortaria o Laboratório toda manhã de céu limpo, só porque amanhece com 53%.
-# Para voltar à regra literal (só "< 70%"), troque para False.
+# Decisão do código, mantida pela equipe (algoritmo, seção 11.3): a projeção só é
+# "desfavorável" se, além de ficar abaixo de 70%, a bateria estiver CAINDO. Sem isso,
+# a Colônia B cortaria o Laboratório toda manhã de céu limpo, só porque amanhece com 53%.
+# Com False, vale a regra literal (só "< 70%"), e os testes que supõem True falham.
 EXIGIR_QUEDA = True
 
 # ---------------------------------------------------------------
@@ -35,12 +35,14 @@ VENTO_TEMPESTADE = 20      # m/s
 FATOR_POEIRA_TEMPESTADE = 0.05  # na tempestade, o solar fica em 5% do normal
 DURACAO_TEMPESTADE = 3     # h
 DENSIDADE_AR_MARTE = 0.020  # kg/m³ (hipótese didática; ≈ 1% do ar da Terra)
+AREA_PAS = 120             # m² varridos pelas pás (hipótese didática)
 
 # ---------------------------------------------------------------
 # Jornada da colônia (seção 3.3: a "ideia do prédio")
 # ---------------------------------------------------------------
 HORA_INICIO_SIMULACAO = 8
-HORA_FIM_SIMULACAO = 20
+HORA_FIM_SIMULACAO = 20    # fim do dia de trabalho
+HORA_AMANHECER = 30        # 6h do dia seguinte (24 + 6): a simulação segue pela noite
 INICIO_EXPEDIENTE = 9
 FIM_EXPEDIENTE = 18
 HORAS_DE_NOITE = 10        # das 20h às 6h, sem sol
@@ -145,14 +147,14 @@ def criar_colonia(tipo=COLONIA_PADRAO):
         "tipo": tipo,
         "energetico": {
             "solar": {"geracao_kw": 0, "pico_kw": PICO_SOLAR},
-            "eolico": {"geracao_kw": 0, "vento_m_s": VENTO_NORMAL, "area_pas_m2": 120},
+            "eolico": {"geracao_kw": 0, "vento_m_s": VENTO_NORMAL, "area_pas_m2": AREA_PAS},
             "bateria": {"nivel_pct": config["bateria_8h_pct"],
                         "capacidade_kwh": config["capacidade_kwh"],
                         "piso_pct": config["piso_pct"]},
         },
         "ambiental": {"temp_interna_c": 21, "temp_externa_c": -60,
                       "vento_m_s": VENTO_NORMAL, "tempestade": False},
-        "operacional": {"modulos": modulos},
+        "operacional": {"modulos": modulos, "alertas_de_falha": []},
     }
 
 
