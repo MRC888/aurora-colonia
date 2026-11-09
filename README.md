@@ -8,7 +8,7 @@ A ideia central: sair de um sistema **reativo** (que age depois que a bateria j�
   <a href="https://mrc888.github.io/aurora-colonia/painel/"><img src="https://img.shields.io/badge/%E2%96%B6%20ABRIR%20O%20PAINEL-AO%20VIVO-46f0ff?style=for-the-badge&labelColor=080d1b" alt="Abrir o painel ao vivo"></a>
 </p>
 
-<p align="center"><b>Painel ao vivo, sem instalar nada:</b> <a href="https://mrc888.github.io/aurora-colonia/painel/">mrc888.github.io/aurora-colonia/painel</a></p>
+<p align="center"><b>Painel ao vivo, sem instalar nada:</b> <a href="https://mrc888.github.io/aurora-colonia/painel/">mrc888.github.io/aurora-colonia/painel</a> · <b>Relatório:</b> <a href="docs/Relatorio_Aurora_Siger.pdf">PDF</a></p>
 
 <p align="center">
   <a href="https://mrc888.github.io/aurora-colonia/painel/"><img src="docs/imagens/painel_tempestade.png" alt="Centro de Operações da colônia durante a tempestade de poeira" width="100%"></a>
@@ -137,6 +137,7 @@ O que os números mostram:
 | `tests/` | 162 testes automáticos (`unittest`) |
 | `algoritmo_v1.md` | o algoritmo em português: **fonte da verdade** |
 | `docs/DECISOES_03-11-2026.md` | registro da reunião de 03/11 e o porquê de cada decisão |
+| `docs/Relatorio_Aurora_Siger.pdf` | relatório da entrega (11 páginas) |
 | `docs/imagens/` | prints do painel e o gráfico usados neste README |
 | `docs/VISUAL.md` | proposta de visual do painel HTML, do PDF e da apresentação, mais a decisão final do painel (seção 0) |
 | `ROADMAP.md` | enunciado detalhado, marcos, divisão de tarefas e critérios de avaliação |

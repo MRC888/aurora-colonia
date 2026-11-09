@@ -30,8 +30,6 @@ Equipe: Marcelo e Douglas (código), Alice (painel HTML e PDF).
 | PDF (M7) | `pdf` (gerar e conferir páginas) |
 | Fim do dia | `/fim-de-sessao` (Obsidian, commit e push) |
 
-## Estado atual (09/11/2026)
-- Tudo integrado na `main`, sem outras branches: sistema completo, 21 cenários, 4 simulações (dia e noite), 162 testes e o painel da Alice (`painel/`, M6).
+## Estado atual (09/11/2026): projeto entregue
+- Tudo na `main`, sem outras branches: sistema, 21 cenários, 4 simulações, 162 testes, painel e relatório (`docs/Relatorio_Aurora_Siger.pdf`).
 - Painel publicado: https://mrc888.github.io/aurora-colonia/painel/
-- **Próximo:** M7 (PDF da entrega), com a Alice.
-- M8 (fechamento) depois disso: rodar `verificador-alinhamento` e marcar R2 na matriz do ROADMAP.
