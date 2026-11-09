@@ -15,7 +15,7 @@ Requer só o Python 3, sem nenhuma biblioteca externa. No macOS, use `python3` n
 ```text
 python main.py            # abre o menu: digite a opção (ex.: 1, 9b, todos) e Enter
 python painel.py          # grava painel/dados.js com todos os números para o painel
-python -m unittest discover -s tests -t .     # 161 testes
+python -m unittest discover -s tests -t .     # 162 testes
 ```
 
 Para ver o painel (o Centro de Operações da colônia), rode `python painel.py` e abra `painel/index.html` direto no navegador, sem servidor. Os quatro arquivos da pasta `painel/` precisam ficar juntos.
@@ -118,7 +118,7 @@ O que os números mostram:
 | `painel.py` | exporta `painel/dados.js` (o painel só mostra, não recalcula) |
 | `painel/` | o Centro de Operações em HTML, um tablet em primeira pessoa: `index.html` (estrutura), `styles.css` (visual), `app.js` (controles e desenho) e `dados.js` (números gerados pelo Python) |
 | `main.py` | menu do avaliador e relatório |
-| `tests/` | 161 testes automáticos (`unittest`) |
+| `tests/` | 162 testes automáticos (`unittest`) |
 | `algoritmo_v1.md` | o algoritmo em português: **fonte da verdade** |
 | `docs/DECISOES_03-11-2026.md` | registro da reunião de 03/11 e o porquê de cada decisão |
 | `docs/VISUAL.md` | proposta de visual do painel HTML, do PDF e da apresentação, mais a decisão final do painel (seção 0) |

@@ -36,6 +36,7 @@ function pct(n){return one(n)+'%'}
 function clock(h){return String(h).padStart(2,'0')+':00'}
 function setText(id,value){$(id).textContent=value}
 function showError(msg){const el=$('error-banner');el.hidden=false;el.textContent=msg}
+function statusName(s){return s==='ECONOMIA'?'MODO ECONOMIA':s==='CRITICO'?'CRÍTICO':s}
 function statusClass(s){if(s==='CRITICO')return 'critical';if(s==='ECONOMIA')return 'economy';if(s==='ALERTA')return 'alert';return ''}
 function stop(){state.playing=false;state.accum=0;DOM.play.textContent='▶';DOM.play.setAttribute('aria-label','Reproduzir')}
 function reset(){stop();state.index=0;render()}
@@ -53,13 +54,16 @@ function toggleReading(active){
   render();
 }
 function fillLevel(id,val,max){$(id).style.width=Math.max(0,Math.min(100,(val/max)*100))+'%'}
-function summarizeActions(row){
+function summarizeActions(row,log){
+  // Regra e observação vêm do diário exportado pelo Python (mesma hora).
+  const why=[];
+  if(log&&log.regra&&log.regra!=='nenhuma regra de alerta')why.push('REGRA · '+log.regra);
+  if(log&&log.observacao)why.push(log.observacao);
   if(row.acoes.length){
-    return row.acoes.map(x=>x.replace(' — motivo:','\n  ')).join('\n')
+    return row.acoes.map(x=>x.replace(' — motivo:','\n  ')).concat(why).join('\n')
   }
-  if(row.tempestade)return 'TEMPESTADE ATIVA\nLeitura processada';
-  if(row.noite)return 'OPERAÇÃO NOTURNA\nLeitura processada';
-  return 'MONITORAMENTO ATIVO\n'+row.situacao;
+  const head=row.tempestade?'TEMPESTADE ATIVA':row.noite?'OPERAÇÃO NOTURNA':'MONITORAMENTO ATIVO';
+  return [head,statusName(row.situacao)].concat(why).join('\n');
 }
 function changeRows(){
   const row=currentRow(),sim=currentSimulation(),comparison=currentComparison(),colony=OFFICIAL.colonias[sim.colonia];
@@ -77,17 +81,17 @@ function changeRows(){
   setText('consumption',one(row.consumo_kw));
   fillLevel('generation-bar',row.geracao_kw,165);
   fillLevel('consumption-bar',row.consumo_kw,165);
-  setText('balance-message',row.geracao_kw<row.consumo_kw?'CONSUMO > GERAÇÃO':'GERAÇÃO ≥ CONSUMO');
-  setText('state-name',row.situacao==='ECONOMIA'?'MODO ECONOMIA':row.situacao==='CRITICO'?'CRÍTICO':row.situacao);
+  setText('balance-message',row.balanco);
+  setText('state-name',statusName(row.situacao));
   $('state-name').className=statusClass(row.situacao);
   setText('projection-value',state.mode==='preditivo'?pct(row.projecao_pct):'—');
   $('projection-value').style.color=(state.mode==='preditivo'&&row.projecao_pct<70)?'var(--orange)':'';
   $('projection-value').title='Projeção de bateria em 3h calculada a partir do início da hora, antes dos cortes.';
-  setText('wind-value',row.tempestade?'20 m/s':'10 m/s');
+  setText('wind-value',row.vento_m_s+' m/s');
   setText('mode-short',state.mode==='preditivo'?'PREV':'REAT');
   const action=row.acoes.find(x=>x.startsWith('Desligado:')||x.startsWith('Religado:'));
   setText('decision-text',action?action.split(' — ')[0].toUpperCase():(row.tempestade?'TEMPESTADE DE POEIRA':row.noite?'NOITE MARCIANA':'MONITORAMENTO'));
-  setText('terminal-output',summarizeActions(row));
+  setText('terminal-output',summarizeActions(row,sim.diario[state.index]));
   setText('scene-weather',row.tempestade?'● TEMPESTADE DE POEIRA':row.noite?'◉ OPERAÇÃO NOTURNA':'◉ CÉU LIMPO');
   setText('scene-caption',`SOL ${row.hora<8?'02':'01'} · ${hour} · ${state.mode.toUpperCase()}`);
   document.querySelectorAll('.module-row').forEach((el,i)=>{
@@ -98,7 +102,7 @@ function changeRows(){
   });
   setText('reactive-end',pct(comparison.reativo.resumo.amanhecer_pct));
   setText('predictive-end',pct(comparison.preditivo.resumo.amanhecer_pct));
-    setText('critical-count','HORAS CRÍTICAS · REAT. / PRED.: '+comparison.reativo.resumo.horas_criticas+' / '+comparison.preditivo.resumo.horas_criticas);
+  setText('critical-count','HORAS CRÍTICAS · REAT. / PRED.: '+comparison.reativo.resumo.horas_criticas+' / '+comparison.preditivo.resumo.horas_criticas);
   setText('shutdown-count','MÓDULO-HORAS · REAT. / PRED.: '+comparison.reativo.resumo.modulo_horas_desligados+' / '+comparison.preditivo.resumo.modulo_horas_desligados);
   const t=OFFICIAL.tempestades[sim.tempestade];
   setText('storm-label',t?'TEMPESTADE '+clock(t.inicio)+'–'+clock(t.inicio+3):'SEM TEMPESTADE');

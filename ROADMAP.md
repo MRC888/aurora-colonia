@@ -112,7 +112,7 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 
 ---
 
-**Situação em 05/11/2026:** M0 a M5 prontos. M6 e M7 são da Alice. M8 fecha quando eles terminarem.
+**Situação em 09/11/2026:** M0 a M6 prontos e na `main`. Falta o M7 (PDF da entrega). O M8 fecha depois dele.
 
 ---
 
@@ -135,6 +135,7 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 | E2 | Geração > consumo → SUGESTÃO | `energia.py` | Cenário 3: `SUGESTÃO: armazenar energia excedente` | Atendido |
 | I1 | Código em funções, sistema único | `main.py`, `sistema.py` | `python main.py`, opção `todos`; testes em `tests/` | Atendido |
 | I2 | Separação dados / lógica / decisões | estrutura de arquivos | `dados.py`, `colonia.py`, `previsao.py`, `energia.py`, `regras.py`, `sistema.py` | Atendido |
+| V1 | Painel visual (extra) com os mesmos números do Python | `painel/` | `index.html` lê `dados.js`; 176 estados conferidos contra o Python | Atendido |
 | R1 | README com exemplo de entrada e saída | `README.md` | Seção "Exemplo de entrada e saída", igual à saída real | Atendido |
 | R2 | PDF com os 5 itens + link | PDF da equipe | Com a Alice (M7) | Pendente |
 

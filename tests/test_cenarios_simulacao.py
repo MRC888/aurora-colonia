@@ -225,6 +225,13 @@ class TestSimulacao(unittest.TestCase):
                           self.todas[codigo]["preditivo"]["resumo"]["modulo_horas_desligados"]))
         self.assertEqual(total, [(8, 30), (12, 30), (4, 28), (0, 26)])
 
+    def test_linhas_trazem_vento_e_balanco_para_o_painel(self):
+        linhas = self.todas["9b"]["preditivo"]["linhas"]
+        self.assertEqual(linhas[6]["vento_m_s"], 20)      # 14h, tempestade
+        self.assertEqual(linhas[0]["vento_m_s"], 10)
+        self.assertEqual(linhas[6]["balanco"], "ALERTA: consumo maior que geração")
+        self.assertEqual(linhas[3]["balanco"], "SUGESTÃO: armazenar energia excedente")
+
     def test_diario_tem_uma_entrada_por_hora(self):
         self.assertEqual(len(self.todas["9b"]["preditivo"]["diario"]), 22)
 

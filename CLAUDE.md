@@ -30,7 +30,7 @@ Equipe: Marcelo e Douglas (código), Alice (painel HTML e PDF).
 | PDF (M7) | `pdf` (gerar e conferir páginas) |
 | Fim do dia | `/fim-de-sessao` (Obsidian, commit e push) |
 
-## Estado atual (05/11/2026)
-- M0 a M5 prontos e na `main`: sistema completo, 21 cenários, 4 simulações (dia e noite) e 161 testes.
-- **Próximo:** M6 (painel HTML) e M7 (PDF da equipe), com a Alice. Ela deve ler `docs/VISUAL.md`.
+## Estado atual (09/11/2026)
+- Tudo integrado na `main`, sem outras branches: sistema completo, 21 cenários, 4 simulações (dia e noite), 162 testes e o painel da Alice (`painel/`, M6).
+- **Próximo:** M7 (PDF da entrega) e publicar o painel no GitHub Pages.
 - M8 (fechamento) depois disso: rodar `verificador-alinhamento` e marcar R2 na matriz do ROADMAP.

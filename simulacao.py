@@ -89,6 +89,7 @@ def simular_dia(tipo_colonia, chave_tempestade, preditivo):
             "noite": hora >= HORA_FIM_SIMULACAO,
             "bateria_inicio_pct": bateria_inicio, "bateria_fim_pct": bateria_fim,
             "geracao_kw": geracao, "consumo_kw": consumo,
+            "vento_m_s": clima["vento_m_s"], "balanco": resultado["balanco"],
             "situacao": resultado["situacao"], "projecao_pct": resultado["projecao_pct"],
             "acoes": resultado["acoes"], "desligados": desligados,
         })
