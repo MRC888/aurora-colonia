@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d1b">
+  <meta name="description" content="Aurora Siger — interface operacional portátil dos sistemas da colônia em Marte. Dados simulados calculados em Python.">
+  <title>Centro de Operações | Aurora Siger</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="dados.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="mars-atmosphere" aria-hidden="true"><span class="planet"></span><span class="horizon"></span></div>
+  <button class="read-toggle" id="read-toggle" type="button" aria-pressed="false" aria-label="Alternar orientação do tablet">▯ MODO LEITURA · VERTICAL</button>
+  <div class="experience">
+    <div class="device-scene">
+      <!-- Luvas da equipe em Marte. São ilustrações decorativas; não fazem parte da telemetria. -->
+      <svg class="glove glove-left" viewBox="0 0 200 264" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="g-fabric" x1="0" x2="1" y1="0" y2=".8"><stop offset="0" stop-color="#536476"/><stop offset=".38" stop-color="#d4d9d8"/><stop offset=".76" stop-color="#8b9ba4"/><stop offset="1" stop-color="#3a4a5b"/></linearGradient>
+          <linearGradient id="g-shell" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f1eee5"/><stop offset=".5" stop-color="#a6b1b7"/><stop offset="1" stop-color="#687987"/></linearGradient>
+          <linearGradient id="g-cuff" x1="0" x2="1"><stop offset="0" stop-color="#26384b"/><stop offset=".55" stop-color="#5e7081"/><stop offset="1" stop-color="#17293b"/></linearGradient>
+        </defs>
+        <path d="M-8 279 15 181 44 157 77 163 93 195 80 279Z" fill="url(#g-cuff)" stroke="#8a9ca6" stroke-width="3"/>
+        <path d="M11 187 58 149 82 143 101 156 104 191 78 221 20 218Z" fill="url(#g-fabric)" stroke="#344456" stroke-width="4"/>
+        <path d="M55 161C63 138 82 118 101 104l39-19c9-4 19 2 18 13-1 6-7 12-14 16l-29 18 12-4 25-13c11-5 19 1 19 10 0 6-4 12-12 16l-32 15 28-6c11-3 18 4 16 13-1 7-7 11-15 14l-35 8 20 1c10 1 15 7 14 15-1 7-7 10-19 12l-41 3-41-27Z" fill="url(#g-shell)" stroke="#415364" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M68 140c-6-25 7-47 22-52 13-4 20 6 18 16l-4 30 17 11-13 30-34-4Z" fill="url(#g-fabric)" stroke="#415364" stroke-width="4"/>
+        <path d="M88 101 104 98 101 119 85 125ZM145 89 157 94 150 107 136 104ZM154 122 168 126 163 139 146 136ZM154 151 170 152 165 164 151 163Z" fill="#344958" opacity=".7"/>
+        <path d="M46 164c17 12 31 24 41 39M19 203l58 12" stroke="#e2e9e6" stroke-width="4" opacity=".5" fill="none"/>
+        <path d="M18 216 80 222 72 243 13 241Z" fill="#172e42" stroke="#93acba" stroke-width="2"/>
+        <path d="M33 227h23" stroke="#46f0ff" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <svg class="glove glove-right" viewBox="0 0 200 264" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="r-fabric" x1="0" x2="1" y1="0" y2=".8"><stop offset="0" stop-color="#536476"/><stop offset=".38" stop-color="#d4d9d8"/><stop offset=".76" stop-color="#8b9ba4"/><stop offset="1" stop-color="#3a4a5b"/></linearGradient>
+          <linearGradient id="r-shell" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f1eee5"/><stop offset=".5" stop-color="#a6b1b7"/><stop offset="1" stop-color="#687987"/></linearGradient>
+          <linearGradient id="r-cuff" x1="0" x2="1"><stop offset="0" stop-color="#26384b"/><stop offset=".55" stop-color="#5e7081"/><stop offset="1" stop-color="#17293b"/></linearGradient>
+        </defs>
+        <path d="M-8 279 15 181 44 157 77 163 93 195 80 279Z" fill="url(#r-cuff)" stroke="#8a9ca6" stroke-width="3"/>
+        <path d="M11 187 58 149 82 143 101 156 104 191 78 221 20 218Z" fill="url(#r-fabric)" stroke="#344456" stroke-width="4"/>
+        <path d="M55 161C63 138 82 118 101 104l39-19c9-4 19 2 18 13-1 6-7 12-14 16l-29 18 12-4 25-13c11-5 19 1 19 10 0 6-4 12-12 16l-32 15 28-6c11-3 18 4 16 13-1 7-7 11-15 14l-35 8 20 1c10 1 15 7 14 15-1 7-7 10-19 12l-41 3-41-27Z" fill="url(#r-shell)" stroke="#415364" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M68 140c-6-25 7-47 22-52 13-4 20 6 18 16l-4 30 17 11-13 30-34-4Z" fill="url(#r-fabric)" stroke="#415364" stroke-width="4"/>
+        <path d="M88 101 104 98 101 119 85 125ZM145 89 157 94 150 107 136 104ZM154 122 168 126 163 139 146 136ZM154 151 170 152 165 164 151 163Z" fill="#344958" opacity=".7"/>
+        <path d="M46 164c17 12 31 24 41 39M19 203l58 12" stroke="#e2e9e6" stroke-width="4" opacity=".5" fill="none"/>
+        <path d="M18 216 80 222 72 243 13 241Z" fill="#172e42" stroke="#93acba" stroke-width="2"/>
+        <path d="M33 227h23" stroke="#46f0ff" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <main class="tablet" id="stage" aria-label="Tablet de operações da colônia Aurora Siger">
+        <div class="tablet-edge" aria-hidden="true"></div>
+        <div class="tablet-camera" aria-hidden="true"></div>
+        <div class="screen" id="tablet-screen">
+          <header class="topbar">
+            <div class="brand"><span class="brand-symbol">✦</span><div><strong>CENTRO DE OPERAÇÕES</strong><span>AURORA SIGER</span></div></div>
+            <div class="topcenter"><span class="blinking" aria-hidden="true"></span><span id="scene-caption">SOL 01 · 08:00 · PREDITIVO</span></div>
+            <div class="topstatus"><span class="status-label">SITUAÇÃO</span><strong id="state-name">NORMAL</strong></div>
+          </header>
+          <div class="dashboard">
+            <div class="left-stack">
+              <section class="scene card" aria-label="Visualização simulada da colônia em Marte">
+                <canvas id="colony-canvas" width="980" height="472" aria-label="Representação animada da colônia, domos, painéis solares, gerador eólico e tempestade de poeira"></canvas>
+                <div class="scene-head"><span class="scene-id">◉ SETOR ALFA · CÂMERA EXTERNA</span><span id="scene-weather">CÉU LIMPO</span></div>
+                <div class="scene-footer"><span>ENERGIA · HABITAÇÃO · MÉDICO · LOGÍSTICA · LABORATÓRIO</span><span id="wind-value">10 m/s</span></div>
+                <span class="viewfinder left" aria-hidden="true"></span><span class="viewfinder right" aria-hidden="true"></span>
+              </section>
+              <section class="modules card" aria-label="Módulos operacionais">
+                <div class="section-head"><strong>MÓDULOS DA COLÔNIA</strong><span>ESTADO EM CADA HORA</span></div>
+                <div class="module-list" id="module-list">
+                  <div class="module-row"><div class="module-icon">EN</div><strong>Energia</strong><small>ESSENCIAL · P1</small><span class="module-state">ATIVO</span></div>
+                  <div class="module-row"><div class="module-icon">HB</div><strong>Habitação</strong><small>ESSENCIAL · P2</small><span class="module-state">ATIVO</span></div>
+                  <div class="module-row"><div class="module-icon">MD</div><strong>Médico</strong><small>ESSENCIAL · P2</small><span class="module-state">ATIVO</span></div>
+                  <div class="module-row"><div class="module-icon">LG</div><strong>Logística</strong><small>SUPORTE · P3</small><span class="module-state">ATIVO</span></div>
+                  <div class="module-row"><div class="module-icon">LB</div><strong>Laboratório</strong><small>PESQUISA · P4</small><span class="module-state">ATIVO</span></div>
+                </div>
+              </section>
+              <section class="comparison-card card" aria-label="Gráfico das reservas dos modos reativo e preditivo">
+                <div class="section-head"><strong>RESERVA · REATIVO × PREDITIVO</strong><span>8H → 6H DO DIA SEGUINTE</span></div>
+                <div class="chart-and-stats">
+                  <div class="chart-pane"><svg id="battery-chart" viewBox="0 0 360 106" preserveAspectRatio="none" role="img" aria-label="Gráfico de linhas da evolução de energia dos sistemas reativo e preditivo"></svg><div class="chart-legend"><span class="leg-reactive">● REATIVO</span><span class="leg-predictive">● PREDITIVO</span></div></div>
+                  <div class="chart-stats"><div><span>REATIVO · 06H</span><strong id="reactive-end">--%</strong></div><div><span>PREDITIVO · 06H</span><strong id="predictive-end">--%</strong></div></div>
+                </div>
+              </section>
+            </div>
+            <div class="right-stack">
+              <section class="battery-card card" aria-label="Reserva da bateria">
+                <div class="section-head"><strong>BATERIA · INÍCIO DA HORA</strong><span id="colony-tag">COLÔNIA A</span></div>
+                <div class="battery-main"><strong id="battery-value">--%</strong><div class="battery-context"><span id="clock-small">08:00</span><span id="battery-end">FIM DA HORA · --%</span><span id="battery-floor-label">PISO 20%</span></div></div>
+                <div class="battery-track"><div id="battery-fill" class="battery-fill"></div><i id="battery-floor" class="battery-floor"></i></div>
+                <div class="battery-bottom"><span title="Projeção calculada no início desta hora, antes das ações de corte">PROJEÇÃO · 3H</span><strong id="projection-value">--%</strong><span class="mode-mark" id="mode-short">PREV</span></div>
+              </section>
+              <section class="energy-card card" aria-label="Balanço de energia">
+                <div class="section-head"><strong>BALANÇO DA REDE</strong><span>kW</span></div>
+                <div class="energy-pair"><div><span>GERAÇÃO</span><strong id="generation">--</strong><div class="mini-track"><i id="generation-bar"></i></div></div><div><span>CONSUMO</span><strong id="consumption">--</strong><div class="mini-track"><i id="consumption-bar" class="warm"></i></div></div></div>
+                <div class="balance-message" id="balance-message">AGUARDANDO LEITURA</div>
+              </section>
+              <section class="decision-card card" aria-label="Decisões do sistema autônomo">
+                <div class="section-head"><strong>REGISTRO DE DECISÕES</strong><span class="live-sign">● SIMULAÇÃO</span></div>
+                <div class="decision-label">ÚLTIMO EVENTO</div>
+                <strong class="decision-title" id="decision-text">AGUARDANDO LEITURA</strong>
+                <div class="terminal-output" id="terminal-output" aria-live="polite">Inicializando leitura...</div>
+                <div class="decision-foot"><span id="critical-count">HORAS CRÍTICAS: — / —</span><span id="shutdown-count">MÓDULO-HORAS: — / —</span></div>
+              </section>
+            </div>
+          </div>
+          <footer class="controls card" aria-label="Controles da simulação">
+            <div class="controls-top"><label>CENÁRIO <select id="scenario" aria-label="Cenário de simulação"><option value="9b">9b · Colônia A · tempestade da tarde</option><option value="9a">9a · Colônia A · tempestade da manhã</option><option value="9c">9c · Colônia B · tempestade da manhã</option><option value="9d">9d · Colônia B · tempestade da tarde</option></select></label><label>MODO <select id="control-mode" aria-label="Tipo de sistema"><option value="preditivo">PREDITIVO</option><option value="reativo">REATIVO</option></select></label><div class="transport"><button id="restart" type="button" aria-label="Reiniciar a simulação" title="Reiniciar">↺</button><button id="play" type="button" aria-label="Reproduzir" title="Reproduzir/Pausar">▶</button><button id="next" type="button" aria-label="Avançar uma hora" title="Próxima hora">⏭</button></div><label>VELOC. <select id="speed" aria-label="Velocidade"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label><span class="storm-note" id="storm-label">TEMPESTADE 14H–17H</span></div>
+            <div class="timeline-wrap"><span id="timeline-start">08H</span><input id="timeline" type="range" min="0" max="21" step="1" value="0" aria-label="Linha do tempo da simulação"><span id="timeline-end">06H</span><strong id="time-label">08:00</strong></div>
+          </footer>
+        </div>
+        
+      </main>
+    </div>
+  </div>
+  <div id="error-banner" class="error-banner" hidden role="alert"></div>
+</body>
+</html>

@@ -18,6 +18,8 @@ python painel.py          # grava painel/dados.js com todos os números para o p
 python -m unittest discover -s tests -t .     # 161 testes
 ```
 
+Para ver o painel (o Centro de Operações da colônia), rode `python painel.py` e abra `painel/index.html` direto no navegador, sem servidor. Os quatro arquivos da pasta `painel/` precisam ficar juntos.
+
 Opções do menu:
 
 | Opção | O que mostra |
@@ -114,11 +116,12 @@ O que os números mostram:
 | `simulacao.py` | o dia e a noite, reativo × preditivo, as 4 simulações |
 | `cenarios.py` | os cenários prontos do menu, cada um com a saída esperada |
 | `painel.py` | exporta `painel/dados.js` (o painel só mostra, não recalcula) |
+| `painel/` | o Centro de Operações em HTML, um tablet em primeira pessoa: `index.html` (estrutura), `styles.css` (visual), `app.js` (controles e desenho) e `dados.js` (números gerados pelo Python) |
 | `main.py` | menu do avaliador e relatório |
 | `tests/` | 161 testes automáticos (`unittest`) |
 | `algoritmo_v1.md` | o algoritmo em português: **fonte da verdade** |
 | `docs/DECISOES_03-11-2026.md` | registro da reunião de 03/11 e o porquê de cada decisão |
-| `docs/VISUAL.md` | proposta de visual do painel HTML, do PDF e da apresentação |
+| `docs/VISUAL.md` | proposta de visual do painel HTML, do PDF e da apresentação, mais a decisão final do painel (seção 0) |
 | `ROADMAP.md` | enunciado detalhado, marcos, divisão de tarefas e critérios de avaliação |
 | `CLAUDE.md`, `.claude/agents/` | regras do projeto e agentes de revisão |
 

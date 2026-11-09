@@ -605,6 +605,8 @@ Como ler:
 | 5. Reativo × Preditivo | Tela dividida, mesma tempestade nas duas metades, do dia à madrugada; seletor de tempestade (manhã/tarde) e de colônia (A/B); placar no fim | O "uau" da apresentação |
 | 6. Diário | Cada decisão com hora, entrada, anomalias, projeção, regra usada e motivo | Lógica de decisão |
 
+> **Nota (08/11/2026):** a proposta de 6 telas acima foi condensada em um **tablet único em primeira pessoa**. O que mudou e onde cada tela foi parar está em `docs/VISUAL.md`, seção 0. O contrato da 10.1 não mudou: o painel só mostra os números do `dados.js`.
+
 ### 10.3 Identidade visual
 | Papel | Cor |
 |---|---|
