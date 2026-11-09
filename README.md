@@ -1,12 +1,20 @@
-# Aurora Siger · Fase 3 — Sistema Inteligente da Colônia
+# Aurora Siger — Sistema Inteligente da Colônia
 
-A colônia já está em Marte, e a Terra está longe demais para dar ordens em tempo real. Este sistema **organiza os dados dos sensores, prevê a geração de energia, analisa geração × consumo e decide sozinho** o que ligar e desligar, sempre protegendo o suporte à vida.
+A colônia está em Marte, e a Terra está longe demais para dar ordens em tempo real. Este sistema **organiza os dados dos sensores, prevê a geração de energia, analisa geração × consumo e decide sozinho** o que ligar e desligar, sempre protegendo o suporte à vida.
 
 A ideia central: sair de um sistema **reativo** (que age depois que a bateria já caiu) para um sistema **preditivo** (que projeta a bateria **3 horas à frente**, de hora em hora, e corta antes de a reserva ficar perigosa).
 
-**Equipe:** Alice Brenda (RM 574916), Douglas Goltz (RM 574439) e Marcelo Santos (RM 576131) · Ciência da Computação · FIAP · 2026
+<p align="center">
+  <a href="https://mrc888.github.io/aurora-colonia/painel/"><img src="https://img.shields.io/badge/%E2%96%B6%20ABRIR%20O%20PAINEL-AO%20VIVO-46f0ff?style=for-the-badge&labelColor=080d1b" alt="Abrir o painel ao vivo"></a>
+</p>
 
-**Fases anteriores:** Fase 1 — Decolagem: [MRC888/Aurora-PBL-FIAP](https://github.com/MRC888/Aurora-PBL-FIAP) · Fase 2 — Pouso (MGPEB): [Douglasgbm/pouso_aurora](https://github.com/Douglasgbm/pouso_aurora) · [painel online](https://mrc888.github.io/aurora-painel/)
+<p align="center"><b>Painel ao vivo, sem instalar nada:</b> <a href="https://mrc888.github.io/aurora-colonia/painel/">mrc888.github.io/aurora-colonia/painel</a></p>
+
+<p align="center">
+  <a href="https://mrc888.github.io/aurora-colonia/painel/"><img src="docs/imagens/painel_tempestade.png" alt="Centro de Operações da colônia durante a tempestade de poeira" width="100%"></a>
+</p>
+
+**Equipe:** Alice Brenda (RM 574916), Douglas Goltz (RM 574439) e Marcelo Santos (RM 576131) · Ciência da Computação · FIAP · 2026
 
 ## Como executar
 
@@ -18,9 +26,7 @@ python painel.py          # grava painel/dados.js com todos os números para o p
 python -m unittest discover -s tests -t .     # 162 testes
 ```
 
-**Painel online (sem instalar nada): https://mrc888.github.io/aurora-colonia/painel/**
-
-Para abrir no computador, rode `python painel.py` e abra `painel/index.html` direto no navegador, sem servidor. Os quatro arquivos da pasta `painel/` precisam ficar juntos.
+Para abrir o painel no computador, rode `python painel.py` e abra `painel/index.html` direto no navegador, sem servidor. Os quatro arquivos da pasta `painel/` precisam ficar juntos.
 
 Opções do menu:
 
@@ -92,6 +98,14 @@ Os outros exemplos do enunciado também estão no menu:
 
 Mesma tempestade nos dois sistemas, do dia até o amanhecer das 6h:
 
+<p align="center"><img src="docs/imagens/grafico_bateria.png" alt="Bateria ao longo do dia e da noite: reativo amanhece com 7,1%, preditivo com 50,7%" width="100%"></p>
+
+| Reativo às 3h: CRÍTICO | Preditivo às 3h: NORMAL |
+|---|---|
+| <img src="docs/imagens/painel_reativo_3h.png" alt="Painel no modo reativo às 3h, em estado crítico"> | <img src="docs/imagens/painel_preditivo_3h.png" alt="Painel no modo preditivo às 3h, em estado normal"> |
+
+Todos os números:
+
 | Simulação | Reativo: 20h → 6h | Preditivo: 20h → 6h | Piso | Horas em CRÍTICO (reat. × pred.) | Módulo-horas desligados (reat. × pred.) |
 |---|---|---|---|---|---|
 | 9a — Colônia A, tempestade da manhã | 72,4% → 22,4% | 79,3% → 52,0% | 20% | 0 × 0 | 8 × 30 |
@@ -118,11 +132,12 @@ O que os números mostram:
 | `simulacao.py` | o dia e a noite, reativo × preditivo, as 4 simulações |
 | `cenarios.py` | os cenários prontos do menu, cada um com a saída esperada |
 | `painel.py` | exporta `painel/dados.js` (o painel só mostra, não recalcula) |
-| `painel/` | o Centro de Operações em HTML, um tablet em primeira pessoa: `index.html` (estrutura), `styles.css` (visual), `app.js` (controles e desenho) e `dados.js` (números gerados pelo Python) |
+| `painel/` | o Centro de Operações em HTML ([ao vivo](https://mrc888.github.io/aurora-colonia/painel/)), um tablet em primeira pessoa: `index.html` (estrutura), `styles.css` (visual), `app.js` (controles e desenho) e `dados.js` (números gerados pelo Python) |
 | `main.py` | menu do avaliador e relatório |
 | `tests/` | 162 testes automáticos (`unittest`) |
 | `algoritmo_v1.md` | o algoritmo em português: **fonte da verdade** |
 | `docs/DECISOES_03-11-2026.md` | registro da reunião de 03/11 e o porquê de cada decisão |
+| `docs/imagens/` | prints do painel e o gráfico usados neste README |
 | `docs/VISUAL.md` | proposta de visual do painel HTML, do PDF e da apresentação, mais a decisão final do painel (seção 0) |
 | `ROADMAP.md` | enunciado detalhado, marcos, divisão de tarefas e critérios de avaliação |
 | `CLAUDE.md`, `.claude/agents/` | regras do projeto e agentes de revisão |
