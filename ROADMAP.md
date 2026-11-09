@@ -135,7 +135,7 @@ Os sensores geram dados o tempo todo. A Terra está longe demais para responder 
 | E2 | Geração > consumo → SUGESTÃO | `energia.py` | Cenário 3: `SUGESTÃO: armazenar energia excedente` | Atendido |
 | I1 | Código em funções, sistema único | `main.py`, `sistema.py` | `python main.py`, opção `todos`; testes em `tests/` | Atendido |
 | I2 | Separação dados / lógica / decisões | estrutura de arquivos | `dados.py`, `colonia.py`, `previsao.py`, `energia.py`, `regras.py`, `sistema.py` | Atendido |
-| V1 | Painel visual (extra) com os mesmos números do Python | `painel/` | `index.html` lê `dados.js`; 176 estados conferidos contra o Python | Atendido |
+| V1 | Painel visual (extra) com os mesmos números do Python | `painel/` | `index.html` lê `dados.js`; 176 estados conferidos contra o Python; online em https://mrc888.github.io/aurora-colonia/painel/ | Atendido |
 | R1 | README com exemplo de entrada e saída | `README.md` | Seção "Exemplo de entrada e saída", igual à saída real | Atendido |
 | R2 | PDF com os 5 itens + link | PDF da equipe | Com a Alice (M7) | Pendente |
 

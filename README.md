@@ -18,7 +18,9 @@ python painel.py          # grava painel/dados.js com todos os números para o p
 python -m unittest discover -s tests -t .     # 162 testes
 ```
 
-Para ver o painel (o Centro de Operações da colônia), rode `python painel.py` e abra `painel/index.html` direto no navegador, sem servidor. Os quatro arquivos da pasta `painel/` precisam ficar juntos.
+**Painel online (sem instalar nada): https://mrc888.github.io/aurora-colonia/painel/**
+
+Para abrir no computador, rode `python painel.py` e abra `painel/index.html` direto no navegador, sem servidor. Os quatro arquivos da pasta `painel/` precisam ficar juntos.
 
 Opções do menu:
 

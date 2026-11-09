@@ -32,5 +32,6 @@ Equipe: Marcelo e Douglas (código), Alice (painel HTML e PDF).
 
 ## Estado atual (09/11/2026)
 - Tudo integrado na `main`, sem outras branches: sistema completo, 21 cenários, 4 simulações (dia e noite), 162 testes e o painel da Alice (`painel/`, M6).
-- **Próximo:** M7 (PDF da entrega) e publicar o painel no GitHub Pages.
+- Painel publicado: https://mrc888.github.io/aurora-colonia/painel/
+- **Próximo:** M7 (PDF da entrega), com a Alice.
 - M8 (fechamento) depois disso: rodar `verificador-alinhamento` e marcar R2 na matriz do ROADMAP.

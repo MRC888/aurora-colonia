@@ -160,3 +160,14 @@ body.reading .glove{top:87%}
 
 
 #scenario{max-width:230px}
+
+/* Celular (até 720px): textos da câmera cabem na tela e nada fica abaixo de 8px. */
+@media (max-width:720px) {
+  .scene-head span { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  body.reading .scene-head { font-size:8px; gap:8px; }
+  body.reading .scene-footer, body.reading .chart-stats span, .external-footnote, .chart-legend { font-size:8px; }
+  body.reading .scene-footer span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+}
+
+/* As luvas decorativas passam da borda de propósito: corta o excesso sem criar rolagem lateral. */
+html, body { overflow-x:clip; }

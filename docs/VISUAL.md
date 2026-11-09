@@ -42,7 +42,7 @@ Assim o painel mostra, por exemplo, `MODO ECONOMIA` com 35,5% (a leitura que cau
 
 **Apresentação (seção 6) com o tablet:** problema (a Terra está longe) → os dados (cena e módulos) → as regras (registro de decisões) → a previsão (projeção em 3h) → o clímax (gráfico reativo × preditivo na 9b).
 
-**Pendente:** publicar no GitHub Pages, como na Fase 2.
+**Publicado (09/11/2026):** https://mrc888.github.io/aurora-colonia/painel/ (GitHub Pages, branch `main`).
 
 ---
 
